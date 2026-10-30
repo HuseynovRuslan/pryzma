@@ -73,6 +73,8 @@ const competition = {
 // The open window sits around the real clock, so the ballot is open whenever the suite runs: a fixed end date
 // (20 October 2026, 21:00 UTC) closed it under every test the next morning.
 const DAY = 86_400_000
+// A vote that closes while a test watches: long enough for a slow CI machine to draw the open ballot first.
+const WINDOW = 3_000
 const opened = new Date(Date.now() - 20 * DAY).toISOString()
 const closes = new Date(Date.now() + 20 * DAY).toISOString()
 
@@ -288,7 +290,7 @@ describe('the ballot', () => {
   })
 
   it('turns into the review stage at the end of the window, without a reload', async () => {
-    const endsAt = new Date(Date.now() + 1_200).toISOString()
+    const endsAt = new Date(Date.now() + WINDOW).toISOString()
     api.summary
       .mockResolvedValueOnce(summary({ endsAt }))
       .mockResolvedValue(summary({ state: 'Closed', endsAt }))
@@ -299,7 +301,7 @@ describe('the ballot', () => {
     expect(await screen.findByRole('button', { name: 'Səs ver' })).toBeInTheDocument()
     expect(screen.queryByText('Səslər yoxlanılır')).not.toBeInTheDocument()
 
-    expect(await screen.findByRole('heading', { name: 'Səslər yoxlanılır' }, { timeout: 4_000 })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Səslər yoxlanılır' }, { timeout: WINDOW + 4_000 })).toBeInTheDocument()
     // The server was asked again at the boundary, and the cards with it.
     await waitFor(() => expect(api.summary).toHaveBeenCalledTimes(2))
     await waitFor(() => expect(api.works).toHaveBeenCalledTimes(2))
@@ -308,14 +310,14 @@ describe('the ballot', () => {
   })
 
   it('a lost answer at the end does not keep the vote open, nor claim a result', async () => {
-    const endsAt = new Date(Date.now() + 1_000).toISOString()
+    const endsAt = new Date(Date.now() + WINDOW).toISOString()
     api.summary.mockResolvedValueOnce(summary({ endsAt })).mockRejectedValue(new ApiError(0, 'Şəbəkə xətası'))
     api.works.mockResolvedValue(works([work()]))
     renderList()
     expect(await screen.findByRole('button', { name: 'Səs ver' })).toBeInTheDocument()
 
     // The server's own end has passed: the review stage, on the strength of the window alone.
-    expect(await screen.findByRole('heading', { name: 'Səslər yoxlanılır' }, { timeout: 4_000 })).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: 'Səslər yoxlanılır' }, { timeout: WINDOW + 4_000 })).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Səs ver' })).not.toBeInTheDocument()
     expect(screen.getAllByText('Səsvermə başa çatıb').length).toBeGreaterThan(0)
     // Nothing about a result, and no error page for a failed background ask.
