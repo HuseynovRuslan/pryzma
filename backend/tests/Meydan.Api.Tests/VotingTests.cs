@@ -2,10 +2,14 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Meydan.Api.Features.Auth;
+using Meydan.Api.Features.Voting;
 using Meydan.Api.Tests.Infrastructure;
 using Meydan.Domain.Entities;
 using Meydan.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Npgsql;
 
 namespace Meydan.Api.Tests;
@@ -30,6 +34,12 @@ public sealed class VotingTests : IDisposable
             // Every read of the live ranking builds it afresh here, so a test that changes a work and reads again
             // sees the change; the shared copy has its own test below.
             ["Voting:LeaderboardCacheSeconds"] = "0",
+        },
+        // The robot check without the network. It stays off unless a test switches it on (CaptchaOn).
+        Overrides = s =>
+        {
+            s.RemoveAll<ICaptchaVerifier>();
+            s.AddSingleton<ICaptchaVerifier, CaptchaFake>();
         },
     };
 
@@ -141,6 +151,37 @@ public sealed class VotingTests : IDisposable
 
     private static Task<HttpResponseMessage> VoteAsync(HttpClient client, string reference) =>
         client.PostAsync($"/api/competitions/{Chevron}/voting/works/{reference}/vote", null);
+
+    private static Task<HttpResponseMessage> VoteAsync(HttpClient client, string reference, string? captchaToken) =>
+        client.PostAsJsonAsync($"/api/competitions/{Chevron}/voting/works/{reference}/vote", new { captchaToken });
+
+    /// <summary>
+    /// The robot check as the API sees it, without the network: a form other than the vote always passes (the
+    /// ballot's accounts are registered with the check on); a vote passes with a token unless told otherwise.
+    /// </summary>
+    private sealed class CaptchaFake : ICaptchaVerifier
+    {
+        public CaptchaOutcome VoteOutcome { get; set; } = CaptchaOutcome.Passed;
+        public List<string?> VoteTokens { get; } = [];
+
+        public Task<CaptchaOutcome> VerifyAsync(string? token, string action, string? ip, CancellationToken ct)
+        {
+            if (action != PublicVoting.CaptchaAction) return Task.FromResult(CaptchaOutcome.Passed);
+            VoteTokens.Add(token);
+            return Task.FromResult(token is null ? CaptchaOutcome.Failed : VoteOutcome);
+        }
+    }
+
+    /// <summary>Switches the robot check on for this test's host — before anything has reached the API.</summary>
+    private void CaptchaOn(bool onVote = true)
+    {
+        _factory.Settings["Captcha:Provider"] = "Turnstile";
+        _factory.Settings["Captcha:SiteKey"] = "0x4AAAAAAAtestsitekey";
+        _factory.Settings["Captcha:SecretKey"] = "test-secret";
+        _factory.Settings["Captcha:OnVote"] = onVote ? "true" : "false";
+    }
+
+    private CaptchaFake Captcha => (CaptchaFake)_factory.Services.GetRequiredService<ICaptchaVerifier>();
 
     private static Task<HttpResponseMessage> WorksAsync(HttpClient client, string query = "") =>
         client.GetAsync($"/api/competitions/{Chevron}/voting/works{query}");
@@ -514,6 +555,61 @@ public sealed class VotingTests : IDisposable
             Item(await Json(await WorksAsync(b.Balaxani.Owner)), b.Balaxani.Reference).GetProperty("eligibility").GetString());
         await Json(await VoteAsync(b.Balaxani.Owner, b.Ramana.Reference));
         Assert.Equal(1, VoteCount());
+    }
+
+    /// <summary>
+    /// The robot check on the vote itself (docs/voting/CAPTCHA.md): a script holding a session still cannot cast. The
+    /// refusals that need no outside call come first and spend no token; then only a passing token made for the vote
+    /// is counted.
+    /// </summary>
+    [Fact]
+    public async Task With_the_robot_check_on_a_vote_needs_a_passing_token_made_for_voting()
+    {
+        CaptchaOn();
+        var b = await OpenBallotAsync();
+        Assert.True((await Json(await _factory.CreateClient().GetAsync("/api/config"))).GetProperty("voteCaptcha").GetBoolean());
+
+        Assert.Contains("Öz işinizə",
+            await Refused(await VoteAsync(b.Balaxani.Owner, b.Balaxani.Reference, "t"), HttpStatusCode.Forbidden));
+        Assert.Empty(Captcha.VoteTokens);
+
+        var missing = await Refused(await VoteAsync(b.Voter, b.Ramana.Reference), HttpStatusCode.BadRequest);
+        Assert.Contains("\"captcha\"", missing);
+        Assert.Contains("Robot olmadığınızı təsdiqləyin", missing);
+        Captcha.VoteOutcome = CaptchaOutcome.Failed;
+        await Refused(await VoteAsync(b.Voter, b.Ramana.Reference, "bad"), HttpStatusCode.BadRequest);
+        Assert.Equal(0, VoteCount());
+
+        Captcha.VoteOutcome = CaptchaOutcome.Passed;
+        await Json(await VoteAsync(b.Voter, b.Ramana.Reference, "good"));
+        Assert.Equal(1, VoteCount());
+        Assert.Equal([null, "bad", "good"], Captcha.VoteTokens);
+    }
+
+    [Fact]
+    public async Task An_outage_of_the_robot_check_refuses_the_vote_rather_than_let_a_wave_through()
+    {
+        CaptchaOn();
+        var b = await OpenBallotAsync();
+        Captcha.VoteOutcome = CaptchaOutcome.Unavailable;
+
+        Assert.Contains("Yoxlama xidməti hazırda cavab vermir",
+            await Refused(await VoteAsync(b.Voter, b.Ramana.Reference, "t"), HttpStatusCode.ServiceUnavailable));
+        Assert.Equal(0, VoteCount());
+    }
+
+    [Fact]
+    public async Task The_owner_can_leave_the_vote_unasked_while_the_forms_keep_the_check()
+    {
+        CaptchaOn(onVote: false);
+        var b = await OpenBallotAsync();
+        var config = await Json(await _factory.CreateClient().GetAsync("/api/config"));
+        Assert.Equal("0x4AAAAAAAtestsitekey", config.GetProperty("captchaSiteKey").GetString());
+        Assert.False(config.GetProperty("voteCaptcha").GetBoolean());
+
+        await Json(await VoteAsync(b.Voter, b.Ramana.Reference));
+        Assert.Equal(1, VoteCount());
+        Assert.Empty(Captcha.VoteTokens);
     }
 
     /// <summary>

@@ -127,6 +127,7 @@ public sealed class CaptchaRegistrationTests
         Assert.Empty(fake.Calls);
         var config = await client.GetFromJsonAsync<JsonElement>("/api/config");
         Assert.Equal(JsonValueKind.Null, config.GetProperty("captchaSiteKey").ValueKind);
+        Assert.False(config.GetProperty("voteCaptcha").GetBoolean());
     }
 
     [Fact]

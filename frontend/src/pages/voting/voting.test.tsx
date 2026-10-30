@@ -1,9 +1,9 @@
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { act, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom'
 import { beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 import { ApiError } from '../../api/client'
-import type { Voting, VotingWork, VotingWorkDetail, VotingWorks } from '../../api/types'
+import type { PublicConfig, Voting, VotingWork, VotingWorkDetail, VotingWorks } from '../../api/types'
 import { voteCopy } from './lib'
 import VotingListPage from './VotingListPage'
 import VotingWorkPage from './VotingWorkPage'
@@ -30,6 +30,12 @@ const auth = vi.hoisted(() => ({ status: 'authenticated' as string }))
 vi.mock('../../auth/AuthContext', () => ({
   useAuth: () => ({ status: auth.status, user: { firstName: 'Günel', lastName: 'Şükürova', roles: [] } }),
 }))
+const noCheck: PublicConfig & { ready: boolean } = { qrlogLogin: false, passwordReset: false, ready: true }
+const config = vi.hoisted(() => ({ value: {} as PublicConfig & { ready: boolean } }))
+vi.mock('../../lib/publicConfig', () => ({ usePublicConfig: () => config.value }))
+
+// Cloudflare's widget, as the dialog sees it: render() hands back an id and later calls back with a token.
+const widget = { render: vi.fn(), remove: vi.fn(), callbacks: [] as ((t: string) => void)[] }
 
 beforeAll(() => {
   window.scrollTo = vi.fn()
@@ -53,6 +59,13 @@ beforeAll(() => {
 beforeEach(() => {
   vi.clearAllMocks()
   auth.status = 'authenticated'
+  config.value = noCheck
+  widget.callbacks = []
+  widget.render.mockImplementation((_el: HTMLElement, o: { callback: (t: string) => void }) => {
+    widget.callbacks.push(o.callback)
+    return `w${widget.callbacks.length}`
+  })
+  window.turnstile = { render: widget.render, remove: widget.remove }
 })
 
 function Where() {
@@ -502,7 +515,8 @@ describe('casting a vote', () => {
     expect(api.vote).not.toHaveBeenCalled()
 
     await userEvent.click(within(dialog).getByRole('button', { name: 'Səsi təsdiqlə' }))
-    expect(api.vote).toHaveBeenCalledWith('emircan', 'SUB-2026-00001')
+    // No robot check is asked here, so no token goes with the vote.
+    expect(api.vote).toHaveBeenCalledWith('emircan', 'SUB-2026-00001', undefined)
 
     // The dialog becomes the receipt, and offers the invitation — which never says which work was chosen.
     expect(await within(dialog).findByRole('heading', { name: 'Səsiniz qeydə alındı' })).toHaveFocus()
@@ -552,6 +566,57 @@ describe('casting a vote', () => {
 
     expect(await screen.findByRole('alert')).toHaveTextContent('Bu nominasiyada artıq səs vermisiniz.')
     await waitFor(() => expect(api.works).toHaveBeenCalledTimes(2))
+  })
+})
+
+describe('the robot check on a vote', () => {
+  const receipt = { reference: 'SUB-2026-00001', nominationSlug: 'simvol-loqotip', voteCount: 4, castAt: '2026-10-05T10:00:00Z' }
+  const openDialog = async () => {
+    api.summary.mockResolvedValue(summary())
+    api.works.mockResolvedValue(works([work()]))
+    renderList()
+    await userEvent.click(await screen.findByRole('button', { name: 'Səs ver' }))
+    return screen.findByRole('dialog')
+  }
+
+  it('must pass before the vote can be confirmed, and its token goes with the vote', async () => {
+    config.value = { ...noCheck, captchaSiteKey: '0x4AAAAAAAtestsitekey', voteCaptcha: true }
+    api.vote.mockResolvedValue(receipt)
+    const dialog = await openDialog()
+
+    await waitFor(() => expect(widget.render).toHaveBeenCalledTimes(1))
+    expect(widget.render.mock.calls[0][1]).toMatchObject({ sitekey: '0x4AAAAAAAtestsitekey', action: 'vote' })
+    expect(within(dialog).getByRole('button', { name: 'Səsi təsdiqlə' })).toBeDisabled()
+
+    act(() => widget.callbacks[0]('token-1'))
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Səsi təsdiqlə' }))
+    expect(api.vote).toHaveBeenCalledWith('emircan', 'SUB-2026-00001', 'token-1')
+    expect(await within(dialog).findByRole('heading', { name: 'Səsiniz qeydə alındı' })).toBeInTheDocument()
+  })
+
+  it('is asked afresh after a refused vote, since a token works only once', async () => {
+    config.value = { ...noCheck, captchaSiteKey: '0x4AAAAAAAtestsitekey', voteCaptcha: true }
+    api.vote.mockRejectedValue(new ApiError(400, 'Robot olmadığınızı təsdiqləyin: yoxlamanı tamamlayıb yenidən göndərin.'))
+    const dialog = await openDialog()
+    await waitFor(() => expect(widget.render).toHaveBeenCalledTimes(1))
+    act(() => widget.callbacks[0]('token-1'))
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Səsi təsdiqlə' }))
+
+    expect(await within(dialog).findByRole('alert')).toHaveTextContent('Robot olmadığınızı təsdiqləyin')
+    await waitFor(() => expect(widget.render).toHaveBeenCalledTimes(2))
+    expect(widget.remove).toHaveBeenCalledWith('w1')
+    // The spent token is gone: without a new one the vote cannot go again.
+    expect(within(dialog).getByRole('button', { name: 'Səsi təsdiqlə' })).toBeDisabled()
+  })
+
+  it('is not there while the server does not ask for it on the vote, even with a key for the forms', async () => {
+    config.value = { ...noCheck, captchaSiteKey: '0x4AAAAAAAtestsitekey', voteCaptcha: false }
+    api.vote.mockResolvedValue(receipt)
+    const dialog = await openDialog()
+
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Səsi təsdiqlə' }))
+    expect(api.vote).toHaveBeenCalledWith('emircan', 'SUB-2026-00001', undefined)
+    expect(widget.render).not.toHaveBeenCalled()
   })
 })
 

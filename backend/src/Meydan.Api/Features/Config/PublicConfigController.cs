@@ -16,7 +16,9 @@ public sealed record PublicConfigDto(
     /// <summary>The robot check's public site key when registration asks for it; null when it does not.</summary>
     string? CaptchaSiteKey = null,
     /// <summary>"email-first": registration starts with the address and a link; "classic": one form.</summary>
-    string RegistrationFlow = "classic");
+    string RegistrationFlow = "classic",
+    /// <summary>Casting a vote asks for the robot check too, with <see cref="CaptchaSiteKey"/>.</summary>
+    bool VoteCaptcha = false);
 
 [ApiController]
 [Route("api/config")]
@@ -30,5 +32,6 @@ public sealed class PublicConfigController(
     public PublicConfigDto Get() =>
         new(sso.Enabled, email.Value.EffectiveMode(env) != EmailMode.Disabled,
             captcha.Value.Enabled ? captcha.Value.SiteKey : null,
-            registration.Enabled ? "email-first" : "classic");
+            registration.Enabled ? "email-first" : "classic",
+            captcha.Value.VoteEnabled);
 }

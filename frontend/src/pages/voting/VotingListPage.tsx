@@ -166,12 +166,12 @@ function Ballot({
     }
   }
 
-  const confirm = async () => {
+  const confirm = async (captchaToken?: string) => {
     if (!chosen) return
     setCasting(true)
     setVoteError(null)
     try {
-      const receipt = await votingApi.vote(slug, chosen.reference)
+      const receipt = await votingApi.vote(slug, chosen.reference, captchaToken)
       setPage((current) => (current ? applyVote(current, receipt) : current))
       // The ranking reads again at once, so the vote is in it before the dialog is even closed.
       live.refresh()

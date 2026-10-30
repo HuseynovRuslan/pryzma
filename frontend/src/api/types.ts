@@ -566,6 +566,8 @@ export interface PublicConfig {
   captchaSiteKey?: string | null
   /** "email-first": registration starts with the address and a link; "classic" (or absent): one form. */
   registrationFlow?: 'email-first' | 'classic'
+  /** Casting a vote asks for the same robot check, with `captchaSiteKey`. */
+  voteCaptcha?: boolean
 }
 
 /** Email-first registration: the link was good; the completion form may be sent with `proof` until `expiresAt`. */

@@ -89,8 +89,12 @@ export const votingApi = {
   },
   work: (slug: string, reference: string, signal?: AbortSignal) =>
     api<VotingWorkDetail>(`/api/competitions/${enc(slug)}/voting/works/${enc(reference)}`, { signal }),
-  vote: (slug: string, reference: string) =>
-    api<VoteReceipt>(`/api/competitions/${enc(slug)}/voting/works/${enc(reference)}/vote`, { method: 'POST' }),
+  /** `captchaToken`: the robot check's single-use token, when the server asks for one (PublicConfig.voteCaptcha). */
+  vote: (slug: string, reference: string, captchaToken?: string) =>
+    api<VoteReceipt>(`/api/competitions/${enc(slug)}/voting/works/${enc(reference)}/vote`, {
+      method: 'POST',
+      ...(captchaToken ? { body: { captchaToken } } : {}),
+    }),
   /** The live ranking of every work on the ballot, with this viewer's own vote. */
   leaderboard: (slug: string, signal?: AbortSignal) =>
     api<VotingLeaderboard>(`/api/competitions/${enc(slug)}/voting/leaderboard`, { signal }),

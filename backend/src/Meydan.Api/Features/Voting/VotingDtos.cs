@@ -141,6 +141,13 @@ public sealed record VotingAuditDto(
     IReadOnlyList<VotingAuditEntryDto> Entries, DateTimeOffset UpdatedAt,
     IReadOnlyList<VotingAuditRuleDto>? Rules = null);
 
+/// <summary>What a vote may carry: the robot check's token, when the check is on. Nothing else is read from it.</summary>
+public sealed record VoteRequest
+{
+    [System.ComponentModel.DataAnnotations.StringLength(2048)]
+    public string? CaptchaToken { get; init; }
+}
+
 /// <summary>What a cast vote answers with: the work, its nomination and the count the vote produced.</summary>
 public sealed record VoteReceiptDto(string Reference, string NominationSlug, int VoteCount, DateTimeOffset CastAt);
 
