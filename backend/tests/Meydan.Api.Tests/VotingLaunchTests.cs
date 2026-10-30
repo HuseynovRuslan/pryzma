@@ -18,6 +18,13 @@ public sealed class VotingLaunchTests : IDisposable
 {
     private readonly MeydanFactory _factory = new() { Settings = { ["Email:OutboxWorkerEnabled"] = "false" } };
 
+    public VotingLaunchTests()
+    {
+        // Whole seconds, so a moment read back out of Postgres (microseconds) is the one that went in.
+        var now = DateTimeOffset.UtcNow;
+        _factory.Clock.Now = new DateTimeOffset(now.Ticks - now.Ticks % TimeSpan.TicksPerSecond, TimeSpan.Zero);
+    }
+
     public void Dispose() => _factory.Dispose();
 
     private sealed record Built(int Id, string Slug, Dictionary<string, int> Fields, int[] Final, int Draft, int Rejected);
