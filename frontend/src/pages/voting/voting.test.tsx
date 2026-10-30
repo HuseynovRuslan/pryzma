@@ -290,28 +290,38 @@ describe('the ballot', () => {
   })
 
   it('turns into the review stage at the end of the window, without a reload', async () => {
+    // The server as it is: open until the moment, closed after it — however often the page asks before then.
     const endsAt = new Date(Date.now() + WINDOW).toISOString()
-    api.summary
-      .mockResolvedValueOnce(summary({ endsAt }))
-      .mockResolvedValue(summary({ state: 'Closed', endsAt }))
-    api.works
-      .mockResolvedValueOnce(works([work()]))
-      .mockResolvedValue(works([work({ eligibility: 'VotingNotOpen' })], { state: 'Closed' }))
+    const over = () => Date.now() >= Date.parse(endsAt)
+    const askedAfter = { summary: 0, works: 0 }
+    api.summary.mockImplementation(async () => {
+      if (!over()) return summary({ endsAt })
+      askedAfter.summary++
+      return summary({ state: 'Closed', endsAt })
+    })
+    api.works.mockImplementation(async () => {
+      if (!over()) return works([work()])
+      askedAfter.works++
+      return works([work({ eligibility: 'VotingNotOpen' })], { state: 'Closed' })
+    })
     renderList()
     expect(await screen.findByRole('button', { name: 'Səs ver' })).toBeInTheDocument()
     expect(screen.queryByText('Səslər yoxlanılır')).not.toBeInTheDocument()
 
     expect(await screen.findByRole('heading', { name: 'Səslər yoxlanılır' }, { timeout: WINDOW + 4_000 })).toBeInTheDocument()
     // The server was asked again at the boundary, and the cards with it.
-    await waitFor(() => expect(api.summary).toHaveBeenCalledTimes(2))
-    await waitFor(() => expect(api.works).toHaveBeenCalledTimes(2))
+    await waitFor(() => expect(askedAfter.summary).toBeGreaterThan(0))
+    await waitFor(() => expect(askedAfter.works).toBeGreaterThan(0))
     expect(screen.queryByRole('button', { name: 'Səs ver' })).not.toBeInTheDocument()
     expect(screen.getByTestId('where')).toHaveTextContent('/competitions/emircan/voting')
   })
 
   it('a lost answer at the end does not keep the vote open, nor claim a result', async () => {
     const endsAt = new Date(Date.now() + WINDOW).toISOString()
-    api.summary.mockResolvedValueOnce(summary({ endsAt })).mockRejectedValue(new ApiError(0, 'Şəbəkə xətası'))
+    api.summary.mockImplementation(async () => {
+      if (Date.now() < Date.parse(endsAt)) return summary({ endsAt })
+      throw new ApiError(0, 'Şəbəkə xətası')
+    })
     api.works.mockResolvedValue(works([work()]))
     renderList()
     expect(await screen.findByRole('button', { name: 'Səs ver' })).toBeInTheDocument()
