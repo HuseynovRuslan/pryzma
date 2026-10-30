@@ -8,12 +8,22 @@ import type {
   VoteReceipt,
   VotingViewer,
 } from '../../api/types'
+import { ApiError } from '../../api/client'
 import { shortCompetitionTitle } from '../../lib/format'
 import { serverNow } from '../../lib/serverClock'
 import { azLocative } from '../../lib/text'
 
 /** What to call a work when its title field is not public: its reference number, never a person. */
 export const workName = (w: Pick<VotingWork, 'title' | 'reference'>) => w.title ?? `İş ${w.reference}`
+
+/**
+ * What the vote dialog says when a vote is refused: the server's own words. A failed robot check arrives as a
+ * field error under a form's generic title, and the dialog has no form, so the field's line is the one shown.
+ */
+export function voteRefusal(err: unknown): string {
+  if (!(err instanceof ApiError)) return 'Səs göndərilmədi. Bir az sonra yenidən cəhd edin.'
+  return err.fieldErrors.captcha?.[0] ?? err.message
+}
 
 /**
  * What a work's button says, and the line under it. One entry per reason the server can give, so the browser
