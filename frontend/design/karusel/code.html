@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+
+<html lang="az"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>PRYZMA.AZ — Açıq Yaradıcılıq və Dizayn Müsabiqələri</title>
+<!-- Google Fonts: Space Grotesk & Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Custom Configuration -->
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            display: ['"Space Grotesk"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              terracotta: '#B2431C',
+              'terracotta-dark': '#933514',
+              'terracotta-light': '#FDF4F0',
+              'terracotta-badge': '#FBECE6',
+              dark: '#14181F',
+              slate: '#475569',
+              border: '#E2E8F0',
+              surface: '#F8FAFC',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- Custom Typography and Micro-Interactions -->
+<style data-purpose="typography">
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #FAFAFC;
+      color: #14181F;
+    }
+    h1, h2, h3, .font-display {
+      font-family: 'Space Grotesk', sans-serif;
+      letter-spacing: -0.02em;
+    }
+    .carousel-slide {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.35s ease-in-out;
+    }
+    .carousel-slide.active {
+      display: block;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-[#14181F] flex flex-col justify-between antialiased selection:bg-[#B2431C] selection:text-white">
+<!-- BEGIN: MainHeader -->
+<header class="w-full bg-white border-b border-[#E2E8F0] sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+<!-- Brand Logo -->
+<div class="flex items-center gap-8">
+<a aria-label="PRYZMA.AZ Ana səhifə" class="flex items-center gap-2 group" href="#">
+<div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#B2431C] to-red-400 flex items-center justify-center text-white font-bold font-display shadow-sm group-hover:opacity-90 transition-opacity">
+            P
+          </div>
+<span class="font-display font-bold text-2xl tracking-tight text-[#14181F]">
+            PRYZMA<span class="text-[#B2431C] text-sm ml-0.5 font-medium tracking-normal">.AZ</span>
+</span>
+</a>
+<!-- Desktop Navigation Links -->
+<nav class="hidden md:flex items-center space-x-7 text-sm font-medium text-slate-700">
+<a class="text-[#B2431C] font-semibold transition-colors duration-150" href="#">Müsabiqələr</a>
+<a class="hover:text-[#B2431C] transition-colors duration-150" href="#">Nəticələr</a>
+<a class="hover:text-[#B2431C] transition-colors duration-150" href="#">Necə iştirak etməli?</a>
+<a class="hover:text-[#B2431C] transition-colors duration-150" href="#">Haqqımızda</a>
+</nav>
+</div>
+<!-- Right Header Actions -->
+<div class="flex items-center gap-4">
+<a class="text-sm font-medium text-slate-700 hover:text-slate-900 px-3 py-2 transition-colors" href="#">
+          İşlərim
+        </a>
+<div class="h-5 w-px bg-slate-200"></div>
+<button aria-label="İstifadəçi Profili" class="flex items-center gap-2.5 p-1 rounded-full border border-slate-200 hover:border-slate-300 transition-all focus:outline-none focus:ring-2 focus:ring-[#B2431C]/30" type="button">
+<div class="w-8 h-8 rounded-full bg-slate-900 text-white font-semibold text-xs flex items-center justify-center tracking-wider">
+            AP
+          </div>
+<span class="text-xs font-semibold text-slate-700 pr-2 hidden sm:inline">Profil</span>
+</button>
+</div>
+</div>
+</header>
+<!-- END: MainHeader -->
+<!-- BEGIN: MainContent -->
+<main class="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+<!-- BEGIN: HeroAnnouncementCard Carousel -->
+<section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden mb-12 relative" id="hero-carousel-container">
+<!-- Carousel Navigation Header Bar: Tabs & Arrows -->
+<div class="px-6 md:px-8 lg:px-10 pt-5 pb-3 border-b border-slate-100 flex flex-wrap items-center justify-between gap-4 bg-slate-50/50">
+<!-- Tab Indicators -->
+<div class="flex items-center gap-2 sm:gap-3 flex-wrap">
+<button class="carousel-tab-btn px-3.5 py-1.5 rounded-lg text-xs font-bold font-display transition-all flex items-center gap-2 bg-white text-[#B2431C] border border-[#B2431C]/30 shadow-xs ring-1 ring-[#B2431C]/20" id="tab-btn-0" onclick="goToSlide(0)" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-[#B2431C]"></span>
+<span>01 Əmircan</span>
+</button>
+<button class="carousel-tab-btn px-3.5 py-1.5 rounded-lg text-xs font-bold font-display transition-all flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-transparent" id="tab-btn-1" onclick="goToSlide(1)" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+<span>02 Şuşa 2026</span>
+</button>
+<button class="carousel-tab-btn px-3.5 py-1.5 rounded-lg text-xs font-bold font-display transition-all flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-transparent" id="tab-btn-2" onclick="goToSlide(2)" type="button">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+<span>03 Şəbəkə Motivləri</span>
+</button>
+</div>
+<!-- Controls: Pagination counter & Arrows -->
+<div class="flex items-center gap-3">
+<span class="text-xs font-bold font-display tracking-wider text-slate-600 bg-white border border-slate-200 px-2.5 py-1 rounded-md" id="slide-counter-badge">
+  01 / 03
+</span>
+<div class="flex items-center gap-1.5">
+<button aria-label="Əvvəlki müsabiqə" class="w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 flex items-center justify-center transition-all hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#B2431C]/30 shadow-2xs" onclick="prevSlide()">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>
+</button>
+<button aria-label="Növbəti müsabiqə" class="w-8 h-8 rounded-lg border border-slate-200 bg-white hover:bg-slate-100 text-slate-700 flex items-center justify-center transition-all hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-[#B2431C]/30 shadow-2xs" onclick="nextSlide()">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"></path></svg>
+</button>
+</div>
+</div>
+</div>
+<!-- ================= SLIDE 1: ƏMİRCANIN SİMVOLU ================= -->
+<div class="carousel-slide active p-6 md:p-8 lg:p-10" id="slide-0">
+<!-- Header Tags and Anonymous Info -->
+<div class="flex flex-wrap items-center justify-between gap-3 pb-6 border-b border-slate-100">
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-[#FBECE6] text-[#B2431C]">
+<span class="w-2 h-2 rounded-full bg-[#B2431C] animate-pulse"></span>
+            Qəbul mərhələsi
+          </span>
+<span class="inline-flex items-center gap-1.5 text-xs text-slate-700 font-medium bg-slate-100 px-3 py-1 rounded-md">
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            Müəllif məlumatları gizli saxlanılır (Korpus anonimlik sistemi)
+          </span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 pt-8 items-start">
+<!-- Left Details & Stepper -->
+<div class="lg:col-span-7 flex flex-col justify-between">
+<div>
+<p class="text-xs uppercase font-bold tracking-wider text-[#B2431C] mb-2 font-display">
+                — MƏRHƏLƏ 01: İŞLƏRİN QƏBULU
+              </p>
+<h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-slate-900 tracking-tight leading-tight">
+                Əmircanın simvolu
+              </h1>
+<p class="text-base text-slate-700 mt-4 leading-relaxed font-normal">
+                İşlərin qəbulu davam edir. Əmircanın zəngin tarixi, memarlığı və yaradıcı irsini müasir vizual dillə ifadə edən simvol və dizayn konseptlərinin hazırlanması üçün açıq müsabiqə.
+              </p>
+<!-- Stages Stepper -->
+<div class="mt-8 pt-6">
+<p class="text-xs font-bold tracking-wider uppercase text-slate-700 mb-6 font-display">MÜSABİQƏNİN MƏRHƏLƏLƏRİ</p>
+<div class="grid grid-cols-4 relative gap-2 sm:gap-4">
+<!-- Stepper Connecting Line -->
+<div class="absolute top-4 left-6 right-6 h-0.5 bg-slate-200 -z-0"></div>
+<!-- Stage 1 (Active) -->
+<div class="flex flex-col items-center text-center relative z-10">
+<div class="w-8 h-8 rounded-full bg-[#B2431C] text-white flex items-center justify-center font-bold text-xs ring-4 ring-[#FBECE6] shadow-sm">
+                      1
+                    </div>
+<span class="mt-3 text-xs sm:text-sm font-bold text-slate-900">Qəbul</span>
+<span class="text-[11px] font-semibold text-[#B2431C]">Cari mərhələ</span>
+</div>
+<!-- Stage 2 -->
+<div class="flex flex-col items-center text-center relative z-10">
+<div class="w-8 h-8 rounded-full bg-white border-2 border-slate-300 text-slate-400 flex items-center justify-center font-bold text-xs">
+                      2
+                    </div>
+<span class="mt-3 text-xs sm:text-sm font-medium text-slate-600">Yoxlama</span>
+<span class="text-[11px] text-slate-400">Növbəti</span>
+</div>
+<!-- Stage 3 -->
+<div class="flex flex-col items-center text-center relative z-10">
+<div class="w-8 h-8 rounded-full bg-white border-2 border-slate-300 text-slate-400 flex items-center justify-center font-bold text-xs">
+                      3
+                    </div>
+<span class="mt-3 text-xs sm:text-sm font-medium text-slate-600">Səsvermə</span>
+<span class="text-[11px] text-slate-400">Növbəti</span>
+</div>
+<!-- Stage 4 -->
+<div class="flex flex-col items-center text-center relative z-10">
+<div class="w-8 h-8 rounded-full bg-white border-2 border-slate-300 text-slate-400 flex items-center justify-center font-bold text-xs">
+                      4
+                    </div>
+<span class="mt-3 text-xs sm:text-sm font-medium text-slate-600">Nəticələr</span>
+<span class="text-[11px] text-slate-400">Növbəti</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Key Dates -->
+<div class="mt-8 pt-5 border-t border-slate-200 flex flex-wrap items-center gap-2 text-sm text-slate-900 bg-slate-50/70 p-3.5 rounded-lg">
+<span class="font-bold text-slate-900 flex items-center gap-1.5">
+<svg class="w-4 h-4 text-slate-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                Əsas tarixlər:
+              </span>
+<span class="font-semibold text-slate-900">
+                Qəbul: <strong class="text-black">23 sentyabr 2026 – 3 oktyabr 2026</strong>
+</span>
+</div>
+</div>
+<!-- Right Column: Countdown Box & Call-to-actions -->
+<div class="lg:col-span-5 bg-[#F8FAFC] border border-slate-200/90 rounded-xl p-6 sm:p-7 flex flex-col justify-between shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
+<div>
+<div class="flex items-center justify-between mb-5">
+<h3 class="text-xs font-bold tracking-wider uppercase text-slate-700 font-display">QƏBULUN BİTMƏSİNƏ</h3>
+<span class="flex h-2 w-2 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+</span>
+</div>
+<!-- Live Countdown Grid -->
+<div class="grid grid-cols-4 gap-2 text-center">
+<div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+<span class="block text-2xl sm:text-3xl font-bold font-display text-slate-900" id="timer-days-0">01</span>
+<span class="block text-[10px] font-bold text-slate-700 tracking-wider mt-1 uppercase">GÜN</span>
+</div>
+<div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+<span class="block text-2xl sm:text-3xl font-bold font-display text-slate-900" id="timer-hours-0">06</span>
+<span class="block text-[10px] font-bold text-slate-700 tracking-wider mt-1 uppercase">SAAT</span>
+</div>
+<div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+<span class="block text-2xl sm:text-3xl font-bold font-display text-slate-900" id="timer-minutes-0">10</span>
+<span class="block text-[10px] font-bold text-slate-700 tracking-wider mt-1 uppercase">DƏQİQƏ</span>
+</div>
+<div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+<span class="block text-2xl sm:text-3xl font-bold font-display text-[#B2431C]" id="timer-seconds-0">29</span>
+<span class="block text-[10px] font-bold text-slate-700 tracking-wider mt-1 uppercase">SANİYƏ</span>
+</div>
+</div>
+<!-- Eligibility note -->
+<div class="mt-5 text-xs text-slate-600 bg-white/70 p-3 rounded-md border border-slate-200/60 leading-relaxed">
+<p>İştirak pulsuzdur. Rəqəmsal eskizlər, vektor qrafikaları və ya skan edilmiş əl işləri qəbul olunur.</p>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-7">
+<a class="inline-flex items-center justify-center px-4 py-3 bg-[#14181F] hover:bg-slate-800 text-white text-sm font-semibold rounded-lg shadow-sm hover:shadow transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900" href="#">
+                İşini təqdim et
+              </a>
+<a class="inline-flex items-center justify-center px-4 py-3 bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 text-sm font-semibold rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400" href="#">
+                Müsabiqəyə bax
+              </a>
+</div>
+</div>
+</div>
+</div>
+<!-- ================= SLIDE 2: ŞUŞA 2026 ================= -->
+<div class="carousel-slide p-6 md:p-8 lg:p-10" id="slide-1">
+<!-- Header Tags and Anonymous Info -->
+<div class="flex flex-wrap items-center justify-between gap-3 pb-6 border-b border-slate-100">
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-2 h-2 rounded-full bg-emerald-600 animate-pulse"></span>
+            Mərhələ 01: Konsept layihələrin qəbulu
+          </span>
+<span class="inline-flex items-center gap-1.5 text-xs text-slate-700 font-medium bg-slate-100 px-3 py-1 rounded-md">
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            Müəllif məlumatları gizli saxlanılır (Korpus anonimlik sistemi)
+          </span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 pt-8 items-start">
+<!-- Left Details & Stepper -->
+<div class="lg:col-span-7 flex flex-col justify-between">
+<div>
+<p class="text-xs uppercase font-bold tracking-wider text-amber-700 mb-2 font-display">
+                — MEMARLIQ VƏ ŞƏHƏRSALMA
+              </p>
+<h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-slate-900 tracking-tight leading-tight">
+                Şuşa 2026: Mədəni Kitabxana və Oxu Mərkəzi
+              </h1>
+<p class="text-base text-slate-700 mt-4 leading-relaxed font-normal">
+                Tarixi mühitə həssaslıqla inteqrasiya olunan müasir açıq kitabxana, rəqəmsal oxu salonu və yaradıcı gənclər üçün icma mərkəzinin konseptual memarlıq layihələrinin açıq seçimi.
+              </p>
+<!-- Stages Stepper -->
+<div class="mt-8 pt-6">
+<p class="text-xs font-bold tracking-wider uppercase text-slate-700 mb-6 font-display">MÜSABİQƏNİN MƏRHƏLƏLƏRİ</p>
+<div class="grid grid-cols-4 relative gap-2 sm:gap-4">
+<!-- Stepper Connecting Line -->
+<div class="absolute top-4 left-6 right-6 h-0.5 bg-slate-200 -z-0"></div>
+<!-- Stage 1 (Active) -->
+<div class="flex flex-col items-center text-center relative z-10">
+<div class="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center font-bold text-xs ring-4 ring-slate-100 shadow-sm">
+                      1
+                    </div>
+<span class="mt-3 text-xs sm:text-sm font-bold text-slate-900">Konsept</span>
+<span class="text-[11px] font-semibold text-slate-800">Cari qəbul</span>
+</div>
+<!-- Stage 2 -->
+<div class="flex flex-col items-center text-center relative z-10">
+<div class="w-8 h-8 rounded-full bg-white border-2 border-slate-300 text-slate-400 flex items-center justify-center font-bold text-xs">
+                      2
+                    </div>
+<span class="mt-3 text-xs sm:text-sm font-medium text-slate-600">Yoxlama</span>
+<span class="text-[11px] text-slate-400">Növbəti</span>
+</div>
+<!-- Stage 3 -->
+<div class="flex flex-col items-center text-center relative z-10">
+<div class="w-8 h-8 rounded-full bg-white border-2 border-slate-300 text-slate-400 flex items-center justify-center font-bold text-xs">
+                      3
+                    </div>
+<span class="mt-3 text-xs sm:text-sm font-medium text-slate-600">Münsiflər</span>
+<span class="text-[11px] text-slate-400">Növbəti</span>
+</div>
+<!-- Stage 4 -->
+<div class="flex flex-col items-center text-center relative z-10">
+<div class="w-8 h-8 rounded-full bg-white border-2 border-slate-300 text-slate-400 flex items-center justify-center font-bold text-xs">
+                      4
+                    </div>
+<span class="mt-3 text-xs sm:text-sm font-medium text-slate-600">Qaliblər</span>
+<span class="text-[11px] text-slate-400">Növbəti</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Key Dates -->
+<div class="mt-8 pt-5 border-t border-slate-200 flex flex-wrap items-center gap-2 text-sm text-slate-900 bg-slate-50/70 p-3.5 rounded-lg">
+<span class="font-bold text-slate-900 flex items-center gap-1.5">
+<svg class="w-4 h-4 text-slate-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                Əsas tarixlər:
+              </span>
+<span class="font-semibold text-slate-900">
+                Layihə qəbulu: <strong class="text-black">1 oktyabr 2026 – 18 oktyabr 2026</strong>
+</span>
+</div>
+</div>
+<!-- Right Column: Countdown Box & Call-to-actions -->
+<div class="lg:col-span-5 bg-[#F8FAFC] border border-slate-200/90 rounded-xl p-6 sm:p-7 flex flex-col justify-between shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
+<div>
+<div class="flex items-center justify-between mb-5">
+<h3 class="text-xs font-bold tracking-wider uppercase text-slate-700 font-display">QƏBULUN BİTMƏSİNƏ</h3>
+<span class="flex h-2 w-2 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+</span>
+</div>
+<!-- Live Countdown Grid -->
+<div class="grid grid-cols-4 gap-2 text-center">
+<div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+<span class="block text-2xl sm:text-3xl font-bold font-display text-slate-900" id="timer-days-1">16</span>
+<span class="block text-[10px] font-bold text-slate-700 tracking-wider mt-1 uppercase">GÜN</span>
+</div>
+<div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+<span class="block text-2xl sm:text-3xl font-bold font-display text-slate-900" id="timer-hours-1">14</span>
+<span class="block text-[10px] font-bold text-slate-700 tracking-wider mt-1 uppercase">SAAT</span>
+</div>
+<div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+<span class="block text-2xl sm:text-3xl font-bold font-display text-slate-900" id="timer-minutes-1">45</span>
+<span class="block text-[10px] font-bold text-slate-700 tracking-wider mt-1 uppercase">DƏQİQƏ</span>
+</div>
+<div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+<span class="block text-2xl sm:text-3xl font-bold font-display text-emerald-700" id="timer-seconds-1">10</span>
+<span class="block text-[10px] font-bold text-slate-700 tracking-wider mt-1 uppercase">SANİYƏ</span>
+</div>
+</div>
+<!-- Eligibility note -->
+<div class="mt-5 text-xs text-slate-600 bg-white/70 p-3 rounded-md border border-slate-200/60 leading-relaxed">
+<p>Bütün tələbələr, fərdi memarlar və emalatxanalar iştirak edə bilər. 3D vizuallar və planlaşma tələb olunur.</p>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-7">
+<a class="inline-flex items-center justify-center px-4 py-3 bg-[#14181F] hover:bg-slate-800 text-white text-sm font-semibold rounded-lg shadow-sm hover:shadow transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900" href="#">
+                Layihəni göndər
+              </a>
+<a class="inline-flex items-center justify-center px-4 py-3 bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 text-sm font-semibold rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400" href="#">
+                Şərtlərlə tanış ol
+              </a>
+</div>
+</div>
+</div>
+</div>
+<!-- ================= SLIDE 3: ŞƏBƏKƏ MOTİVLƏRİ ================= -->
+<div class="carousel-slide p-6 md:p-8 lg:p-10" id="slide-2">
+<!-- Header Tags and Anonymous Info -->
+<div class="flex flex-wrap items-center justify-between gap-3 pb-6 border-b border-slate-100">
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-900 border border-amber-300">
+<span class="w-2 h-2 rounded-full bg-amber-600"></span>
+            Mərhələ 02: Texniki Yoxlama
+          </span>
+<span class="inline-flex items-center gap-1.5 text-xs text-slate-700 font-medium bg-slate-100 px-3 py-1 rounded-md">
+<svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+            Müəllif məlumatları gizli saxlanılır (Korpus anonimlik sistemi)
+          </span>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 pt-8 items-start">
+<!-- Left Details & Stepper -->
+<div class="lg:col-span-7 flex flex-col justify-between">
+<div>
+<p class="text-xs uppercase font-bold tracking-wider text-sky-800 mb-2 font-display">
+                — TƏTBİQİ SƏNƏT VƏ MƏHSUL DİZAYNI
+              </p>
+<h1 class="text-3xl sm:text-4xl lg:text-5xl font-bold font-display text-slate-900 tracking-tight leading-tight">
+                Şəbəkə Motivləri: Müasir İnteryer Elementləri
+              </h1>
+<p class="text-base text-slate-700 mt-4 leading-relaxed font-normal">
+                Qəbul bitib! Ekspert heyəti tərəfindən anonim kodlaşdırılmış işlər yoxlanılır. Klassik Şəki şəbəkə həndəsəsinin müasir mebel, işıqlandırma və arakəsmə elementlərinə adaptasiyası.
+              </p>
+<!-- Stages Stepper -->
+<div class="mt-8 pt-6">
+<p class="text-xs font-bold tracking-wider uppercase text-slate-700 mb-6 font-display">MÜSABİQƏNİN MƏRHƏLƏLƏRİ</p>
+<div class="grid grid-cols-4 relative gap-2 sm:gap-4">
+<!-- Stepper Connecting Line -->
+<div class="absolute top-4 left-6 right-6 h-0.5 bg-slate-200 -z-0"></div>
+<!-- Stage 1 (Done) -->
+<div class="flex flex-col items-center text-center relative z-10">
+<div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shadow-sm">
+                      ✓
+                    </div>
+<span class="mt-3 text-xs sm:text-sm font-semibold text-slate-700">Qəbul</span>
+<span class="text-[11px] font-semibold text-emerald-700">Başa çatdı</span>
+</div>
+<!-- Stage 2 (Active) -->
+<div class="flex flex-col items-center text-center relative z-10">
+<div class="w-8 h-8 rounded-full bg-amber-600 text-white flex items-center justify-center font-bold text-xs ring-4 ring-amber-100 shadow-sm">
+                      2
+                    </div>
+<span class="mt-3 text-xs sm:text-sm font-bold text-slate-900">Yoxlama</span>
+<span class="text-[11px] font-bold text-amber-800">Cari mərhələ</span>
+</div>
+<!-- Stage 3 -->
+<div class="flex flex-col items-center text-center relative z-10">
+<div class="w-8 h-8 rounded-full bg-white border-2 border-slate-300 text-slate-400 flex items-center justify-center font-bold text-xs">
+                      3
+                    </div>
+<span class="mt-3 text-xs sm:text-sm font-medium text-slate-600">Səsvermə</span>
+<span class="text-[11px] text-slate-400">Növbəti</span>
+</div>
+<!-- Stage 4 -->
+<div class="flex flex-col items-center text-center relative z-10">
+<div class="w-8 h-8 rounded-full bg-white border-2 border-slate-300 text-slate-400 flex items-center justify-center font-bold text-xs">
+                      4
+                    </div>
+<span class="mt-3 text-xs sm:text-sm font-medium text-slate-600">Nəticələr</span>
+<span class="text-[11px] text-slate-400">Növbəti</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Key Dates -->
+<div class="mt-8 pt-5 border-t border-slate-200 flex flex-wrap items-center gap-2 text-sm text-slate-900 bg-slate-50/70 p-3.5 rounded-lg">
+<span class="font-bold text-slate-900 flex items-center gap-1.5">
+<svg class="w-4 h-4 text-slate-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+                Əsas tarixlər:
+              </span>
+<span class="font-semibold text-slate-900">
+                Texniki yoxlama: <strong class="text-black">18 oktyabr – 28 oktyabr 2026</strong>
+</span>
+</div>
+</div>
+<!-- Right Column: Countdown Box & Call-to-actions -->
+<div class="lg:col-span-5 bg-[#F8FAFC] border border-slate-200/90 rounded-xl p-6 sm:p-7 flex flex-col justify-between shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
+<div>
+<div class="flex items-center justify-between mb-5">
+<h3 class="text-xs font-bold tracking-wider uppercase text-slate-700 font-display">NÖVBƏTİ MƏRHƏLƏYƏ (SƏSVERMƏ)</h3>
+<span class="flex h-2 w-2 relative">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+</span>
+</div>
+<!-- Live Countdown Grid -->
+<div class="grid grid-cols-4 gap-2 text-center">
+<div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+<span class="block text-2xl sm:text-3xl font-bold font-display text-slate-900" id="timer-days-2">10</span>
+<span class="block text-[10px] font-bold text-slate-700 tracking-wider mt-1 uppercase">GÜN</span>
+</div>
+<div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+<span class="block text-2xl sm:text-3xl font-bold font-display text-slate-900" id="timer-hours-2">08</span>
+<span class="block text-[10px] font-bold text-slate-700 tracking-wider mt-1 uppercase">SAAT</span>
+</div>
+<div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+<span class="block text-2xl sm:text-3xl font-bold font-display text-slate-900" id="timer-minutes-2">24</span>
+<span class="block text-[10px] font-bold text-slate-700 tracking-wider mt-1 uppercase">DƏQİQƏ</span>
+</div>
+<div class="bg-white p-3 rounded-lg border border-slate-200 shadow-sm">
+<span class="block text-2xl sm:text-3xl font-bold font-display text-amber-700" id="timer-seconds-2">48</span>
+<span class="block text-[10px] font-bold text-slate-700 tracking-wider mt-1 uppercase">SANİYƏ</span>
+</div>
+</div>
+<!-- Eligibility note -->
+<div class="mt-5 text-xs text-slate-600 bg-white/70 p-3 rounded-md border border-slate-200/60 leading-relaxed">
+<p>Daxil olan 84 anonim layihə texniki komissiya tərəfindən ilkin yoxlamadan keçirilir. Açıq səsvermə 28 oktyabrda başlayacaq.</p>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-7">
+<a class="inline-flex items-center justify-center px-4 py-3 bg-[#14181F] hover:bg-slate-800 text-white text-sm font-semibold rounded-lg shadow-sm hover:shadow transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900" href="#">
+                Yoxlama detalları
+              </a>
+<a class="inline-flex items-center justify-center px-4 py-3 bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 text-sm font-semibold rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-400" href="#">
+                Münsiflər haqqında
+              </a>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Slide Dots Indicator -->
+<div class="py-3 bg-white border-t border-slate-100 flex items-center justify-center gap-2">
+<button aria-label="Slayd 1" class="carousel-dot-btn w-6 h-1.5 rounded-full bg-[#B2431C] transition-all" onclick="goToSlide(0)"></button>
+<button aria-label="Slayd 2" class="carousel-dot-btn w-2 h-1.5 rounded-full bg-slate-300 hover:bg-slate-400 transition-all" onclick="goToSlide(1)"></button>
+<button aria-label="Slayd 3" class="carousel-dot-btn w-2 h-1.5 rounded-full bg-slate-300 hover:bg-slate-400 transition-all" onclick="goToSlide(2)"></button>
+</div>
+</section>
+<!-- END: HeroAnnouncementCard Carousel -->
+<!-- BEGIN: ActiveContestsSection -->
+<section class="mb-14">
+<!-- Section Header -->
+<div class="flex items-end justify-between mb-8 pb-3 border-b border-slate-200">
+<div>
+<h2 class="text-2xl sm:text-3xl font-bold font-display text-slate-900">
+            Hazırda açıq müsabiqələr
+          </h2>
+<p class="text-sm text-slate-700 mt-1">Abşeron və regionların memarlıq, dizayn və vizual irsinə töhfə verin</p>
+</div>
+<a class="text-sm font-semibold text-[#B2431C] hover:text-[#933514] flex items-center gap-1 group" href="#">
+          Bütün müsabiqələr
+          <svg class="w-4 h-4 transform group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+</a>
+</div>
+<!-- Contests Grid: 3 Rich Diversified Cards -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 1: Əmircanın simvolu -->
+<article class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-lg transition-all duration-200 flex flex-col justify-between group">
+<div>
+<!-- Poster Visual -->
+<div class="relative w-full h-56 bg-slate-100 overflow-hidden">
+<img alt="Əmircanın simvolu yaradıcılıq müsabiqəsi rəsmi afişası" class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPvwecKFst9F7gdb7FmQsbL0t8z5YxTCSUxv0RuQWQvfdfZYEGk4NfElNXB7XxJ5FUG9AzaonCTuCaMIemLU4PTmymnZ8zOwDfHoZXW-UcVc81JMmCaDtQGbRwmYHaQDC8ehanZOFUkoyuTsSVaT-SITKlTE8AZsEbUgZq2RgH1s_2dQJE9vRHvySiyZ9GdEHAOAn5N7kDwPnCnHcrUA3LXdu2CXytBe5ikh2olF-MTEv3hZNnNyUNsnRJwRB0kf0ouw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+<div class="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
+<span class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-[#FBECE6] text-[#B2431C] shadow-sm">
+                  ● Qəbul açıqdır
+                </span>
+<span class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-amber-500 text-white shadow-sm">
+                  Mükafatlı müsabiqə
+                </span>
+</div>
+</div>
+<!-- Content Area -->
+<div class="p-5">
+<span class="text-[11px] font-bold uppercase tracking-wider text-slate-700 block mb-1">
+                ABŞERONUN SİMVOLLARI
+              </span>
+<h3 class="text-xl font-bold font-display text-slate-900 group-hover:text-[#B2431C] transition-colors line-clamp-1">
+                “Əmircanın simvolu” yaradıcılıq müsabiqəsi
+              </h3>
+<p class="text-sm text-slate-700 mt-2 line-clamp-2 leading-relaxed">
+                Əmircanın zəngin tarixi, memarlığı və yaradıcı irsini müasir vizual dillə ifadə edən simvol və dizayn konseptlərinin hazırlanması üçün açıq müsabiqə.
+              </p>
+</div>
+</div>
+<div class="p-5 pt-0">
+<div class="flex items-center justify-between text-xs py-3 border-t border-slate-100 mb-3">
+<span class="text-slate-700">Son tarix:</span>
+<span class="font-bold text-slate-900">3 oktyabr 2026</span>
+</div>
+<a class="w-full py-2.5 px-4 bg-[#14181F] hover:bg-slate-800 text-white text-xs font-semibold rounded-lg flex items-center justify-center transition-colors" href="#">
+              Ətraflı
+            </a>
+</div>
+</article>
+<!-- Card 2: Şuşa Mədəni Kitabxanası Layihəsi -->
+<article class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-lg transition-all duration-200 flex flex-col justify-between group">
+<div>
+<!-- Poster Visual Container -->
+<div class="relative w-full h-56 bg-slate-900 overflow-hidden">
+<div class="w-full h-full bg-gradient-to-br from-slate-800 via-stone-800 to-amber-950 flex items-center justify-center text-slate-300 p-6 relative">
+<div class="absolute inset-0 opacity-20 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+<div class="text-center relative z-10">
+<span class="text-xs uppercase tracking-widest text-amber-200/80 font-display">Memarlıq &amp; İrs</span>
+<div class="text-2xl font-bold font-display text-white mt-1">ŞUŞA 2026</div>
+<div class="text-xs text-slate-300 mt-0.5 font-sans">Kitabxana və Oxu Mərkəzi</div>
+</div>
+</div>
+<div class="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
+<span class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-[#FBECE6] text-[#B2431C] shadow-sm">
+                  ● Qəbul açıqdır
+                </span>
+<span class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-slate-900 text-white shadow-sm">
+                  Memarlıq &amp; Bərpa
+                </span>
+</div>
+</div>
+<!-- Content Area -->
+<div class="p-5">
+<span class="text-[11px] font-bold uppercase tracking-wider text-slate-700 block mb-1">
+                MƏDƏNİYYƏT VƏ ŞƏHƏRSALMA
+              </span>
+<h3 class="text-xl font-bold font-display text-slate-900 group-hover:text-[#B2431C] transition-colors line-clamp-1">
+                Şuşa Mədəni Kitabxanası Memarlıq Layihəsi
+              </h3>
+<p class="text-sm text-slate-700 mt-2 line-clamp-2 leading-relaxed">
+                Tarixi mühitə inteqrasiya olunan müasir açıq kitabxana və gənclər üçün icma mərkəzinin konseptual memarlıq layihəsi.
+              </p>
+</div>
+</div>
+<div class="p-5 pt-0">
+<div class="flex items-center justify-between text-xs py-3 border-t border-slate-100 mb-3">
+<span class="text-slate-700">Son tarix:</span>
+<span class="font-bold text-slate-900">18 oktyabr 2026</span>
+</div>
+<a class="w-full py-2.5 px-4 bg-[#14181F] hover:bg-slate-800 text-white text-xs font-semibold rounded-lg flex items-center justify-center transition-colors" href="#">
+              Ətraflı
+            </a>
+</div>
+</article>
+<!-- Card 3: Şəki Şəbəkə Motivləri İnteryerlərdə -->
+<article class="bg-white rounded-xl border border-slate-200 border-dashed md:border-solid overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-lg transition-all duration-200 flex flex-col justify-between group">
+<div>
+<!-- Poster Visual Container -->
+<div class="relative w-full h-56 bg-slate-800 overflow-hidden">
+<div class="w-full h-full bg-gradient-to-tr from-sky-950 via-slate-900 to-indigo-950 flex items-center justify-center p-6 relative">
+<div class="absolute inset-0 opacity-15 bg-[radial-gradient(#38bdf8_1.5px,transparent_1.5px)] [background-size:20px_20px]"></div>
+<div class="text-center relative z-10">
+<span class="text-xs uppercase tracking-widest text-sky-300 font-display">Sənaye Dizaynı</span>
+<div class="text-2xl font-bold font-display text-white mt-1">ŞƏBƏKƏ MOTİVİ</div>
+<div class="text-xs text-slate-300 mt-0.5 font-sans">Müasir İnteryer Elementləri</div>
+</div>
+</div>
+<div class="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
+<span class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-amber-100 text-amber-900 shadow-sm">
+                  ● Texniki Yoxlama
+                </span>
+<span class="px-2.5 py-1 rounded-md text-[11px] font-bold bg-white/90 text-slate-800 shadow-sm">
+                  Sənaye Dizaynı
+                </span>
+</div>
+</div>
+<!-- Content Area -->
+<div class="p-5">
+<span class="text-[11px] font-bold uppercase tracking-wider text-slate-700 block mb-1">
+                TƏTBİQİ SƏNƏT VƏ MƏHSUL DİZAYNI
+              </span>
+<h3 class="text-xl font-bold font-display text-slate-900 group-hover:text-[#B2431C] transition-colors line-clamp-1">
+                Şəbəkə Motivləri Müasir İnteryerlərdə
+              </h3>
+<p class="text-sm text-slate-700 mt-2 line-clamp-2 leading-relaxed">
+                Klassik Şəki şəbəkə həndəsəsinin müasir mebel, işıqlandırma və arakəsmə elementlərinə adaptasiyası üzrə məhsul müsabiqəsi.
+              </p>
+</div>
+</div>
+<div class="p-5 pt-0">
+<div class="flex items-center justify-between text-xs py-3 border-t border-slate-100 mb-3">
+<span class="text-slate-700">Mərhələ bitməsi:</span>
+<span class="font-bold text-slate-900">28 oktyabr 2026</span>
+</div>
+<a class="w-full py-2.5 px-4 bg-[#14181F] hover:bg-slate-800 text-white text-xs font-semibold rounded-lg flex items-center justify-center transition-colors" href="#">
+              Ətraflı
+            </a>
+</div>
+</article>
+</div>
+</section>
+<!-- END: ActiveContestsSection -->
+<!-- BEGIN: AboutPryzmaBlock -->
+<section class="bg-white rounded-2xl border border-slate-200 p-8 sm:p-10 mb-12 shadow-sm">
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+<div class="max-w-3xl">
+<h2 class="text-2xl font-bold font-display text-slate-900 mb-2">
+            PRYZMA nədir?
+          </h2>
+<p class="text-slate-700 text-sm sm:text-base leading-relaxed">
+            Müxtəlif mövzularda açıq yaradıcılıq müsabiqələrinin keçirildiyi platformadır. Peşəkar olmaq şərt deyil — əsas olan mövzuya özünəməxsus baxış və orijinal ideyadır.
+          </p>
+</div>
+<div class="flex-shrink-0">
+<a class="inline-flex items-center justify-center px-6 py-3 border border-slate-900 text-sm font-semibold text-slate-900 rounded-lg hover:bg-slate-900 hover:text-white transition-all focus:outline-none focus:ring-2 focus:ring-slate-900" href="#">
+            PRYZMA haqqında
+          </a>
+</div>
+</div>
+</section>
+<!-- END: AboutPryzmaBlock -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: MainFooter -->
+<footer class="bg-white border-t border-slate-200 py-10 w-full mt-auto">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex flex-col md:flex-row items-center justify-between gap-6">
+<!-- Left: Branding & Copyright -->
+<div class="flex flex-col sm:flex-row items-center gap-3 text-center sm:text-left">
+<span class="font-display font-bold text-lg tracking-tight text-slate-900">PRYZMA.AZ</span>
+<span class="hidden sm:inline text-slate-300">|</span>
+<p class="text-xs text-slate-600">
+            Müəllif hüquqları © 2026. Bütün hüquqlar qorunur.
+          </p>
+</div>
+<!-- Right: Footer Navigation Links -->
+<div class="flex flex-wrap items-center justify-center gap-6 text-xs text-slate-700 font-medium">
+<a class="hover:text-[#B2431C] transition-colors" href="#">Qaydalar və Şərtlər</a>
+<a class="hover:text-[#B2431C] transition-colors" href="#">Məxfilik Siyasəti</a>
+<a class="hover:text-[#B2431C] transition-colors" href="#">Münsiflər Heyəti</a>
+<a class="hover:text-[#B2431C] transition-colors" href="#">Əlaqə</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- END: MainFooter -->
+<!-- BEGIN: CarouselAndCountdownScript -->
+<script data-purpose="carousel-and-countdown">
+    let currentSlide = 0;
+    const totalSlides = 3;
+
+    function updateCarouselUI() {
+      // Update slide visibility
+      for (let i = 0; i < totalSlides; i++) {
+        const slide = document.getElementById(`slide-${i}`);
+        const tabBtn = document.getElementById(`tab-btn-${i}`);
+        if (slide) {
+          if (i === currentSlide) {
+            slide.classList.add('active');
+          } else {
+            slide.classList.remove('active');
+          }
+        }
+        if (tabBtn) {
+          const dot = tabBtn.querySelector('span:first-child');
+          if (i === currentSlide) {
+            tabBtn.className = 'carousel-tab-btn px-3.5 py-1.5 rounded-lg text-xs font-bold font-display transition-all flex items-center gap-2 bg-white text-[#B2431C] border border-[#B2431C]/30 shadow-xs ring-1 ring-[#B2431C]/20';
+            if (dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-[#B2431C]';
+          } else {
+            tabBtn.className = 'carousel-tab-btn px-3.5 py-1.5 rounded-lg text-xs font-bold font-display transition-all flex items-center gap-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-transparent';
+            if (dot) dot.className = 'w-1.5 h-1.5 rounded-full bg-slate-400';
+          }
+        }
+      }
+
+      // Update bottom dots
+      const dots = document.querySelectorAll('.carousel-dot-btn');
+      dots.forEach((dot, idx) => {
+        if (idx === currentSlide) {
+          dot.className = 'carousel-dot-btn w-6 h-1.5 rounded-full bg-[#B2431C] transition-all';
+        } else {
+          dot.className = 'carousel-dot-btn w-2 h-1.5 rounded-full bg-slate-300 hover:bg-slate-400 transition-all';
+        }
+      });
+
+      // Update counter badge
+      const badge = document.getElementById('slide-counter-badge');
+      if (badge) {
+        badge.textContent = `0${currentSlide + 1} / 0${totalSlides}`;
+      }
+    }
+
+    function goToSlide(index) {
+      currentSlide = (index + totalSlides) % totalSlides;
+      updateCarouselUI();
+    }
+
+    function nextSlide() {
+      goToSlide(currentSlide + 1);
+    }
+
+    function prevSlide() {
+      goToSlide(currentSlide - 1);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Live Countdown Clocks for each slide
+      const timers = [
+        { days: 1, hours: 6, minutes: 10, seconds: 29 },
+        { days: 16, hours: 14, minutes: 45, seconds: 10 },
+        { days: 10, hours: 8, minutes: 24, seconds: 48 }
+      ];
+
+      setInterval(() => {
+        timers.forEach((t, i) => {
+          if (t.seconds > 0) {
+            t.seconds--;
+          } else {
+            t.seconds = 59;
+            if (t.minutes > 0) {
+              t.minutes--;
+            } else {
+              t.minutes = 59;
+              if (t.hours > 0) {
+                t.hours--;
+              } else {
+                t.hours = 23;
+                if (t.days > 0) t.days--;
+              }
+              const hrEl = document.getElementById(`timer-hours-${i}`);
+              if (hrEl) hrEl.textContent = t.hours.toString().padStart(2, '0');
+              const dayEl = document.getElementById(`timer-days-${i}`);
+              if (dayEl) dayEl.textContent = t.days.toString().padStart(2, '0');
+            }
+            const minEl = document.getElementById(`timer-minutes-${i}`);
+            if (minEl) minEl.textContent = t.minutes.toString().padStart(2, '0');
+          }
+          const secEl = document.getElementById(`timer-seconds-${i}`);
+          if (secEl) secEl.textContent = t.seconds.toString().padStart(2, '0');
+        });
+      }, 1000);
+    });
+  </script>
+<!-- END: CarouselAndCountdownScript -->
+</body></html>

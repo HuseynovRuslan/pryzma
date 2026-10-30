@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="az">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" sizes="256x256" href="/brand/prizma-mark.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/brand/prizma-mark-180.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#F3F4F0" />
+    <meta name="description" content="Yaradıcı layihələr və açıq müsabiqələr üçün vahid platforma." />
+    <title>PRIZMA</title>
+
+    <!--
+      What a link to this site looks like when it is shared, and which address counts as the real one.
+
+      These are the site's own defaults, and for most of what reads them they are the only answer there is:
+      Facebook, WhatsApp and the rest fetch this file and do not run the application, so every address shares the
+      same card. src/lib/canonical.ts corrects the canonical link and og:url once the page is running, which is
+      what a search engine — which does render — ends up indexing.
+
+      The addresses are absolute because a scraper resolves nothing, and the platform's name is written out
+      because this file is served before anything has asked the API what the platform is called.
+    -->
+    <link rel="canonical" href="https://pryzma.az/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="PRIZMA" />
+    <meta property="og:locale" content="az_AZ" />
+    <meta property="og:url" content="https://pryzma.az/" />
+    <meta property="og:title" content="PRIZMA — Bir mövzu, min baxış" />
+    <meta property="og:description" content="Yaradıcı layihələr və açıq müsabiqələr üçün vahid platforma" />
+    <meta property="og:image" content="https://pryzma.az/brand/prizma-og.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="PRIZMA" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="PRIZMA — Bir mövzu, min baxış" />
+    <meta name="twitter:description" content="Yaradıcı layihələr və açıq müsabiqələr üçün vahid platforma" />
+    <meta name="twitter:image" content="https://pryzma.az/brand/prizma-og.png" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

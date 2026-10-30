@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<html lang="az"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><meta content="mobile_tab" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,300..900;1,300..900&amp;family=Space+Grotesk:wght@300..700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{width:100vw;margin:0;padding:0;}body{overscroll-behavior:none;}.pb-safe{padding-bottom:env(safe-area-inset-bottom,0px);}.pt-safe{padding-top:env(safe-area-inset-top,0px);}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { colors: { "outline-variant": "#c2c7c9", "primary-container": "#0e1f23", "surface-canvas": "#F7F7F5", "border-hairline": "#EAECE6", "on-tertiary-fixed": "#271900", "on-secondary": "#ffffff", "on-secondary-fixed-variant": "#76330f", "surface-bright": "#f9f9ff", "on-error-container": "#93000a", "inverse-primary": "#b7cacf", "on-primary": "#ffffff", "surface-container-lowest": "#ffffff", "surface-subtle": "#F1F2EE", "secondary-container": "#fe9e72", "secondary-fixed": "#ffdbcd", "on-tertiary": "#ffffff", "surface-container-low": "#f1f3ff", "outline": "#73787a", "error-container": "#ffdad6", "surface-tint": "#506166", "primary": "#000203", "secondary-fixed-dim": "#ffb595", "surface": "#f9f9ff", "surface-card": "#FFFFFF", "on-secondary-fixed": "#360f00", "text-muted": "#64748B", "primary-fixed-dim": "#b7cacf", "on-tertiary-container": "#a97d2b", "surface-dim": "#d3daef", "on-error": "#ffffff", "on-surface-variant": "#424849", "secondary": "#944924", "accent-terracotta": "#C26D45", "tertiary": "#040200", "accent-amber": "#C99A45", "error": "#ba1a1a", "on-primary-container": "#76888c", "surface-container-high": "#e1e8fd", "tertiary-container": "#291a00", "on-tertiary-fixed-variant": "#5f4100", "background": "#f9f9ff", "primary-fixed": "#d3e6eb", "on-secondary-container": "#77330f", "surface-container": "#e9edff", "on-primary-fixed": "#0d1e22", "accent-sand": "#D9C5B2", "tertiary-fixed": "#ffdeaa", "surface-variant": "#dce2f7", "on-surface": "#141b2b", "tertiary-fixed-dim": "#f1be65", "inverse-surface": "#293040", "border-structural": "#E2E5DD", "on-background": "#141b2b", "inverse-on-surface": "#edf0ff", "on-primary-fixed-variant": "#39494e", "surface-container-highest": "#dce2f7" }, borderRadius: { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, spacing: { "gutter-sm": "1rem", "margin": "3rem", "space-xl": "2.5rem", "space-md": "1rem", "space-sm": "0.5rem", "margin-mobile": "1.25rem", "space-xs": "0.25rem", "gutter": "1.5rem", "space-lg": "1.5rem" }, fontFamily: { "body-md": ["Hanken Grotesk"], "headline-md": ["Space Grotesk"], "display-hero-mobile": ["Space Grotesk"], "label-lg": ["Space Grotesk"], "label-tabular": ["Space Grotesk"], "display-hero": ["Space Grotesk"], "body-sm": ["Hanken Grotesk"], "headline-sm": ["Space Grotesk"], "headline-lg-mobile": ["Space Grotesk"], "body-lg": ["Hanken Grotesk"], "headline-lg": ["Space Grotesk"], "label-md": ["Space Grotesk"] }, fontSize: { "body-md": ["15px", { lineHeight: "24px", fontWeight: "400" }], "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }], "display-hero-mobile": ["38px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700" }], "label-lg": ["14px", { lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "600" }], "label-tabular": ["22px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "700" }], "display-hero": ["56px", { lineHeight: "64px", letterSpacing: "-0.03em", fontWeight: "700" }], "body-sm": ["13px", { lineHeight: "20px", fontWeight: "400" }], "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }], "headline-lg-mobile": ["28px", { lineHeight: "34px", letterSpacing: "-0.01em", fontWeight: "700" }], "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }], "headline-lg": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700" }], "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.04em", fontWeight: "600" }] } } } }</script></head><body class="bg-surface-canvas text-on-surface font-body-md text-body-md flex flex-col min-h-screen"><header class="fixed top-0 w-full z-50 pt-safe bg-surface-canvas/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-margin-mobile flex items-center justify-between"><div class="flex items-center gap-space-sm"><span class="font-headline-sm text-headline-sm tracking-tight text-primary font-bold">PRYZMA<span class="text-accent-terracotta">.AZ</span></span></div><div class="flex items-center gap-space-sm"><div class="h-7 px-2.5 rounded-full bg-accent-terracotta/10 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-accent-terracotta animate-pulse"></span><span class="font-label-md text-label-md uppercase tracking-wider text-accent-terracotta">Səsvermə Açıq</span></div><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div></header><main class="flex flex-col relative w-full pt-16 pb-20 bg-surface-canvas min-h-screen"><div class="flex flex-col w-full px-margin-mobile pb-space-xl">
+<!-- Simulation Mode Floating Control Bar -->
+<!-- Live Dynamic Contextual Ribbon for Mobile -->
+<div class="w-full bg-surface-subtle text-primary py-2.5 px-3.5 rounded-lg mb-space-md flex items-center justify-between shadow-sm"><div class="flex items-center gap-2 min-w-0"><span class="material-symbols-outlined text-accent-terracotta text-[18px] shrink-0" id="ribbon-icon">how_to_vote</span><span class="font-label-md text-label-md truncate text-primary uppercase tracking-wider" id="ribbon-badge-text">İctimai Səsvermə • 2 Gün Qalıb</span></div><span class="font-body-sm text-body-sm text-on-surface-variant font-semibold text-[11px] shrink-0">Mərhələ 3 / 4</span></div>
+<!-- Primary Lifecycle Hero Card -->
+<section class="w-full bg-surface-card rounded-xl p-space-md shadow-md mb-space-md flex flex-col gap-space-md"><!-- Header of Card -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5 bg-surface-subtle px-2.5 py-1 rounded">
+<span class="material-symbols-outlined text-primary text-[15px]">timeline</span>
+<span class="font-label-md text-label-md uppercase tracking-wider text-primary">Müsabiqə Həyat Dövrü</span>
+</div>
+</div>
+<!-- Stepper Graphic with verified civic states -->
+<div class="w-full py-2">
+<div class="relative flex items-center justify-between w-full">
+<!-- Connecting Line Background -->
+<div class="absolute left-3 right-3 top-1/2 -translate-y-1/2 h-1 bg-surface-subtle rounded-full -z-0"></div>
+<!-- Filled Line up to Səsvermə (66%) -->
+<div class="absolute left-3 top-1/2 -translate-y-1/2 h-1 bg-primary rounded-full -z-0 w-2/3" id="stepper-progress-fill"></div>
+<!-- Step 1: Qəbul (Completed) -->
+<div class="flex flex-col items-center gap-1.5 z-10" id="step-node-1">
+<div class="node-circle w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center transition-all shadow-sm">
+<span class="material-symbols-outlined text-[15px] node-icon">check</span>
+</div>
+<span class="node-text font-label-md text-label-md text-primary font-semibold">Qəbul</span>
+</div>
+<!-- Step 2: Yoxlama (Completed) -->
+<div class="flex flex-col items-center gap-1.5 z-10" id="step-node-2">
+<div class="node-circle w-7 h-7 rounded-full bg-primary text-on-primary flex items-center justify-center transition-all shadow-sm">
+<span class="material-symbols-outlined text-[15px] node-icon">check</span>
+</div>
+<span class="node-text font-label-md text-label-md text-primary font-semibold">Yoxlama</span>
+</div>
+<!-- Step 3: Səsvermə (Active) -->
+<div class="flex flex-col items-center gap-1.5 z-10" id="step-node-3">
+<div class="node-circle w-7 h-7 rounded-full bg-accent-terracotta text-on-primary shadow-sm flex items-center justify-center transition-all">
+<span class="material-symbols-outlined text-[15px] node-icon">fiber_manual_record</span>
+</div>
+<span class="node-text font-label-md text-label-md text-accent-terracotta font-bold">Səsvermə</span>
+</div>
+<!-- Step 4: Nəticələr (Upcoming) -->
+<div class="flex flex-col items-center gap-1.5 z-10" id="step-node-4">
+<div class="node-circle w-7 h-7 rounded-full bg-surface-card text-on-surface-variant shadow-sm flex items-center justify-center transition-all">
+<span class="material-symbols-outlined text-[15px] node-icon">radio_button_unchecked</span>
+</div>
+<span class="node-text font-label-md text-label-md text-on-surface-variant font-normal">Nəticələr</span>
+</div>
+</div>
+</div>
+<!-- Active Stage State Messaging & Details -->
+<div class="bg-surface-subtle rounded-lg p-space-md flex flex-col gap-2">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-accent-terracotta animate-pulse shrink-0" id="stage-pulse"></span>
+<h2 class="font-headline-sm text-headline-sm text-primary" id="stage-title">İctimai səsvermə aktivdir</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant" id="stage-subtitle">Münsiflərin texniki seçimindən keçən anonim konseptləri qiymətləndirin və səs verin.</p>
+<!-- Tabular Civic Countdown Box -->
+<div class="mt-2 pt-2 bg-surface-card rounded p-3 shadow-sm flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant" id="countdown-label">Səsvermənin bitməsinə qalan vaxt:</span>
+</div>
+<div class="font-label-tabular text-label-tabular text-primary flex items-center gap-2" id="countdown-value">
+<span class="bg-surface-subtle px-2 py-0.5 rounded">02 gün</span> : 
+<span class="bg-surface-subtle px-2 py-0.5 rounded">23 saat</span> : 
+<span class="bg-surface-subtle px-2 py-0.5 rounded">59 dəqiqə</span>
+</div>
+</div>
+</div>
+<!-- Primary & Secondary CTA with Accessible 44px Touch Targets -->
+<div class="flex flex-col gap-2.5 w-full mt-1" id="stage-actions">
+<a class="w-full min-h-[44px] bg-primary text-on-primary font-headline-sm text-headline-sm font-semibold rounded px-4 py-2.5 flex items-center justify-center gap-2 hover:bg-accent-terracotta transition-colors shadow-sm" href="#submissions-container" id="primary-cta-btn">
+<span class="material-symbols-outlined text-[20px]" id="primary-cta-icon">how_to_vote</span>
+<span id="primary-cta-text">İndi səs ver</span>
+</a>
+<a class="w-full min-h-[44px] bg-surface-subtle text-primary font-headline-sm text-headline-sm font-semibold rounded px-4 py-2.5 flex items-center justify-center gap-2 hover:bg-outline-variant/30 transition-colors" href="#submissions-container" id="secondary-cta-btn">
+<span class="material-symbols-outlined text-[20px]">view_list</span>
+<span id="secondary-cta-text">İşlərə bax</span>
+</a>
+</div></section>
+<!-- Competition Poster Showcase Card -->
+<article class="w-full bg-surface-card rounded-xl overflow-hidden shadow-md mb-space-md flex flex-col">
+<div class="relative w-full aspect-[2.09/1] bg-primary-container overflow-hidden">
+<img alt="Müsabiqə Afişası: Əmircanın simvolunu yarat" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfZGIgWIsgfqYs40xELdzHNCSDYm4q2494PhriIt7Hdr6zs5VS1Ufczhhj7gSd5-7NmkYkyPA8fhLqeL9BDe2DiUOne8A3d_-wG8GxCUZA6Equui0sKm1MYW_DMd5njY6FpAy4FxTs7h5XppNe1TVZoKQOc2-Ubw0TXIT93SzZv8Ay1IjcWTa8ea2_4R_1o1XvH29zEBfXA_hJ2TNlqj-lPUVABx01MgtXZm-KyhbUfD47oyOaEzopY0cnU3dcXxuOgw"/>
+<div class="absolute top-2.5 left-2.5 bg-primary-container/90 backdrop-blur-sm text-on-primary px-2.5 py-1 rounded text-[11px] font-label-md uppercase tracking-wider flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-accent-amber"></span>
+<span>Açıq Şəhər Çağırışı</span>
+</div>
+</div>
+<div class="p-space-md flex flex-col gap-3">
+<div class="flex items-center gap-2">
+<span class="bg-surface-subtle text-primary font-label-md text-label-md px-2 py-0.5 rounded">Memarlıq &amp; İdentika</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">• 2026 Müsabiqəsi</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary">Əmircan Qəsəbəsinin Tarixi Mədəni İrsi üçün İdentik Simvol Müsabiqəsi</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2">Abşeron memarlıq məktəbinin incilərindən olan Əmircan üçün müasir, davamlı və yadda qalan identik vizual elementlərin və heykəltəraşlıq kompozisiyalarının yaradılması.</p>
+</div>
+</article>
+<!-- Finalist Works / Submissions Dynamic Showcase -->
+<section class="w-full bg-surface-card rounded-xl p-space-md shadow-md flex flex-col gap-space-md"><div class="flex items-center justify-between">
+<div>
+<h4 class="font-headline-sm text-headline-sm text-primary" id="works-list-title">Səsverməyə Təqdim Olunan Konseptlər</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant" id="works-list-sub">Anonim kodlaşdırılmış finalist layihələr</p>
+</div>
+</div>
+<!-- Finalist Cards / Submissions List (Strictly Anonymous) -->
+<div class="flex flex-col gap-3" id="submissions-container">
+<!-- Anonymous Item 1 -->
+<div class="bg-surface-subtle p-3.5 rounded-lg flex flex-col gap-2.5 border border-border-hairline shadow-sm">
+<div class="flex items-center justify-between">
+<span class="bg-primary text-on-primary font-label-md text-label-md px-2 py-0.5 rounded font-bold tracking-wider">Kod: EMR-01</span>
+<span class="font-label-md text-label-md text-accent-terracotta text-[11px] font-semibold work-stage-badge flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-accent-terracotta animate-pulse"></span> Səsvermə Açıqdır</span>
+</div>
+<div class="flex items-start gap-3">
+<div class="w-14 h-14 rounded bg-primary-container shrink-0 overflow-hidden flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[24px]">architecture</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-headline-sm text-headline-sm text-[16px] text-primary truncate">Neft &amp; Əncir: İki Xətt</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-0.5">Abşeron torpağının sənaye irsi ilə qədim bağ təbiətinin sintezini simvolizə edən minimalist heykəltəraşlıq formu.</p>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-1 border-t border-border-hairline/60">
+<button class="flex-1 min-h-[44px] bg-primary text-on-primary font-headline-sm text-[14px] font-semibold rounded px-3 py-2 flex items-center justify-center gap-1.5 hover:bg-accent-terracotta transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">how_to_vote</span>
+<span>Səs ver</span>
+</button>
+<button aria-label="Konsepti nəzərdən keçir" class="min-w-[44px] min-h-[44px] rounded flex items-center justify-center bg-surface-card text-primary shadow-sm hover:bg-surface-subtle transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+</div>
+<!-- Anonymous Item 2 -->
+<div class="bg-surface-subtle p-3.5 rounded-lg flex flex-col gap-2.5 border border-border-hairline shadow-sm">
+<div class="flex items-center justify-between">
+<span class="bg-primary text-on-primary font-label-md text-label-md px-2 py-0.5 rounded font-bold tracking-wider">Kod: EMR-02</span>
+<span class="font-label-md text-label-md text-accent-terracotta text-[11px] font-semibold work-stage-badge flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-accent-terracotta animate-pulse"></span> Səsvermə Açıqdır</span>
+</div>
+<div class="flex items-start gap-3">
+<div class="w-14 h-14 rounded bg-primary-container shrink-0 overflow-hidden flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[24px]">palette</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-headline-sm text-headline-sm text-[16px] text-primary truncate">Qədim Minarə Şəbəkəsi</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-0.5">Tarixi Əmircan məscidləri və minarə kərpic naxışlarının müasir şəhər mebelində və işıqlandırmasında tətbiqi.</p>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-1 border-t border-border-hairline/60">
+<button class="flex-1 min-h-[44px] bg-primary text-on-primary font-headline-sm text-[14px] font-semibold rounded px-3 py-2 flex items-center justify-center gap-1.5 hover:bg-accent-terracotta transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">how_to_vote</span>
+<span>Səs ver</span>
+</button>
+<button aria-label="Konsepti nəzərdən keçir" class="min-w-[44px] min-h-[44px] rounded flex items-center justify-center bg-surface-card text-primary shadow-sm hover:bg-surface-subtle transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+</div>
+<!-- Anonymous Item 3 -->
+<div class="bg-surface-subtle p-3.5 rounded-lg flex flex-col gap-2.5 border border-border-hairline shadow-sm">
+<div class="flex items-center justify-between">
+<span class="bg-primary text-on-primary font-label-md text-label-md px-2 py-0.5 rounded font-bold tracking-wider">Kod: EMR-03</span>
+<span class="font-label-md text-label-md text-accent-terracotta text-[11px] font-semibold work-stage-badge flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-accent-terracotta animate-pulse"></span> Səsvermə Açıqdır</span>
+</div>
+<div class="flex items-start gap-3">
+<div class="w-14 h-14 rounded bg-primary-container shrink-0 overflow-hidden flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[24px]">view_in_ar</span>
+</div>
+<div class="flex flex-col min-w-0 flex-1">
+<span class="font-headline-sm text-headline-sm text-[16px] text-primary truncate">Baxış Nöqtəsi • Portal 40</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant line-clamp-2 mt-0.5">Mərkəzi meydana baxan daş portal quruluşu: Qəsəbənin keçmişi və gələcəyini birləşdirən vizual ox.</p>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-1 border-t border-border-hairline/60">
+<button class="flex-1 min-h-[44px] bg-primary text-on-primary font-headline-sm text-[14px] font-semibold rounded px-3 py-2 flex items-center justify-center gap-1.5 hover:bg-accent-terracotta transition-colors shadow-sm" type="button">
+<span class="material-symbols-outlined text-[18px]">how_to_vote</span>
+<span>Səs ver</span>
+</button>
+<button aria-label="Konsepti nəzərdən keçir" class="min-w-[44px] min-h-[44px] rounded flex items-center justify-center bg-surface-card text-primary shadow-sm hover:bg-surface-subtle transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]">visibility</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Institutional Rigor Footnote: Clean Civic Standards -->
+<div class="bg-surface-subtle p-3 rounded flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-primary shrink-0">verified_user</span>
+<span class="font-body-sm text-body-sm text-[12px] leading-tight">Səsvermə müddətində işlərin müəllif məlumatları gizli saxlanılır. Aralıq səs nəticələri səsvermə bitənədək göstərilmir.</span>
+</div></section>
+</div>
+<script>
+  (function initLifecycleSimulation() {
+    const statesData = {
+      1: {
+        stepIndex: 1,
+        fillWidth: '0%',
+        ribbonBadge: 'Qəbul • 4 gün qaldı',
+        ribbonIcon: 'schedule',
+        stepCounter: 'Mərhələ 1 / 4',
+        title: 'İşlərin qəbulu davam edir',
+        subtitle: 'Əmircanın simvolunu yarat və milli layihədə müəllif kimi təqdim et.',
+        countdownLabel: 'Qəbulun bitməsinə:',
+        countdownValue: '<span class="bg-surface-subtle px-2 py-0.5 rounded">04 gün</span> : <span class="bg-surface-subtle px-2 py-0.5 rounded">12s</span> : <span class="bg-surface-subtle px-2 py-0.5 rounded">30d</span>',
+        primaryCta: 'İşini təqdim et',
+        primaryIcon: 'upload_file',
+        secondaryCta: 'Şərtlərə bax',
+        secondaryHidden: false,
+        pulseClass: 'bg-accent-terracotta',
+        worksTitle: 'Təqdim Olunmuş Layihələr',
+        worksSub: 'Müsabiqə komissiyası tərəfindən qeydə alınan ilkin işlər',
+        workBadgeText: 'Qeydiyyatdan keçdi',
+        workBadgeColor: 'text-accent-terracotta',
+        workBtnIcon: 'visibility',
+        stepper: [
+          { status: 'active', label: 'Qəbul' },
+          { status: 'inactive', label: 'Yoxlama' },
+          { status: 'inactive', label: 'Səsvermə' },
+          { status: 'inactive', label: 'Nəticələr' }
+        ]
+      },
+      2: {
+        stepIndex: 2,
+        fillWidth: '33%',
+        ribbonBadge: 'Yoxlama gedir',
+        ribbonIcon: 'hourglass_top',
+        stepCounter: 'Mərhələ 2 / 4',
+        title: 'İşlərin qəbulu başa çatdı',
+        subtitle: 'Təqdim olunan işlər ekspert komissiyası tərəfindən texniki və etik yoxlanılır.',
+        countdownLabel: 'Səsvermənin başlamasına:',
+        countdownValue: '<span class="bg-surface-subtle px-2 py-0.5 rounded">01 gün</span> : <span class="bg-surface-subtle px-2 py-0.5 rounded">18s</span> : <span class="bg-surface-subtle px-2 py-0.5 rounded">00d</span>',
+        primaryCta: 'İşlərə bax',
+        primaryIcon: 'grid_view',
+        secondaryCta: 'Münsif Heyəti',
+        secondaryHidden: false,
+        pulseClass: 'bg-accent-amber',
+        worksTitle: 'Yoxlamada Olan Əsərlər',
+        worksSub: 'Münsiflər tərəfindən kodlaşdırılmış və baxılan layihələr',
+        workBadgeText: 'Yoxlamadadır',
+        workBadgeColor: 'text-accent-amber',
+        workBtnIcon: 'visibility',
+        stepper: [
+          { status: 'completed', label: 'Qəbul' },
+          { status: 'active', label: 'Yoxlama' },
+          { status: 'inactive', label: 'Səsvermə' },
+          { status: 'inactive', label: 'Nəticələr' }
+        ]
+      },
+      3: {
+        stepIndex: 3,
+        fillWidth: '66%',
+        ribbonBadge: 'Səsvermə • Sabah',
+        ribbonIcon: 'notification_important',
+        stepCounter: 'Mərhələ 3 / 4 (Gözləmə)',
+        title: 'Səsvermə tezliklə başlayır',
+        subtitle: 'Əmircanın simvolunu birlikdə seçirik. Bütün finalist işlər təsdiqləndi.',
+        countdownLabel: 'Səsvermənin başlamasına:',
+        countdownValue: '<span class="bg-surface-subtle px-2 py-0.5 rounded">00 gün</span> : <span class="bg-surface-subtle px-2 py-0.5 rounded">14s</span> : <span class="bg-surface-subtle px-2 py-0.5 rounded">25d</span>',
+        primaryCta: 'İşlərə bax',
+        primaryIcon: 'preview',
+        secondaryCta: 'Bildiriş al',
+        secondaryHidden: false,
+        pulseClass: 'bg-accent-amber',
+        worksTitle: 'Təsdiqlənmiş Finalistlər',
+        worksSub: 'Sabah ictimai səsverməyə çıxarılacaq seçilmiş layihələr',
+        workBadgeText: 'Finalist • Hazır',
+        workBadgeColor: 'text-primary',
+        workBtnIcon: 'preview',
+        stepper: [
+          { status: 'completed', label: 'Qəbul' },
+          { status: 'completed', label: 'Yoxlama' },
+          { status: 'soon', label: 'Səsvermə (Tezliklə)' },
+          { status: 'inactive', label: 'Nəticələr' }
+        ]
+      },
+      4: {
+        stepIndex: 4,
+        fillWidth: '66%',
+        ribbonBadge: '● Səsvermə • 2 gün',
+        ribbonIcon: 'how_to_vote',
+        stepCounter: 'Mərhələ 3 / 4 (Canlı)',
+        title: '● Səsvermə başladı',
+        subtitle: 'Əmircanın simvolunu seç! Hər vətəndaş təsdiqlənmiş Asan İmza və ya FİN ilə 1 səs verə bilər.',
+        countdownLabel: 'Səsvermənin bitməsinə:',
+        countdownValue: '<span class="bg-surface-subtle px-2 py-0.5 rounded">02 gün</span> : <span class="bg-surface-subtle px-2 py-0.5 rounded">23s</span> : <span class="bg-surface-subtle px-2 py-0.5 rounded">59d</span>',
+        primaryCta: 'İndi səs ver',
+        primaryIcon: 'check_box',
+        secondaryCta: 'İşlərə bax',
+        secondaryHidden: false,
+        pulseClass: 'bg-accent-terracotta animate-pulse',
+        worksTitle: 'Səsverməyə Açıq İşlər',
+        worksSub: 'Bəyəndiyiniz layihəyə dərhal səs verin',
+        workBadgeText: 'Səsvermə Aktivdir',
+        workBadgeColor: 'text-accent-terracotta font-bold',
+        workBtnIcon: 'how_to_vote',
+        stepper: [
+          { status: 'completed', label: 'Qəbul' },
+          { status: 'completed', label: 'Yoxlama' },
+          { status: 'active', label: 'Səsvermə (Canlı)' },
+          { status: 'inactive', label: 'Nəticələr' }
+        ]
+      },
+      5: {
+        stepIndex: 5,
+        fillWidth: '100%',
+        ribbonBadge: 'Nəticələr tezliklə',
+        ribbonIcon: 'military_tech',
+        stepCounter: 'Mərhələ 4 / 4',
+        title: 'Səsvermə başa çatdı',
+        subtitle: 'Səslər qəbul edildi. Nəticələr audit və yekunlaşdırma protokollarından sonra açıqlanacaq.',
+        countdownLabel: 'Nəticələrin açıqlanmasına:',
+        countdownValue: '<span class="bg-surface-subtle px-2 py-0.5 rounded text-accent-terracotta font-bold">15 Aprel, 2025</span>',
+        primaryCta: 'Nəticələri gözlə',
+        primaryIcon: 'hourglass_empty',
+        secondaryCta: 'Hesabatı oxu',
+        secondaryHidden: true,
+        pulseClass: 'bg-primary-container',
+        worksTitle: 'Səsvermə Nəticəsi Gözlənilir',
+        worksSub: 'Bütün səslər blokçeyn əsaslı reyestrdə saxlanılmışdır',
+        workBadgeText: 'Audit olunur',
+        workBadgeColor: 'text-on-surface-variant',
+        workBtnIcon: 'verified',
+        stepper: [
+          { status: 'completed', label: 'Qəbul' },
+          { status: 'completed', label: 'Yoxlama' },
+          { status: 'completed', label: 'Səsvermə' },
+          { status: 'active', label: 'Nəticələr' }
+        ]
+      }
+    };
+
+    function updateView(phaseNum) {
+      const data = statesData[phaseNum];
+      if (!data) return;
+
+      // Update simulation pill button styles
+      const buttons = document.querySelectorAll('.phase-btn');
+      buttons.forEach(btn => {
+        const p = parseInt(btn.getAttribute('data-phase'), 10);
+        if (p === phaseNum) {
+          btn.className = 'phase-btn h-9 rounded text-center font-label-md text-label-md transition-all flex items-center justify-center bg-accent-terracotta text-on-primary font-bold shadow-sm';
+        } else {
+          btn.className = 'phase-btn h-9 rounded text-center font-label-md text-label-md transition-all flex items-center justify-center text-on-primary-container hover:bg-white/10';
+        }
+      });
+
+      // Update ribbon & header sync
+      const ribbonBadge = document.getElementById('ribbon-badge-text');
+      const ribbonIcon = document.getElementById('ribbon-icon');
+      if (ribbonBadge) ribbonBadge.textContent = data.ribbonBadge;
+      if (ribbonIcon) ribbonIcon.textContent = data.ribbonIcon;
+
+      // Stepper progress line width
+      const fillBar = document.getElementById('stepper-progress-fill');
+      if (fillBar) fillBar.style.width = data.fillWidth;
+
+      // Stepper node styles
+      for (let i = 1; i <= 4; i++) {
+        const nodeEl = document.getElementById('step-node-' + i);
+        if (!nodeEl) continue;
+        const circle = nodeEl.querySelector('.node-circle');
+        const icon = nodeEl.querySelector('.node-icon');
+        const text = nodeEl.querySelector('.node-text');
+        const stepState = data.stepper[i - 1];
+
+        text.textContent = stepState.label;
+
+        if (stepState.status === 'completed') {
+          circle.className = 'node-circle w-7 h-7 rounded-full bg-primary-container text-on-primary flex items-center justify-center transition-all shadow-sm';
+          icon.textContent = 'check';
+          text.className = 'node-text font-label-md text-label-md text-primary font-semibold';
+        } else if (stepState.status === 'active') {
+          circle.className = 'node-circle w-7 h-7 rounded-full bg-accent-terracotta text-on-primary flex items-center justify-center transition-all shadow-sm';
+          icon.textContent = 'fiber_manual_record';
+          text.className = 'node-text font-label-md text-label-md text-accent-terracotta font-bold';
+        } else if (stepState.status === 'soon') {
+          circle.className = 'node-circle w-7 h-7 rounded-full bg-accent-amber text-on-primary flex items-center justify-center transition-all shadow-sm';
+          icon.textContent = 'schedule';
+          text.className = 'node-text font-label-md text-label-md text-accent-amber font-semibold';
+        } else {
+          circle.className = 'node-circle w-7 h-7 rounded-full bg-surface-card text-on-surface-variant shadow-sm flex items-center justify-center transition-all';
+          icon.textContent = 'radio_button_unchecked';
+          text.className = 'node-text font-label-md text-label-md text-on-surface-variant font-normal';
+        }
+      }
+
+      // Card Content Details
+      const counterEl = document.getElementById('step-counter');
+      if (counterEl) counterEl.textContent = data.stepCounter;
+
+      const titleEl = document.getElementById('stage-title');
+      if (titleEl) titleEl.textContent = data.title;
+
+      const subtitleEl = document.getElementById('stage-subtitle');
+      if (subtitleEl) subtitleEl.textContent = data.subtitle;
+
+      const pulseEl = document.getElementById('stage-pulse');
+      if (pulseEl) pulseEl.className = 'w-2.5 h-2.5 rounded-full shrink-0 ' + data.pulseClass;
+
+      const countdownLabelEl = document.getElementById('countdown-label');
+      if (countdownLabelEl) countdownLabelEl.textContent = data.countdownLabel;
+
+      const countdownValEl = document.getElementById('countdown-value');
+      if (countdownValEl) countdownValEl.innerHTML = data.countdownValue;
+
+      // CTA Buttons
+      const primaryCta = document.getElementById('primary-cta-btn');
+      const primaryIcon = document.getElementById('primary-cta-icon');
+      const primaryText = document.getElementById('primary-cta-text');
+      const secondaryCta = document.getElementById('secondary-cta-btn');
+      const secondaryText = document.getElementById('secondary-cta-text');
+
+      if (primaryText) primaryText.textContent = data.primaryCta;
+      if (primaryIcon) primaryIcon.textContent = data.primaryIcon;
+
+      if (secondaryCta) {
+        if (data.secondaryHidden) {
+          secondaryCta.classList.add('hidden');
+        } else {
+          secondaryCta.classList.remove('hidden');
+          if (secondaryText) secondaryText.textContent = data.secondaryCta;
+        }
+      }
+
+      // Works Showcase section sync
+      const worksTitleEl = document.getElementById('works-list-title');
+      const worksSubEl = document.getElementById('works-list-sub');
+      if (worksTitleEl) worksTitleEl.textContent = data.worksTitle;
+      if (worksSubEl) worksSubEl.textContent = data.worksSub;
+
+      const badges = document.querySelectorAll('.work-stage-badge');
+      badges.forEach(b => {
+        b.textContent = data.workBadgeText;
+        b.className = 'font-label-md text-label-md text-[11px] work-stage-badge ' + data.workBadgeColor;
+      });
+
+      const actionBtns = document.querySelectorAll('.work-action-btn span');
+      actionBtns.forEach(icon => {
+        icon.textContent = data.workBtnIcon;
+      });
+    }
+
+    // Attach click listeners to all phase control buttons
+    const phaseButtons = document.querySelectorAll('.phase-btn');
+    phaseButtons.forEach(btn => {
+      btn.addEventListener('click', function () {
+        const phaseNum = parseInt(this.getAttribute('data-phase'), 10);
+        updateView(phaseNum);
+      });
+    });
+  })();
+</script></main><nav class="fixed bottom-0 w-full z-50 pb-safe bg-surface-canvas/90 backdrop-blur-xl shadow-[0_-1px_8px_rgba(0,0,0,0.04)]" data-active-classes="text-primary font-headline-sm font-semibold"><div class="flex justify-around items-center h-20 px-2"><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] gap-0.5 text-on-surface-variant hover:text-on-surface transition-colors" data-path="musabiqeler" href="#"><span class="material-symbols-outlined text-[22px]">trophy</span><span class="font-label-md text-label-md tracking-normal">Müsabiqələr</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] gap-0.5 text-primary font-semibold transition-colors" data-path="sesverme" href="#"><span class="material-symbols-outlined text-[22px] text-accent-terracotta">how_to_vote</span><span class="font-label-md text-label-md tracking-normal">Səsvermə</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] gap-0.5 text-on-surface-variant hover:text-on-surface transition-colors" data-path="neticeler" href="#"><span class="material-symbols-outlined text-[22px]">analytics</span><span class="font-label-md text-label-md tracking-normal">Nəticələr</span></a><a class="flex flex-col items-center justify-center min-w-[64px] min-h-[44px] gap-0.5 text-on-surface-variant hover:text-on-surface transition-colors" data-path="profil" href="#"><span class="material-symbols-outlined text-[22px]">account_circle</span><span class="font-label-md text-label-md tracking-normal">Profil</span></a></div></nav></body></html>

@@ -1,0 +1,195 @@
+/* ---- The stage carousel ----
+   The card around the stage hero when the site leads with more than one competition: a bar of tabs and arrows
+   above it, dots below. It borrows the hero's own --st-* tokens, so the two cannot drift apart. */
+
+.stagecar {
+  background: var(--st-card);
+  border: 1px solid var(--st-structural);
+  border-radius: var(--st-radius);
+  box-shadow: var(--st-shadow);
+  overflow: hidden;
+}
+
+.stagecar__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  background: var(--st-subtle);
+  border-bottom: 1px solid var(--st-hairline);
+}
+
+.stagecar__tabs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  min-width: 0;
+}
+
+.stagecar__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  max-width: 100%;
+  padding: 4px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--st-radius-sm);
+  background: none;
+  color: var(--st-muted);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background var(--t-fast),
+    color var(--t-fast),
+    border-color var(--t-fast);
+}
+
+.stagecar__tab:hover {
+  background: var(--st-card);
+  color: var(--ink);
+}
+
+.stagecar__tab.is-current {
+  border-color: color-mix(in srgb, var(--st-terracotta) 30%, transparent);
+  background: var(--st-card);
+  color: var(--st-terracotta);
+}
+
+.stagecar__tab-dot {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+.stagecar__tab.is-current .stagecar__tab-dot {
+  opacity: 1;
+}
+
+.stagecar__tab-n {
+  flex: none;
+  opacity: 0.75;
+}
+
+/* A long competition name is cut rather than allowed to wrap the whole bar onto another line. */
+.stagecar__tab-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stagecar__controls {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin-left: auto;
+}
+
+.stagecar__count {
+  padding: 4px 10px;
+  border: 1px solid var(--st-structural);
+  border-radius: var(--st-radius-sm);
+  background: var(--st-card);
+  color: var(--st-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.stagecar__arrows {
+  display: flex;
+  gap: 6px;
+}
+
+.stagecar__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border: 1px solid var(--st-structural);
+  border-radius: var(--st-radius-sm);
+  background: var(--st-card);
+  color: var(--ink-2);
+  cursor: pointer;
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast),
+    color var(--t-fast);
+}
+
+.stagecar__arrow:hover {
+  border-color: var(--ink);
+  color: var(--ink);
+}
+
+.stagecar__dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  padding: 0 var(--s-4) var(--s-4);
+}
+
+.stagecar__dot {
+  width: 8px;
+  height: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--st-structural);
+  cursor: pointer;
+  transition:
+    width var(--t-fast),
+    background var(--t-fast);
+}
+
+.stagecar__dot:hover {
+  background: var(--st-muted);
+}
+
+.stagecar__dot.is-current {
+  width: 24px;
+  background: var(--st-terracotta);
+}
+
+/* On a phone the bar would wrap into three rows of tabs, which is a menu, not a bar: the tabs scroll sideways
+   instead and the arrows stay put, so stepping through never moves the controls under the reader's thumb. */
+@media (max-width: 639px) {
+  .stagecar__bar {
+    flex-wrap: nowrap;
+    gap: var(--s-2);
+  }
+
+  .stagecar__tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .stagecar__tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .stagecar__tab {
+    flex: none;
+  }
+
+  .stagecar__tab-name {
+    max-width: 8.5rem;
+  }
+
+  .stagecar__count {
+    display: none;
+  }
+}

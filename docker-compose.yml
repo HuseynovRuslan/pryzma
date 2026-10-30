@@ -1,0 +1,29 @@
+# Optional local PostgreSQL for development — production does not depend on Docker or on this file.
+# The password is never stored here: copy .env.example to .env (git-ignored) and set POSTGRES_PASSWORD.
+#
+#   docker compose up -d postgres
+#   dotnet user-secrets set "ConnectionStrings:Meydan" \
+#     "Host=localhost;Port=55433;Database=meydan_dev;Username=meydan;Password=<POSTGRES_PASSWORD>" --project backend/src/Meydan.Api
+#   dotnet user-secrets set "TestDatabase:AdminConnectionString" \
+#     "Host=localhost;Port=55433;Database=postgres;Username=meydan;Password=<POSTGRES_PASSWORD>" --project backend/tests/Meydan.Api.Tests
+services:
+  postgres:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: meydan
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: meydan_dev
+      POSTGRES_INITDB_ARGS: --encoding=UTF8 --locale=C
+    ports:
+      - "127.0.0.1:55433:5432"
+    volumes:
+      - meydan-pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U meydan -d meydan_dev"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  meydan-pg:

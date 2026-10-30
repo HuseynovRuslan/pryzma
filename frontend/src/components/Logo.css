@@ -1,0 +1,19 @@
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+}
+
+/* Height-driven: the picture keeps its own proportions whatever the header does. */
+.wordmark__image {
+  display: block;
+  width: auto;
+  height: 22px;
+}
+
+@media (min-width: 1024px) {
+  .wordmark__image {
+    height: 26px;
+  }
+}

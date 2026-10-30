@@ -1,0 +1,443 @@
+/* The jury's catalog (four works to an A4 page, the evaluation form itself) and the internal ranking — on top of
+   print.css (A4 sheets, head, foot). */
+
+.jp-status {
+  max-width: 210mm;
+  margin: 0 auto var(--s-4);
+}
+
+/* ---- The catalog ---- */
+
+.jp-sheet {
+  padding: 9mm 10mm 7mm;
+}
+
+/* The head of every page: the mark, the document, the instruction and the key of the score fields. */
+.jp-head {
+  flex: none;
+  display: grid;
+  gap: 1.5mm;
+  margin-bottom: 3.5mm;
+  padding-bottom: 2.5mm;
+  border-bottom: 0.5mm solid var(--ink);
+}
+
+.jp-head__top {
+  display: flex;
+  align-items: center;
+  gap: 3mm;
+  font-size: 9pt;
+}
+
+.jp-head__brand {
+  flex: none;
+  padding: 0.7mm 2.2mm 0.5mm;
+  background: var(--ink);
+  color: var(--saffron);
+  font-family: var(--font-display);
+  font-size: 8.5pt;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.jp-head__doc {
+  flex: 1;
+  min-width: 0;
+  font-weight: 700;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.jp-head__page {
+  flex: none;
+  font-weight: 700;
+}
+
+.jp-head__rule {
+  margin: 0;
+  font-size: 8.5pt;
+  line-height: 1.3;
+  color: var(--pr-ink-2);
+}
+
+.jp-head__legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1mm 6mm;
+}
+
+.jp-legend {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1mm 4.5mm;
+  font-size: 9pt;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.jp-legend__item {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1.2mm;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.jp-legend__key,
+.jp-mark__key {
+  flex: none;
+  min-width: 6.5mm;
+  padding: 0.2mm 1mm 0;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-align: center;
+}
+
+.jp-legend--none {
+  color: #8a1c12;
+}
+
+.jp-head__key {
+  font-size: 7.5pt;
+  color: var(--pr-muted);
+}
+
+.jp-grid {
+  flex: 1 1 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 5mm;
+}
+
+/* One work: its place and number, title, picture, public vote, then a score field per juror. The picture takes what
+   the rest leaves — the text and the fields are never cut. */
+.jp-card {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8mm;
+  padding: 2.6mm 3mm 3mm;
+  border: 0.3mm solid var(--pr-rule);
+  border-top: 1.2mm solid var(--ink);
+  break-inside: avoid;
+}
+
+.jp-card__top {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2mm;
+}
+
+.jp-card__place {
+  display: inline-flex;
+  align-items: center;
+  gap: 1.5mm;
+  min-width: 0;
+}
+
+.jp-card__pos {
+  flex: none;
+  padding: 0.6mm 2mm 0.4mm;
+  background: var(--ink);
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 10.5pt;
+  font-weight: 800;
+}
+
+.jp-card__tie {
+  font-size: 7.5pt;
+  font-weight: 700;
+  color: var(--pr-ink-2);
+  white-space: nowrap;
+}
+
+.jp-card__no {
+  flex: none;
+  font-family: var(--font-display);
+  font-size: 12pt;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.jp-card__title {
+  flex: none;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 11pt;
+  font-weight: 700;
+  line-height: 1.15;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.jp-card__title--long {
+  font-size: 9.5pt;
+}
+
+.jp-card__fig {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 18mm;
+  display: grid;
+  margin: 0;
+  background: var(--pr-soft);
+  place-items: center;
+  overflow: hidden;
+}
+
+/* Fitted into whatever the card leaves, whole — never cropped, whatever the picture's shape. */
+.jp-card__fig img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.jp-card__badge {
+  position: absolute;
+  left: 1.5mm;
+  bottom: 1.5mm;
+  padding: 0 1.5mm;
+  border: 0.25mm solid #000;
+  background: #fff;
+  font-size: 7pt;
+  font-weight: 700;
+}
+
+.jp-card__vote {
+  flex: none;
+  display: grid;
+  gap: 1mm;
+}
+
+.jp-card__counts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0 2mm;
+  margin: 0;
+  font-size: 8.5pt;
+}
+
+.jp-card__counts strong {
+  font-family: var(--font-display);
+  font-size: 11.5pt;
+}
+
+.jp-card__invalid {
+  color: #a32c23;
+  font-weight: 700;
+}
+
+.jp-card__none {
+  color: var(--pr-muted);
+}
+
+.jp-card .vbar {
+  height: 2.6mm;
+}
+
+/* The score fields: the key above, a box large enough for a handwritten 10. */
+.jp-marks {
+  flex: none;
+  display: grid;
+  gap: 1mm 2.2mm;
+  padding-top: 1.6mm;
+  border-top: 0.3mm solid var(--ink);
+}
+
+.jp-marks__caption {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 7.5pt;
+  font-weight: 700;
+  color: var(--pr-ink-2);
+}
+
+.jp-mark {
+  display: grid;
+  justify-items: start;
+  gap: 0.6mm;
+  min-width: 0;
+}
+
+.jp-mark__key {
+  font-size: 8pt;
+}
+
+.jp-mark__box {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  height: 12mm;
+  border: 0.4mm solid var(--ink);
+  background: #fff;
+}
+
+.jp-marks--rows-2 .jp-mark__box {
+  height: 10.5mm;
+}
+
+.jp-marks--rows-3 .jp-mark__box {
+  height: 9mm;
+}
+
+.jp-foot {
+  font-size: 7.5pt;
+}
+
+/* On a phone the A4 sheets are shown whole, scaled down, instead of a strip to scroll sideways. Screen only. */
+@media screen and (max-width: 40rem) {
+  .jp-pages .pr-sheet {
+    zoom: 0.46;
+  }
+}
+
+@media screen and (min-width: 40.01rem) and (max-width: 52rem) {
+  .jp-pages .pr-sheet {
+    zoom: 0.8;
+  }
+}
+
+@media print {
+  /* The loading line is for the screen: on paper it would push the first sheet onto a page of its own. */
+  .jp-status {
+    display: none !important;
+  }
+}
+
+/* ---- The internal ranking ---- */
+
+.jp-scores {
+  padding: 12mm 14mm 10mm;
+}
+
+.jp-scores__head {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1.5mm 6mm;
+  margin-bottom: 3mm;
+  padding-bottom: 2.5mm;
+  border-bottom: 0.4mm solid #000;
+}
+
+.jp-scores__doc {
+  margin: 0;
+  font-size: 9pt;
+  color: var(--pr-ink-2);
+}
+
+.jp-scores__juror {
+  margin: 1mm 0 0;
+  font-size: 13pt;
+}
+
+.jp-scores__page {
+  align-self: start;
+  font-size: 9pt;
+  font-weight: 700;
+}
+
+.jp-scores__rule {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 9pt;
+  font-weight: 700;
+}
+
+.jp-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 9pt;
+}
+
+.jp-table th {
+  padding: 1.5mm 1.5mm;
+  border-bottom: 0.4mm solid #000;
+  font-size: 8pt;
+  text-align: left;
+}
+
+.jp-table td {
+  height: 6.6mm;
+  padding: 0 1.5mm;
+  border-bottom: 0.25mm solid var(--pr-rule);
+  vertical-align: middle;
+}
+
+.jp-table tbody tr:nth-child(even) td {
+  background: #f7f7f7;
+}
+
+.jp-table__n {
+  width: 9mm;
+  font-weight: 700;
+  text-align: right;
+}
+
+.jp-table__ref {
+  width: 18mm;
+  font-size: 8.5pt;
+  font-weight: 700;
+}
+
+.jp-table__title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jp-table__avg {
+  width: 30mm;
+  text-align: right;
+}
+
+.jp-table__count {
+  width: 18mm;
+  text-align: center;
+}
+
+.jp-table__tie {
+  width: 26mm;
+  font-size: 8pt;
+  font-weight: 700;
+}
+
+.jp-sum {
+  color: var(--pr-muted);
+  font-size: 7.5pt;
+}
+
+.jp-scores__foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 6mm;
+  margin-top: auto;
+  padding-top: 4mm;
+  font-size: 9pt;
+}
+
+.jp-scores__cont,
+.jp-scores__id {
+  color: var(--pr-muted);
+  white-space: nowrap;
+}
+
+.jp-ranking tbody tr.is-tied td {
+  background: #fff4d6;
+}

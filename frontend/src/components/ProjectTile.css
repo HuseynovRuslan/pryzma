@@ -1,0 +1,190 @@
+.project-tile {
+  min-width: 0;
+}
+
+.project-tile__link {
+  display: grid;
+  gap: var(--s-5);
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.project-tile__link:focus-visible {
+  box-shadow: none;
+  outline: 3px solid var(--ink);
+  outline-offset: 6px;
+}
+
+/* The plate: the project's own image, or — without one — its colour field. One chamfered corner. */
+.project-tile__plate {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: clamp(240px, 42vw, 360px);
+  padding: var(--s-5);
+  overflow: hidden;
+  background: var(--accent);
+  color: var(--on-accent);
+  clip-path: polygon(0 0, calc(100% - var(--chamfer)) 0, 100% var(--chamfer), 100% 100%, 0 100%);
+  isolation: isolate;
+}
+
+.project-tile__cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  transition: transform 600ms var(--ease-out);
+}
+
+/* With an image: ink behind it while it loads, the photo framed a little below centre (where people and
+   streets usually are), and the project's colour reduced to a thin line along the bottom. */
+.project-tile__plate--cover {
+  background: var(--ink);
+}
+
+.project-tile__plate--cover::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  background: var(--accent);
+}
+
+.project-tile__cover {
+  object-position: 50% 58%;
+}
+
+/* A neutral scrim only where the name sits — the photograph stays a photograph, never a colour block. */
+.project-tile__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(
+    to top,
+    rgba(16, 38, 43, 0.8) 0%,
+    rgba(16, 38, 43, 0.42) 32%,
+    rgba(16, 38, 43, 0) 60%
+  );
+}
+
+.project-tile__plate--cover .project-tile__index,
+.project-tile__plate--cover .project-tile__name {
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(16, 38, 43, 0.45);
+}
+
+.project-tile__index {
+  position: absolute;
+  top: var(--s-5);
+  left: var(--s-5);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-stretch: 120%;
+  font-size: var(--fs-400);
+  line-height: 1;
+}
+
+.project-tile__name {
+  font-size: var(--fs-800);
+  font-weight: 800;
+  font-stretch: 72%;
+  line-height: var(--lh-tight);
+  letter-spacing: -0.015em;
+  max-width: 12ch;
+}
+
+.project-tile__body {
+  display: grid;
+  gap: var(--s-4);
+  align-content: start;
+}
+
+.project-tile__desc {
+  font-size: var(--fs-400);
+  color: var(--ink-2);
+  max-width: 48ch;
+}
+
+.project-tile__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-5);
+  margin: 0;
+  font-size: var(--fs-200);
+  font-weight: 600;
+}
+
+.project-tile__facts dd {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+.project-tile__open::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--saffron);
+  border: 1.5px solid var(--ink);
+}
+
+.project-tile__cta {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.3em;
+}
+
+.project-tile__link:hover .project-tile__cta {
+  text-decoration-color: var(--saffron);
+  text-decoration-thickness: 3px;
+}
+
+.project-tile__link:hover .motif {
+  transform: scale(1.03);
+}
+
+.project-tile__link:hover .project-tile__cover {
+  transform: scale(1.03);
+}
+
+/* Feature: the plate and the body sit side by side on wide screens. */
+@media (min-width: 768px) {
+  .project-tile--feature .project-tile__link {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: var(--col-gap);
+  }
+
+  .project-tile--feature .project-tile__plate {
+    min-height: clamp(360px, 38vw, 520px);
+    padding: var(--s-6);
+  }
+
+  .project-tile--feature .project-tile__index {
+    top: var(--s-6);
+    left: var(--s-6);
+  }
+
+  .project-tile--feature .project-tile__body {
+    align-content: end;
+    padding-bottom: var(--s-2);
+  }
+
+  .project-tile--feature .project-tile__desc {
+    font-size: var(--fs-500);
+    line-height: 1.45;
+    color: var(--ink);
+  }
+}

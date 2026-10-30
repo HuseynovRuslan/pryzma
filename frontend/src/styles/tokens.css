@@ -1,0 +1,96 @@
+/*
+  MEYDAN design tokens.
+
+  Palette — "a public square in Baku":
+    paper    #F3F4F0  cool limestone white, the ground everything stands on
+    stone    #E3E5DF  paving-slab grey for quiet fields and hover states
+    ink      #10262B  Caspian ink: all text, rules and primary actions
+    saffron  #F0B323  signal colour, used sparingly: "open now", focus on dark, the mark
+    Project accents come from data (Project.AccentColor) and only colour that project's world.
+
+  Type:
+    Archivo (variable weight + width 62–125%) — display. Condensed for headlines, extended for the wordmark.
+    Schibsted Grotesk — text. Sturdy, newsroom-institutional.
+    Both were chosen by rendering, not by spec sheets: every Azerbaijani letter (Ə ə I ı İ i Ğ ğ Ş ş Ç ç Ö ö Ü ü)
+    comes from the family itself at every weight used, and accented letters condense exactly like their base
+    letter. Anybody (the Phase 1 display face) failed: its capital Ə is drawn at x-height and does not follow
+    the width axis. Re-check with `npm run e2e:glyphs` before changing either face.
+*/
+:root {
+  /* Colour */
+  --paper: #f3f4f0;
+  --paper-raised: #fbfbf9;
+  --stone: #e3e5df;
+  --stone-2: #d6d9d1;
+  --line: #c3c8bf;
+  --ink: #10262b;
+  --ink-hover: #1d3b42;
+  --ink-2: #3e5157;
+  --muted: #5b6b70;
+  --saffron: #f0b323;
+  --saffron-soft: #f8e3a8;
+  --danger: #b42318;
+  --danger-soft: #fbe9e7;
+  --success: #1e6f48;
+  --success-soft: #e3f1e9;
+
+  /* Fallback accent until a project sets its own */
+  --accent: #10262b;
+  --on-accent: #f3f4f0;
+
+  /* Type */
+  --font-display: 'Archivo Variable', 'Arial Narrow', system-ui, sans-serif;
+  --font-text: 'Schibsted Grotesk Variable', 'Segoe UI', system-ui, sans-serif;
+
+  --fs-100: 0.8125rem;
+  --fs-200: 0.875rem;
+  --fs-300: 1rem;
+  --fs-400: 1.125rem;
+  --fs-500: 1.375rem;
+  --fs-600: clamp(1.5rem, 1.2rem + 1.2vw, 2.125rem);
+  --fs-700: clamp(2rem, 1.35rem + 2.8vw, 3.5rem);
+  --fs-800: clamp(2.5rem, 1.4rem + 4.8vw, 5.5rem);
+  --fs-900: clamp(3.1rem, 1.2rem + 8.4vw, 9.75rem);
+
+  --lh-tight: 0.92;
+  --lh-heading: 1.08;
+  --lh-text: 1.55;
+
+  /* Space (4px base) */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4rem;
+  --s-9: 6rem;
+  --s-10: 8rem;
+
+  --section-gap: clamp(4rem, 2.5rem + 6vw, 8rem);
+
+  /* Layout */
+  --max: 1360px;
+  --gutter: clamp(1rem, 0.4rem + 3vw, 3rem);
+  --header-h: 64px;
+  --col-gap: clamp(1rem, 0.5rem + 1.6vw, 1.75rem);
+
+  /* Shape — deliberately small; tiles use a chamfer instead of rounding */
+  --r-1: 2px;
+  --r-2: 4px;
+  --chamfer: clamp(18px, 2.4vw, 36px);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.1, 1);
+  --t-fast: 140ms;
+  --t-med: 260ms;
+
+  --focus: 0 0 0 2px var(--paper), 0 0 0 4.5px var(--ink);
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --header-h: 76px;
+  }
+}

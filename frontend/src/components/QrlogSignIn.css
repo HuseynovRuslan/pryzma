@@ -1,0 +1,96 @@
+.qrlog {
+  display: grid;
+  gap: var(--s-3);
+}
+
+/* QRLog's own colours on a white chip, so the logo reads as its brand and not as one of MEYDAN's buttons.
+   The wordmark stands in for the word "QRLog", so it sits a word space from the text, not an icon's gap. */
+.qrlog__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4em;
+  width: 100%;
+  background: #fff;
+  color: #0f1b2d;
+  border: 2px solid #0f1b2d;
+}
+
+.qrlog__btn:hover:not(:disabled),
+.qrlog__btn:focus-visible {
+  background: #eef3f9;
+  color: #0f1b2d;
+}
+
+.qrlog__btn:disabled {
+  opacity: 0.7;
+}
+
+/* The wordmark as an image: never squeezed, never a stray underline or baseline gap. */
+.qrlog-logo {
+  flex: none;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* On a phone: where the tap leads, right under the button. */
+.qrlog__hint {
+  margin: calc(-1 * var(--s-2)) 0 0;
+  text-align: center;
+  font-size: var(--fs-200);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.qrlog__note {
+  font-size: var(--fs-200);
+  color: var(--ink-2);
+}
+
+.qrlog__note a {
+  font-weight: 600;
+}
+
+.qrlog__or {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  color: var(--ink-2);
+  font-size: var(--fs-200);
+  margin-top: var(--s-2);
+}
+
+.qrlog__or::before,
+.qrlog__or::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line, rgba(16, 38, 43, 0.2));
+}
+
+/* The account page's "linked sign-in methods" card. */
+.logins {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.logins__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
+}
+
+.logins__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-weight: 600;
+}
+
+/* Two ways forward, side by side where there is room. */
+.auth-form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+}

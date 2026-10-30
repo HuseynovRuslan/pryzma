@@ -1,0 +1,373 @@
+/*
+  A result announced as two independent choices (AwardsResults): an editorial page in PRYZMA's own colours — deep
+  navy ink, warm white paper, gold only as an accent (the medal, a rule, small labels on navy; never body text on
+  white, where it cannot reach 4.5:1). The jury's section sits on navy, the public's on paper, so the two read as two
+  verdicts, not one ranking. Every work is shown whole on a light mat, never cropped.
+*/
+
+.results--awards {
+  --aw-gold: var(--saffron);
+  --aw-gold-soft: color-mix(in srgb, var(--saffron) 22%, transparent);
+
+  padding-bottom: var(--section-gap);
+}
+
+/* ---- Header ---- */
+
+.aw-head {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-3);
+  max-width: 60rem;
+  margin: var(--s-6) 0 var(--s-7);
+}
+
+.aw-head__competition {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-500);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.aw-head__competition::before {
+  content: '';
+  width: 2.5rem;
+  height: 3px;
+  background: var(--aw-gold);
+}
+
+.aw-head__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-800);
+  font-weight: 800;
+  font-stretch: 80%;
+  line-height: var(--lh-tight);
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.aw-head__lede {
+  max-width: 40rem;
+  margin: 0;
+  font-size: var(--fs-400);
+  line-height: var(--lh-text);
+  color: var(--ink-2);
+}
+
+.aw-head__date {
+  margin: 0;
+  font-size: var(--fs-200);
+  color: var(--muted);
+}
+
+.aw-head__jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-top: var(--s-2);
+}
+
+.aw-head__jump a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 44px;
+  padding: var(--s-2) var(--s-4);
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.aw-head__jump a span {
+  display: inline-grid;
+  place-items: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  background: var(--ink);
+  color: var(--aw-gold);
+  font-family: var(--font-display);
+  font-size: var(--fs-100);
+}
+
+.aw-head__jump a:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ---- The two sections ---- */
+
+.aw-section {
+  padding: var(--s-8) 0;
+  scroll-margin-top: var(--header-h);
+}
+
+.aw-section--jury {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.aw-section--public {
+  background: var(--paper-raised);
+  color: var(--ink);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+
+.aw-section__head {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: end;
+  gap: var(--s-1) var(--s-4);
+  margin-bottom: var(--s-6);
+}
+
+.aw-section__mark {
+  grid-row: span 2;
+  display: grid;
+  place-items: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  border: 2px solid var(--aw-gold);
+  font-family: var(--font-display);
+  font-size: var(--fs-500);
+  font-weight: 800;
+  color: var(--aw-gold);
+}
+
+.aw-section--public .aw-section__mark {
+  color: var(--ink);
+}
+
+.aw-section__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-700);
+  font-weight: 800;
+  font-stretch: 85%;
+  line-height: var(--lh-heading);
+}
+
+.aw-section__note {
+  margin: 0;
+  font-size: var(--fs-200);
+  opacity: 0.85;
+}
+
+/* ---- The podium: the first place large, the second and third compact ---- */
+
+.aw-podium {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aw-place__card {
+  display: grid;
+  gap: var(--s-3);
+  height: 100%;
+}
+
+.aw-place__visual {
+  --art-pad: var(--s-4);
+  margin: 0;
+  aspect-ratio: 1;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+}
+
+.aw-section--jury .aw-place__visual {
+  border-color: transparent;
+}
+
+.aw-place__text {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: var(--s-1);
+  min-width: 0;
+}
+
+.aw-place__rank {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin: 0;
+  font-size: var(--fs-200);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.aw-medal {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 2px solid var(--aw-gold);
+  font-family: var(--font-display);
+  font-size: var(--fs-300);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.aw-place--1 .aw-medal {
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--aw-gold);
+  color: var(--ink);
+  font-size: var(--fs-400);
+}
+
+.aw-place__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-500);
+  font-weight: 700;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.aw-place__name {
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.aw-place__points {
+  margin: var(--s-1) 0 0;
+  font-size: var(--fs-300);
+}
+
+.aw-place__points strong {
+  font-family: var(--font-display);
+  font-size: var(--fs-600);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.aw-section--jury .aw-place__points strong {
+  color: var(--aw-gold);
+}
+
+.aw-place__link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-1);
+  min-height: 44px;
+  margin-top: var(--s-1);
+  font-weight: 700;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--aw-gold);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.3em;
+}
+
+.aw-section--jury .aw-place__link:focus-visible {
+  outline: 3px solid var(--aw-gold);
+  outline-offset: 3px;
+}
+
+/* The first place: the work as large as the column allows, its title as a headline. */
+.aw-place--1 .aw-place__title {
+  font-size: var(--fs-600);
+}
+
+.aw-place--1 .aw-place__points strong {
+  font-size: var(--fs-700);
+}
+
+/* Phones: second and third as compact rows — the work beside its text. */
+@media (max-width: 39.99rem) {
+  .aw-place:not(.aw-place--1) .aw-place__card {
+    grid-template-columns: 104px minmax(0, 1fr);
+    align-items: start;
+    gap: var(--s-3);
+  }
+
+  .aw-place:not(.aw-place--1) .aw-place__visual {
+    --art-pad: var(--s-2);
+  }
+
+  .aw-place:not(.aw-place--1) .aw-place__title {
+    font-size: var(--fs-400);
+  }
+
+  .aw-place:not(.aw-place--1) .aw-place__points strong {
+    font-size: var(--fs-500);
+  }
+
+  .aw-section {
+    padding: var(--s-7) 0;
+  }
+}
+
+/* Tablets: the first across the width, the other two side by side. */
+@media (min-width: 40rem) {
+  .aw-podium {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--s-6) var(--col-gap);
+  }
+
+  .aw-place--1 {
+    grid-column: 1 / -1;
+  }
+
+  .aw-place--1 .aw-place__card {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    align-items: center;
+    gap: var(--col-gap);
+  }
+}
+
+/* Desktop: the first on the left, large; the second and third stacked on the right. */
+@media (min-width: 64rem) {
+  /* The second and third sit together at the top of the right column; the last row takes what the first leaves. */
+  .aw-podium {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    grid-template-rows: auto auto 1fr;
+  }
+
+  .aw-place--1 {
+    grid-column: 1;
+    grid-row: 1 / span 3;
+  }
+
+  .aw-place--1 .aw-place__card {
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+  }
+
+  .aw-place:not(.aw-place--1) .aw-place__card {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    align-items: center;
+    gap: var(--s-5);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .aw-head__jump a {
+    transition: background-color var(--t-fast), color var(--t-fast);
+  }
+}
+
+/* Paper: both sections on white, the work and the numbers kept together. */
+@media print {
+  .aw-section--jury {
+    background: none;
+    color: var(--ink);
+  }
+
+  .aw-place {
+    break-inside: avoid;
+  }
+}

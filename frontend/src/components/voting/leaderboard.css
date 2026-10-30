@@ -1,0 +1,447 @@
+/*
+  "Canlı reytinq", after the approved Figma (xS7LZxvdiYpMsKXFcQ2YmQ, states A–H; 390 and 1440 layouts).
+
+  The Figma's colours are the stage's terracotta family, plus three it adds for this module only: a deeper
+  terracotta for text on light ground (#974726 — the stage's #c26d45 is too light for 11–12px type), a peach wash
+  for the gap line and the "new vote" tint, and a sage tint for the viewer's own work. They live here, under --lb-,
+  like the stage keeps its own under --st-.
+
+  The module lays itself out by its own width, not the screen's: one column on a phone, and from 760px of its own
+  the Figma's desktop split — title and context on the left, the standings on the right.
+*/
+
+.lb {
+  --lb-ink: var(--ink);
+  --lb-muted: var(--muted);
+  --lb-terracotta: #c26d45;
+  --lb-terracotta-ink: #974726;
+  --lb-peach: #f9ede5;
+  --lb-sage: #e8eeea;
+  --lb-subtle: #f1f2ee;
+  --lb-structural: #e2e5dd;
+  --lb-ease: cubic-bezier(0.2, 0.7, 0.1, 1);
+
+  container: lb / inline-size;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.lb__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-4);
+  padding: var(--s-4);
+}
+
+/* ---- the head ---- */
+
+.lb__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  min-width: 0;
+}
+
+.lb__titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.lb__title {
+  margin: 0;
+  font-size: 30px;
+  line-height: 1.1;
+  color: var(--lb-ink);
+}
+
+.lb__live {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex: none;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--lb-terracotta-ink);
+}
+
+.lb__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--lb-terracotta-ink);
+}
+
+/* "Nöqtə 1 600 ms ərzində çox zəif nəfəs alır." */
+@media (prefers-reduced-motion: no-preference) {
+  .lb__dot {
+    animation: lb-breathe 1.6s ease-in-out infinite;
+  }
+}
+
+@keyframes lb-breathe {
+  50% {
+    opacity: 0.45;
+  }
+}
+
+.lb__lede,
+.lb__scope,
+.lb__climb,
+.lb__fresh {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.lb__lede {
+  font-size: 12px;
+  color: var(--ink-2);
+}
+
+.lb__scope,
+.lb__fresh {
+  font-size: 11px;
+  color: var(--lb-muted);
+}
+
+.lb__climb {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--lb-terracotta-ink);
+}
+
+/* The Figma prints the time of the last read on the desktop layout only. */
+.lb__fresh {
+  display: none;
+}
+
+/* ---- the standings ---- */
+
+.lb__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+  min-width: 0;
+}
+
+.lb__list {
+  position: relative; /* the rows' offsetParent, for the reorder slide */
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lb__row {
+  position: relative;
+  background: var(--paper-raised);
+  border-bottom: 1px solid var(--lb-structural);
+}
+
+.lb__row.is-lead {
+  background: var(--lb-subtle);
+}
+
+.lb__row.is-mine {
+  background: var(--lb-sage);
+  box-shadow: inset 2px 0 0 var(--lb-terracotta);
+}
+
+/* The viewer's own work under a top three it is not part of: a gap says the rows between are left out. */
+.lb__row.is-detached {
+  margin-top: var(--s-3);
+  border-top: 1px dashed var(--line);
+}
+
+.lb__link {
+  display: grid;
+  grid-template-columns: 26px 40px minmax(0, 1fr) auto;
+  grid-template-areas:
+    'rank thumb work side'
+    'notes notes notes notes';
+  align-items: center;
+  column-gap: 10px;
+  padding: var(--s-3) 10px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.lb__link:focus-visible {
+  position: relative;
+  z-index: 1;
+  outline: none;
+  box-shadow: var(--focus);
+}
+
+.lb__link:hover .lb__name {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.lb__rank {
+  grid-area: rank;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 500;
+  font-stretch: 78%;
+  line-height: 1;
+  color: var(--lb-ink);
+}
+
+.lb__row.is-lead .lb__rank {
+  font-weight: 760;
+}
+
+.lb__thumb {
+  grid-area: thumb;
+  display: block;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border-radius: 2px;
+  background: var(--lb-subtle);
+}
+
+.lb__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.lb__work {
+  grid-area: work;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+}
+
+.lb__name {
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--lb-ink);
+}
+
+.lb__bar {
+  display: block;
+  width: 100px;
+  max-width: 100%;
+  height: 3px;
+  background: var(--lb-structural);
+}
+
+.lb__fill {
+  display: block;
+  height: 100%;
+  background: var(--lb-terracotta);
+}
+
+.lb__row.is-lead .lb__fill {
+  background: var(--lb-ink);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .lb__fill {
+    transition: width var(--t-med) var(--lb-ease);
+  }
+}
+
+.lb__side {
+  grid-area: side;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+  min-width: 68px;
+  white-space: nowrap;
+}
+
+.lb__votes {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--lb-ink);
+}
+
+.lb__move {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--lb-muted);
+}
+
+.lb__move.is-up {
+  color: var(--lb-terracotta-ink);
+}
+
+.lb__notes {
+  grid-area: notes;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px var(--s-3);
+  padding-top: var(--s-2);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--lb-terracotta-ink);
+}
+
+/* ---- a new vote: the count rises (180 ms), the row warms and cools (700 ms), the note lingers (1 200 ms) ---- */
+
+@media (prefers-reduced-motion: no-preference) {
+  .lb__votes.is-rising {
+    animation: lb-rise 180ms var(--lb-ease);
+  }
+
+  .lb__row.is-gained {
+    animation: lb-warm 700ms ease-out;
+  }
+
+  .lb__gained {
+    animation: lb-linger 1200ms ease-in forwards;
+  }
+}
+
+@keyframes lb-rise {
+  from {
+    opacity: 0.35;
+    transform: translateY(4px);
+  }
+}
+
+@keyframes lb-warm {
+  from {
+    background-color: var(--lb-peach);
+  }
+}
+
+@keyframes lb-linger {
+  70% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* ---- under the standings ---- */
+
+.lb__gap {
+  margin: 0;
+  padding: var(--s-2) 10px;
+  border-radius: var(--r-2);
+  background: var(--lb-peach);
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--lb-terracotta-ink);
+}
+
+.lb__more-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0 var(--s-4);
+}
+
+.lb__more {
+  min-height: 36px;
+  padding: var(--s-2) var(--s-3);
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--lb-ink);
+  cursor: pointer;
+}
+
+.lb__more:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.lb__more:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+
+/* Provisional, said quietly: the smallest type in the module, muted, no box around it. */
+.lb__provisional {
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--lb-muted);
+}
+
+.lb__rule,
+.lb__fine {
+  margin: 0;
+  line-height: 1.5;
+  color: var(--lb-muted);
+}
+
+.lb__rule {
+  font-size: 12px;
+}
+
+.lb__fine {
+  font-size: 11px;
+}
+
+.lb__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 var(--s-4);
+  border-radius: var(--r-2);
+  background: var(--lb-ink);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--paper-raised);
+  text-decoration: none;
+}
+
+.lb__cta:hover {
+  background: var(--ink-hover);
+}
+
+.lb__cta:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+
+/* ---- the desktop split (the 1440 frame: a 320px head, 48px apart, 24px inside) ---- */
+
+@container lb (min-width: 760px) {
+  .lb__grid {
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: var(--s-7);
+    padding: var(--s-5);
+  }
+
+  .lb__fresh {
+    display: block;
+  }
+
+  .lb__bar {
+    width: 140px;
+  }
+}
+
+/* Between the two, the head is narrower so the standings keep their room. */
+@container lb (min-width: 760px) and (max-width: 979.98px) {
+  .lb__grid {
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: var(--s-6);
+  }
+}

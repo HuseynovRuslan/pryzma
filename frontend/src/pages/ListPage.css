@@ -1,0 +1,27 @@
+.list-page {
+  padding-top: var(--s-5);
+}
+
+.list-page__head {
+  display: grid;
+  gap: var(--s-4);
+  padding-top: var(--s-6);
+  padding-bottom: var(--s-7);
+}
+
+.list-page__head h1 {
+  font-size: var(--fs-800);
+  font-weight: 840;
+  font-stretch: 66%;
+  line-height: 0.92;
+}
+
+.list-group + .list-group {
+  margin-top: var(--s-8);
+}
+
+.list-group__title {
+  font-size: var(--fs-600);
+  font-stretch: 78%;
+  margin-bottom: var(--s-6);
+}

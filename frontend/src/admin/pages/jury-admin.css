@@ -1,0 +1,376 @@
+/* The jury's evaluation of every work (admin tab). Builds on final.css (steps, print docs, order, prizes). */
+
+.jy-list {
+  margin: 0;
+  padding-left: 1.2em;
+  color: var(--ink-2);
+  line-height: 1.6;
+}
+
+.jy-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: var(--s-3);
+  margin: 0;
+}
+
+.jy-stats > div {
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.jy-stats dt {
+  color: var(--muted);
+  font-size: var(--fs-100);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.jy-stats dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-500);
+  font-weight: 800;
+}
+
+.jy-bar {
+  display: block;
+  height: 8px;
+  background: var(--stone);
+}
+
+.jy-bar > span {
+  display: block;
+  height: 100%;
+  background: var(--saffron);
+}
+
+.jy-bar--mini {
+  width: 7rem;
+  height: 5px;
+  margin-top: 4px;
+}
+
+.jy-mini {
+  margin-left: var(--s-2);
+  font-size: var(--fs-100);
+}
+
+.jy-status {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--stone);
+  font-size: var(--fs-100);
+  font-weight: 600;
+}
+
+.jy-status--InProgress {
+  background: var(--saffron-soft);
+}
+
+.jy-status--Submitted {
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.jy-small {
+  margin-left: var(--s-2);
+  font-size: var(--fs-100);
+}
+
+.jy-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1);
+  min-width: 14rem;
+}
+
+.jy-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--s-3);
+}
+
+.jy-inline--tight {
+  align-items: center;
+  gap: var(--s-1);
+}
+
+.jy-inline--tight input {
+  min-width: 10rem;
+  padding: 4px 8px;
+}
+
+.jy-secret {
+  display: grid;
+  grid-template-columns: 7rem 1fr auto;
+  align-items: center;
+  gap: var(--s-2);
+  margin: var(--s-2) 0;
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.jy-secret__label {
+  color: var(--muted);
+  font-size: var(--fs-100);
+  font-weight: 600;
+}
+
+.jy-secret__value {
+  overflow-wrap: anywhere;
+  font-size: var(--fs-200);
+}
+
+.jy-secret__value--code {
+  font-size: var(--fs-500);
+  font-weight: 800;
+  letter-spacing: 0.2em;
+}
+
+/* The matrix */
+
+.jy-matrix-wrap {
+  max-height: 70vh;
+  overflow: auto;
+}
+
+.jy-matrix thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--paper-raised);
+}
+
+.jy-matrix td.jy-missing {
+  color: var(--muted);
+  background: color-mix(in srgb, var(--saffron-soft) 45%, transparent);
+}
+
+.jy-work {
+  display: grid;
+  text-align: left;
+}
+
+.jy-src {
+  display: inline-block;
+  margin-left: 3px;
+  padding: 0 3px;
+  border: 1px solid var(--ink-2);
+  font-size: 0.65rem;
+  font-weight: 700;
+  vertical-align: super;
+}
+
+.jy-note {
+  margin-left: 2px;
+  color: var(--saffron);
+  font-weight: 800;
+}
+
+.jy-done {
+  color: var(--success);
+}
+
+/* Paper entry */
+
+.jy-select select {
+  min-width: 18rem;
+}
+
+.jy-paper-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+  gap: var(--s-1) var(--s-3);
+  max-height: 55vh;
+  overflow: auto;
+  padding: var(--s-2);
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.jy-paper-row {
+  display: grid;
+  grid-template-columns: 2rem 1fr 3.5rem;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--fs-200);
+}
+
+.jy-paper-row__n {
+  color: var(--muted);
+  text-align: right;
+}
+
+.jy-paper-row input {
+  width: 100%;
+  padding: 4px 6px;
+  border: 1.5px solid var(--line);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+.jy-paper-row input:focus-visible {
+  border-color: var(--ink);
+  outline: none;
+}
+
+.jy-preview {
+  display: grid;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  border: 1px solid var(--ink);
+  background: var(--paper);
+}
+
+.jy-conflicts {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.jy-conflict {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4);
+  margin: 0;
+  padding: var(--s-2) var(--s-3);
+  border: 1px solid var(--danger);
+  background: var(--danger-soft);
+}
+
+.jy-conflict legend {
+  padding: 0 4px;
+  font-weight: 700;
+}
+
+/* The two lists */
+
+.jy-columns {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+  gap: var(--s-4);
+}
+
+.jy-standing {
+  padding: var(--s-4);
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.jy-standing--pending {
+  border-style: dashed;
+}
+
+.jy-rank {
+  display: grid;
+  gap: 2px;
+  margin: var(--s-3) 0;
+  padding: 0;
+  list-style: none;
+}
+
+.jy-rank li {
+  display: grid;
+  grid-template-columns: 2rem 1fr auto;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 6px var(--s-2);
+  border-bottom: 1px solid var(--stone);
+}
+
+.jy-rank li.is-place {
+  background: var(--paper-raised);
+}
+
+.jy-rank li.is-place-1 .jy-rank__pos {
+  background: var(--saffron);
+}
+
+.jy-rank__pos {
+  display: grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  background: var(--stone);
+  font-weight: 800;
+  place-items: center;
+}
+
+.jy-rank__metric {
+  font-weight: 700;
+}
+
+.jy-rank__prize {
+  grid-column: 2 / -1;
+  color: var(--success);
+  font-size: var(--fs-100);
+  font-weight: 700;
+}
+
+.jy-tag {
+  display: inline-block;
+  margin-left: var(--s-2);
+  padding: 0 6px;
+  border: 1px solid var(--line);
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.jy-tag--warn {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.jy-prizes,
+.jy-publish {
+  display: grid;
+  gap: var(--s-3);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line);
+}
+
+.jy-prizes__grid label {
+  display: grid;
+  gap: 4px;
+  min-width: 13rem;
+}
+
+.jy-audit {
+  max-height: 28rem;
+  overflow: auto;
+}
+
+/* The internal ranking */
+
+.jy-ranking__pos {
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+.jy-ranking tr.is-tied td {
+  background: color-mix(in srgb, var(--saffron-soft) 55%, transparent);
+}
+
+.jy-tag--tie {
+  border-color: var(--ink);
+  background: var(--saffron);
+  color: var(--ink);
+}
+
+.jy-ranking-summary {
+  font-weight: 700;
+}
+
+/* On a phone the ranking scrolls sideways inside its frame rather than squeezing the references letter by letter. */
+.jy-ranking {
+  min-width: 34rem;
+}
+
+.jy-ranking .a-table__primary,
+.jy-tag--tie {
+  white-space: nowrap;
+}

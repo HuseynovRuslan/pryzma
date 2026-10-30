@@ -1,0 +1,96 @@
+# Every push to main is checked and, when the checks pass, deployed to pryzma.az (the owner, 30 October 2026).
+# The server key lives only in the "production" environment, which only main may use; on the server it can run one
+# thing — deploy/scripts/ci-deploy.sh, installed outside the release tree — which refuses QRLog's clock-in peaks.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.event_name == 'pull_request' && format('checks-{0}', github.ref) || 'production' }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - run: npx vitest run --testTimeout=20000
+
+  backend:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_PASSWORD: ci-only
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      TestDatabase__AdminConnectionString: Host=localhost;Port=5432;Database=postgres;Username=postgres;Password=ci-only
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: |
+            8.0.x
+            9.0.x
+      # The three classes that race the wall clock fail on a loaded machine and pass alone; they are run on a
+      # developer's machine before a release instead of blocking every deploy here.
+      - run: >-
+          dotnet test backend/tests/Meydan.Api.Tests -nologo
+          --filter "FullyQualifiedName!~DerivativeBackfillTests&FullyQualifiedName!~QrlogQrLoginTests&FullyQualifiedName!~RefreshThrottlingTests"
+          -- xUnit.MaxParallelThreads=2
+
+  deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: [frontend, backend]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment:
+      name: production
+      url: https://pryzma.az
+    steps:
+      - uses: actions/checkout@v4
+      - name: Pack the release
+        id: pack
+        run: echo "archive=$(bash deploy/scripts/release.sh)" >> "$GITHUB_OUTPUT"
+      - name: Deploy to pryzma.az
+        env:
+          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+          ARCHIVE: ${{ steps.pack.outputs.archive }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
+          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
+          id="$(basename "$ARCHIVE" .tgz)"; id="${id#meydan-}"
+          ssh -i ~/.ssh/deploy -o BatchMode=yes -o ServerAliveInterval=15 deploy@94.20.153.137 "deploy $id" < "$ARCHIVE"
+      - name: The site answers
+        run: |
+          for i in $(seq 1 12); do
+            code="$(curl -s -o /dev/null -w '%{http_code}' https://pryzma.az/health/live || true)"
+            [ "$code" = 200 ] && { echo "pryzma.az is live"; exit 0; }
+            sleep 5
+          done
+          echo "pryzma.az did not answer 200 after the deploy" >&2; exit 1

@@ -1,0 +1,667 @@
+/* ---- Buttons ------------------------------------------------------------------------------ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: 48px;
+  padding: 0 var(--s-5);
+  border: 1.5px solid var(--ink);
+  border-radius: var(--r-1);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-text);
+  font-size: var(--fs-300);
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color var(--t-fast),
+    color var(--t-fast),
+    border-color var(--t-fast),
+    transform var(--t-fast);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:hover {
+  background: var(--stone);
+  text-decoration: none;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn[disabled],
+.btn[aria-disabled='true'] {
+  cursor: not-allowed;
+  opacity: 0.55;
+  transform: none;
+}
+
+.btn--primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn--primary:hover {
+  background: var(--ink-hover);
+  border-color: var(--ink-hover);
+}
+
+.btn--on-accent {
+  border-color: var(--on-accent);
+  background: var(--on-accent);
+  color: var(--accent);
+}
+
+.btn--on-accent:hover {
+  background: transparent;
+  color: var(--on-accent);
+}
+
+.btn--ghost {
+  border-color: transparent;
+  padding-inline: var(--s-3);
+}
+
+.btn--sm {
+  min-height: 40px;
+  padding: 0 var(--s-4);
+  font-size: var(--fs-200);
+}
+
+.btn--lg {
+  min-height: 56px;
+  padding: 0 var(--s-6);
+  font-size: var(--fs-400);
+}
+
+.btn--block {
+  width: 100%;
+}
+
+.btn__spinner {
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---- Forms -------------------------------------------------------------------------------- */
+
+.field {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.field__label {
+  font-size: var(--fs-200);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.field__hint {
+  font-size: var(--fs-200);
+  color: var(--muted);
+}
+
+.field__error {
+  display: flex;
+  gap: var(--s-2);
+  font-size: var(--fs-200);
+  font-weight: 500;
+  color: var(--danger);
+}
+
+.input {
+  width: 100%;
+  min-height: 52px;
+  padding: 0 var(--s-4);
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-1);
+  background: var(--paper-raised);
+  color: var(--ink);
+  /* 16px minimum stops iOS Safari from zooming into fields */
+  font-size: max(16px, var(--fs-300));
+  transition:
+    border-color var(--t-fast),
+    box-shadow var(--t-fast);
+  appearance: none;
+}
+
+.input::placeholder {
+  color: #8a969a;
+}
+
+.input:hover {
+  border-color: var(--ink-2);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--ink);
+  box-shadow: 0 0 0 3px var(--saffron-soft);
+}
+
+.input[aria-invalid='true'] {
+  border-color: var(--danger);
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.input-wrap .input {
+  padding-right: 88px;
+}
+
+.input-wrap__toggle {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  min-height: 40px;
+  padding: 0 var(--s-3);
+  border: 0;
+  border-radius: var(--r-1);
+  background: transparent;
+  color: var(--ink-2);
+  font-size: var(--fs-200);
+  font-weight: 600;
+}
+
+.input-wrap__toggle:hover {
+  background: var(--stone);
+}
+
+.check {
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: var(--s-3);
+  align-items: start;
+  min-height: 44px;
+  padding-top: 2px;
+  cursor: pointer;
+  font-size: var(--fs-300);
+}
+
+.check input {
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+  border: 1.5px solid var(--ink);
+  border-radius: var(--r-1);
+  background: var(--paper-raised);
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+}
+
+.check input::after {
+  content: '';
+  width: 12px;
+  height: 7px;
+  border-left: 2.5px solid var(--paper);
+  border-bottom: 2.5px solid var(--paper);
+  transform: translateY(-1px) rotate(-45deg) scale(0);
+  transition: transform var(--t-fast) var(--ease-out);
+}
+
+.check input:checked {
+  background: var(--ink);
+}
+
+.check input:checked::after {
+  transform: translateY(-1px) rotate(-45deg) scale(1);
+}
+
+.check input[aria-invalid='true'] {
+  border-color: var(--danger);
+}
+
+.alert {
+  display: grid;
+  gap: var(--s-1);
+  padding: var(--s-4);
+  border-left: 4px solid var(--danger);
+  background: var(--danger-soft);
+  color: var(--ink);
+  font-size: var(--fs-200);
+}
+
+.alert--success {
+  border-color: var(--success);
+  background: var(--success-soft);
+}
+
+.alert--info {
+  border-color: var(--ink);
+  background: var(--stone);
+}
+
+.alert strong {
+  font-weight: 700;
+}
+
+/* ---- Status -------------------------------------------------------------------------------- */
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--fs-200);
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.status__glyph {
+  width: 10px;
+  height: 10px;
+  flex: none;
+  border: 1.5px solid currentColor;
+}
+
+.status--open .status__glyph {
+  border-radius: 50%;
+  background: var(--saffron);
+  border-color: var(--ink);
+}
+
+.status--upcoming .status__glyph {
+  background: transparent;
+}
+
+.status--closed .status__glyph,
+.status--judging .status__glyph {
+  background: linear-gradient(135deg, currentColor 50%, transparent 50%);
+}
+
+.status--completed .status__glyph {
+  background: currentColor;
+}
+
+.status--on-accent {
+  color: var(--on-accent);
+}
+
+.status--on-accent.status--open .status__glyph {
+  border-color: var(--on-accent);
+}
+
+/* ---- Breadcrumbs ---------------------------------------------------------------------------- */
+
+.crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-1) var(--s-2);
+  font-size: var(--fs-200);
+}
+
+.crumbs li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-width: 0;
+}
+
+.crumbs li + li::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-top: 1.5px solid currentColor;
+  border-right: 1.5px solid currentColor;
+  transform: rotate(45deg);
+  opacity: 0.6;
+}
+
+.crumbs a {
+  display: inline-block;
+  padding-block: 6px;
+  text-decoration: none;
+  opacity: 0.85;
+}
+
+.crumbs a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.crumbs [aria-current='page'] {
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 48ch;
+}
+
+/* ---- Page state (loading / error / empty) --------------------------------------------------- */
+
+.page-state {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-4);
+  padding-block: var(--s-9);
+}
+
+.page-state h1,
+.page-state h2 {
+  font-size: var(--fs-700);
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--stone) 0%, var(--stone-2) 50%, var(--stone) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.empty {
+  display: grid;
+  gap: var(--s-4);
+  justify-items: start;
+  padding: var(--s-7) var(--s-6);
+  border: 1.5px dashed var(--line);
+}
+
+.empty h3 {
+  font-size: var(--fs-600);
+}
+
+.empty p {
+  color: var(--ink-2);
+  max-width: 52ch;
+}
+
+/* ---- Form layout ---------------------------------------------------------------------------- */
+
+.auth-form {
+  display: grid;
+  gap: var(--s-5);
+}
+
+.auth-form__row {
+  display: grid;
+  gap: var(--s-5);
+}
+
+.auth-form__inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2) var(--s-4);
+}
+
+.auth-form__inline a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+  font-size: var(--fs-200);
+}
+
+.auth-form__switch {
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line);
+  color: var(--ink-2);
+}
+
+/* The sign-in page's first words for someone who has no account yet: where to start, as a button. */
+.auth-first {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3) var(--s-4);
+  padding: var(--s-4);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper-raised);
+}
+
+.auth-first p {
+  flex: 1 1 18rem;
+  margin: 0;
+}
+
+/* What usually lies behind a refused sign-in, under the error: the ways on, each one link. */
+.auth-help {
+  padding: var(--s-4);
+  border-left: 3px solid var(--saffron);
+  border-radius: 6px;
+  background: var(--paper-raised);
+  font-size: var(--fs-200);
+  color: var(--ink-2);
+}
+
+.auth-help__title {
+  margin: 0 0 var(--s-2);
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.auth-help ul {
+  display: grid;
+  gap: var(--s-2);
+  margin: 0;
+  padding-left: 1.1em;
+}
+
+.auth-help a {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.auth-form__switch a,
+.auth-form__switch .link-button {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* The heading of one step of email-first registration. */
+.auth-form__title {
+  margin: 0;
+  font-size: var(--fs-400);
+  line-height: 1.25;
+}
+
+/* A button that reads as a link ("Başqa e-mail yazın"), with a finger-sized target. */
+.link-button {
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+@media (min-width: 560px) {
+  .auth-form__row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ---- Submission status chip (İşlərim, receipt) ---------------------------------------------- */
+
+.subs__status {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-weight: 700;
+  font-size: var(--fs-200);
+}
+
+.subs__status::before {
+  content: '';
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid currentColor;
+}
+
+.subs__status--submitted::before,
+.subs__status--underreview::before {
+  border-radius: 50%;
+  background: var(--saffron);
+  border-color: var(--ink);
+}
+
+.subs__status--winner::before,
+.subs__status--approved::before {
+  background: currentColor;
+}
+
+.subs__status--rejected {
+  color: var(--danger);
+}
+
+/* ---- Winner badge: ink plate + a saffron dot, never gold fills ---- */
+.winner-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  width: fit-content;
+  padding: 0.3em 0.75em 0.3em 0.6em;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-display);
+  font-weight: 760;
+  font-stretch: 90%;
+  font-size: var(--fs-200);
+  line-height: 1.2;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.winner-badge__glyph {
+  width: 0.62em;
+  height: 0.62em;
+  border-radius: 50%;
+  background: var(--saffron);
+}
+
+.winner-badge--sm {
+  font-size: var(--fs-100);
+}
+
+.winner-badge--lg {
+  font-size: var(--fs-400);
+  padding: 0.35em 0.9em 0.35em 0.7em;
+}
+
+/* ---- Sticky action bar ------------------------------------------------------------------------
+   The way in, once the page's own button has scrolled away: the competition page offers "İştirak et",
+   the voting page "Səs ver". Shared because two routes use it and each loads its own stylesheet —
+   a pattern living in one route's CSS would simply be missing from the other. */
+
+/* Below desktop the fixed action bar would cover the end of the page. Reserve its measured height
+   (set on <html> from JS; it already includes the iOS safe-area inset) under the footer. */
+@media (max-width: 1023.98px) {
+  html:has(.action-bar) .site-footer {
+    padding-bottom: calc(var(--action-bar-h, 96px) + var(--s-6));
+  }
+}
+
+/* ---- Mobile action bar ---- */
+
+.action-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding: var(--s-3) var(--gutter) max(var(--s-3), env(safe-area-inset-bottom));
+  background: var(--paper);
+  border-top: 2px solid var(--ink);
+  transition:
+    transform 220ms ease,
+    visibility 0s linear 0s;
+}
+
+/* Out of the way while the page's own button is on screen. It slides rather than fades: the room it takes at the
+   bottom is reserved either way, so nothing on the page moves when it comes and goes. */
+.action-bar[data-shown='false'] {
+  transform: translateY(100%);
+  visibility: hidden;
+  transition:
+    transform 220ms ease,
+    visibility 0s linear 220ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .action-bar,
+  .action-bar[data-shown='false'] {
+    transition: none;
+  }
+}
+
+.action-bar__choice {
+  display: grid;
+  min-width: 0;
+}
+
+.action-bar__label {
+  font-size: var(--fs-100);
+  color: var(--muted);
+}
+
+/* Two lines at most: a long name wraps once and is then cut, so the bar can never grow past the CTA. */
+.action-bar__value {
+  font-weight: 700;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.action-bar__value.is-empty {
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.action-bar .btn {
+  flex: none;
+}
+
+.btn--primary.btn--waiting {
+  background: var(--stone-2);
+  border-color: var(--stone-2);
+  color: var(--ink-2);
+}
+
+/* From the wide layout up, the page's own buttons are always in reach and the bar is not needed. */
+@media (min-width: 1024px) {
+  .action-bar {
+    display: none;
+  }
+}

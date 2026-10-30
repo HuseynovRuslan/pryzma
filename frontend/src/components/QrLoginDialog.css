@@ -1,0 +1,251 @@
+/* "QRLog ilə daxil ol" on a computer: the QR is the one thing to look at; the steps sit beside it, quietly. */
+.qrdlg {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: var(--s-4);
+}
+
+.qrdlg__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(16, 38, 43, 0.55);
+}
+
+.qrdlg__box {
+  position: relative;
+  width: min(640px, 100%);
+  max-height: calc(100dvh - 2 * var(--s-4));
+  overflow-y: auto;
+  background: var(--paper-raised);
+  color: var(--ink);
+  border-top: 4px solid var(--ink);
+  box-shadow: 0 24px 60px -24px rgba(16, 38, 43, 0.55);
+}
+
+.qrdlg__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: var(--s-4) var(--s-5) var(--s-3);
+}
+
+.qrdlg__title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  margin: 0;
+  font-family: var(--font-text);
+  font-size: var(--fs-400);
+  font-weight: 650;
+}
+
+.qrdlg__close {
+  position: relative;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.qrdlg__close span::before,
+.qrdlg__close span::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 18px;
+  height: 2px;
+  background: currentColor;
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.qrdlg__close span::after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.qrdlg__close:hover {
+  background: var(--stone);
+}
+
+.qrdlg__body {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--s-5);
+  align-items: start;
+  padding: var(--s-3) var(--s-5) var(--s-5);
+  border-top: 1px solid var(--line);
+}
+
+/* The QR on a white plate — scanners want contrast, not the paper tone. Fixed size, so states do not jump. */
+.qrdlg__code {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 232px;
+  height: 232px;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+
+.qrdlg__qr {
+  display: block;
+  width: 216px;
+  height: 216px;
+}
+
+.qrdlg__placeholder {
+  width: 216px;
+  height: 216px;
+  background: repeating-linear-gradient(90deg, var(--stone) 0 12px, var(--paper) 12px 24px);
+  opacity: 0.6;
+}
+
+.qrdlg__state {
+  display: grid;
+  justify-items: center;
+  gap: var(--s-3);
+  padding: var(--s-4);
+  text-align: center;
+  font-family: var(--font-display);
+  font-stretch: 90%;
+  font-size: var(--fs-500);
+  line-height: var(--lh-heading);
+}
+
+.qrdlg__state--ok {
+  color: var(--success);
+}
+
+.qrdlg__tick {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--success);
+  position: relative;
+}
+
+.qrdlg__tick::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 22px;
+  height: 11px;
+  border-left: 3px solid #fff;
+  border-bottom: 3px solid #fff;
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+.qrdlg__side {
+  display: grid;
+  gap: var(--s-3);
+  min-width: 0;
+}
+
+.qrdlg__lede {
+  margin: 0;
+  font-family: var(--font-display);
+  font-stretch: 85%;
+  font-weight: 760;
+  font-size: var(--fs-500);
+  line-height: var(--lh-heading);
+}
+
+.qrdlg__steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+  display: grid;
+  gap: var(--s-2);
+}
+
+.qrdlg__steps li {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 1.6em 1fr;
+  align-items: baseline;
+}
+
+.qrdlg__steps li::before {
+  content: counter(step);
+  font-family: var(--font-display);
+  font-weight: 760;
+  color: var(--muted);
+}
+
+.qrdlg__status {
+  margin: 0;
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-200);
+  color: var(--ink-2);
+}
+
+.qrdlg__foot {
+  margin: 0;
+  padding: var(--s-3) var(--s-5) var(--s-4);
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-200);
+  color: var(--ink-2);
+}
+
+.qrdlg__link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  cursor: pointer;
+}
+
+.qrdlg__link:hover {
+  text-decoration-color: var(--saffron);
+  text-decoration-thickness: 2px;
+}
+
+/* Narrow windows and tablets in portrait: the QR on top, the steps below. */
+@media (max-width: 599px) {
+  .qrdlg {
+    padding: var(--s-3);
+  }
+
+  .qrdlg__head,
+  .qrdlg__body,
+  .qrdlg__foot {
+    padding-left: var(--s-4);
+    padding-right: var(--s-4);
+  }
+
+  .qrdlg__body {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+
+  .qrdlg__side {
+    justify-self: stretch;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .qrdlg__box {
+    animation: qrdlg-in 180ms var(--ease-out, ease-out) both;
+  }
+
+  @keyframes qrdlg-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+}

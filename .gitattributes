@@ -1,0 +1,14 @@
+# Normalise text line endings; never touch binary files (test fixtures, images, fonts).
+* text=auto
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+
+# Shell scripts run on Linux servers: always LF
+*.sh text eol=lf

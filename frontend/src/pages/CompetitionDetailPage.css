@@ -1,0 +1,810 @@
+.comp {
+  padding-top: var(--s-5);
+}
+
+.comp__crumbs {
+  display: none;
+}
+
+.comp__back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 44px;
+  font-weight: 600;
+  font-size: var(--fs-200);
+  text-decoration: none;
+}
+
+.comp__back:hover {
+  text-decoration: underline;
+}
+
+.comp__back-arrow {
+  width: 8px;
+  height: 8px;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  margin-left: 2px;
+}
+
+@media (min-width: 768px) {
+  .comp__crumbs {
+    display: block;
+  }
+
+  .comp__back {
+    display: none;
+  }
+}
+
+.comp__head {
+  display: grid;
+  gap: var(--s-6);
+  padding-top: var(--s-5);
+  padding-bottom: clamp(var(--s-7), 5vw, var(--s-9));
+  border-bottom: 2px solid var(--ink);
+}
+
+.comp__tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-5);
+}
+
+.comp__project {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 32px;
+  font-weight: 600;
+  font-size: var(--fs-200);
+  text-decoration: none;
+}
+
+.comp__project:hover {
+  text-decoration: underline;
+}
+
+.comp__swatch {
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  clip-path: polygon(0 0, 65% 0, 100% 35%, 100% 100%, 0 100%);
+}
+
+.comp__title {
+  font-size: var(--fs-800);
+  font-weight: 840;
+  font-stretch: 64%;
+  line-height: 0.92;
+  letter-spacing: -0.02em;
+  max-width: 16ch;
+  text-wrap: balance;
+}
+
+.comp__lede {
+  font-size: var(--fs-500);
+  line-height: 1.45;
+  color: var(--ink-2);
+  max-width: 44ch;
+}
+
+/* The competition's own name, above an ad's headline: small, but on the first screen. */
+.comp__kicker {
+  font-weight: 650;
+  font-size: var(--fs-200);
+  color: var(--ink-2);
+}
+
+/* From a tablet up the breadcrumbs above already end with the same name. */
+@media (min-width: 768px) {
+  .comp__kicker {
+    display: none;
+  }
+}
+
+/*
+  The two facts worth carrying in the hero: what can be won and until when. Side by side even on a phone, each
+  under a hairline, so they read as a pair of figures rather than two more lines of text.
+*/
+.comp__facts {
+  display: grid;
+  /* Two columns down to a 320px phone; min() lets them stack rather than push past the gutter if even that fails. */
+  grid-template-columns: repeat(auto-fit, minmax(min(8.5rem, 100%), 1fr));
+  gap: var(--s-4) var(--s-5);
+  max-width: 34rem;
+}
+
+.comp__fact {
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  padding-top: var(--s-2);
+  border-top: 1px solid var(--line);
+}
+
+.comp__facts dt {
+  color: var(--muted);
+  font-size: var(--fs-200);
+}
+
+.comp__fact-value {
+  font-family: var(--font-display);
+  font-size: var(--fs-600);
+  font-weight: 800;
+  font-stretch: 78%;
+  line-height: 1.1;
+}
+
+.comp__fact-note {
+  color: var(--accent);
+  font-size: var(--fs-200);
+  font-weight: 650;
+}
+
+/* The way in, with the two things that stop people from taking it answered right under it. */
+.comp__head-cta {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-3);
+}
+
+.comp__reassure {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-4);
+  color: var(--ink-2);
+  font-size: var(--fs-200);
+}
+
+.comp__reassure li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+
+/* A tick drawn in the project's colour; the list carries the meaning, so it is decoration only. */
+.comp__reassure li::before {
+  content: '';
+  flex: none;
+  width: 0.8em;
+  height: 0.45em;
+  border-left: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+  transform: rotate(-45deg) translateY(-0.1em);
+}
+
+@media (max-width: 767.98px) {
+  /* On a phone the page starts close under the header: every line of space there pushes the button down. */
+  .comp {
+    padding-top: var(--s-3);
+  }
+
+  .comp__head {
+    gap: var(--s-5);
+    padding-top: var(--s-3);
+  }
+
+  .comp__head--ad {
+    padding-top: var(--s-2);
+  }
+
+  .comp__lede {
+    font-size: var(--fs-400);
+    line-height: 1.4;
+  }
+
+  .comp__head-cta {
+    justify-items: stretch;
+  }
+}
+
+/*
+  Nominations: three entries, each announced by its number. The number is set large and in the project's colour —
+  it is the only ornament the section gets, and it tells the reader how many there are before they start.
+*/
+.nominations {
+  display: grid;
+}
+
+.nominations__item {
+  display: grid;
+  gap: var(--s-2);
+  padding-block: var(--s-6);
+  border-top: 1px solid var(--line);
+}
+
+.nominations__item:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.nominations__n {
+  font-family: var(--font-display);
+  font-size: var(--fs-500);
+  font-weight: 800;
+  font-stretch: 84%;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.nominations__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-600);
+  font-weight: 780;
+  font-stretch: 80%;
+  line-height: var(--lh-heading);
+}
+
+.nominations__body {
+  color: var(--ink-2);
+  max-width: 62ch;
+  font-size: var(--fs-400);
+  line-height: 1.55;
+  white-space: pre-line;
+}
+
+@media (min-width: 768px) {
+  .nominations__item {
+    grid-template-columns: 4rem minmax(0, 1fr);
+    column-gap: var(--s-5);
+    padding-block: var(--s-7);
+  }
+
+  .nominations__n {
+    grid-row: 1 / span 2;
+    font-size: var(--fs-600);
+  }
+}
+
+/*
+  Prizes: the amount first, because that is what is being read for — then the place under it, then what comes with
+  it. Three quiet columns on a rule, not three coloured cards.
+*/
+.prizes {
+  display: grid;
+  gap: var(--s-6);
+}
+
+.prizes__list {
+  display: grid;
+  gap: var(--s-5);
+}
+
+.prizes__item {
+  display: grid;
+  gap: var(--s-1);
+  padding-top: var(--s-4);
+  border-top: 2px solid var(--ink);
+}
+
+.prizes__award {
+  font-family: var(--font-display);
+  font-size: var(--fs-700);
+  font-weight: 840;
+  font-stretch: 70%;
+  line-height: 0.95;
+  font-variant-numeric: tabular-nums;
+}
+
+.prizes__place {
+  font-weight: 680;
+}
+
+.prizes__extra {
+  color: var(--muted);
+  font-size: var(--fs-200);
+}
+
+.prizes__note {
+  max-width: 62ch;
+  color: var(--ink-2);
+}
+
+@media (min-width: 620px) {
+  .prizes__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-6);
+  }
+}
+
+.comp__intro {
+  display: grid;
+  /* Never wider than the page's column, whatever a child's smallest size is: the gutter is not negotiable. */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  /* 16px on a phone, 24px from a small tablet up: the hero's lines sit closer where the screen is short. */
+  gap: clamp(var(--s-4), 2.5vw, var(--s-5));
+  min-width: 0;
+}
+
+.comp__head-cta {
+  padding-top: var(--s-2);
+}
+
+/*
+  The poster is the artwork and nothing else: no frame, no mount, no fixed ratio — it keeps its own proportions at
+  the full width of its column, with a single accent rule under it the way a printed sheet sits on a shelf.
+*/
+.comp__poster {
+  max-width: min(100%, 520px);
+  margin-inline: auto;
+  border-bottom: 5px solid var(--accent);
+}
+
+.comp__poster img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+@media (min-width: 900px) {
+  .comp__head--poster {
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 42%);
+    column-gap: clamp(var(--s-6), 4vw, var(--s-9));
+    align-items: end;
+  }
+
+  .comp__head--poster > .comp__intro {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: start;
+  }
+
+  .comp__head--poster > .comp__poster {
+    grid-column: 2;
+    grid-row: 1;
+    margin-inline: 0;
+    max-width: 100%;
+  }
+}
+
+/* The closing invitation: the page's last word, on the page itself rather than in a panel. */
+.comp-final {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-4);
+  padding-top: clamp(var(--s-6), 4vw, var(--s-7));
+  border-top: 5px solid var(--accent);
+}
+
+.comp-final__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-700);
+  font-weight: 820;
+  font-stretch: 70%;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  max-width: 14ch;
+  text-wrap: balance;
+}
+
+.comp-final__text {
+  max-width: 52ch;
+  font-size: var(--fs-400);
+  color: var(--ink-2);
+}
+
+.comp__layout {
+  display: grid;
+  gap: var(--s-7);
+  padding-top: var(--s-7);
+}
+
+.comp__content {
+  display: grid;
+  gap: clamp(var(--s-8), 6vw, var(--s-9));
+  min-width: 0;
+}
+
+/* A section is a heading and its text, parted from the next by a rule and room — never a box. */
+.comp-block {
+  display: grid;
+  gap: var(--s-5);
+  scroll-margin-top: calc(var(--header-h) + 24px);
+}
+
+.comp-block__title {
+  font-size: var(--fs-700);
+  font-weight: 800;
+  font-stretch: 72%;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.comp-block__body {
+  min-width: 0;
+}
+
+.comp__hint {
+  color: var(--ink-2);
+  margin-bottom: var(--s-4);
+}
+
+.comp__pending {
+  padding: var(--s-5);
+  border: 1.5px dashed var(--line);
+  color: var(--ink-2);
+}
+
+.timeline {
+  display: grid;
+  border-top: 1px solid var(--line);
+}
+
+.timeline li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--s-2) var(--s-5);
+  padding-block: var(--s-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.timeline__label {
+  color: var(--ink-2);
+}
+
+.timeline__value {
+  font-weight: 700;
+}
+
+/* ---- Participation panel ---- */
+
+/* The one surface the page keeps: the action, held at the top of the column. A rule rather than a full border,
+   so it reads as part of the page and not as a widget dropped on it. */
+.panel {
+  display: grid;
+  gap: var(--s-4);
+  padding-top: var(--s-5);
+  border-top: 2px solid var(--ink);
+}
+
+.panel__choice {
+  display: grid;
+  gap: var(--s-1);
+  padding-bottom: var(--s-4);
+  border-bottom: 1px solid var(--line);
+}
+
+.panel__choice-label {
+  font-size: var(--fs-200);
+  color: var(--muted);
+}
+
+.panel__choice-value {
+  font-family: var(--font-display);
+  font-size: var(--fs-600);
+  font-weight: 760;
+  font-stretch: 80%;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.panel__choice-value.is-empty {
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.panel__note {
+  font-size: var(--fs-200);
+  color: var(--ink-2);
+}
+
+.panel__closed {
+  font-weight: 600;
+}
+
+.panel__facts {
+  display: grid;
+  gap: var(--s-3);
+  margin: 0;
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-200);
+}
+
+.panel__facts div {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-4);
+}
+
+.panel__facts dt {
+  color: var(--muted);
+}
+
+.panel__facts dd {
+  font-weight: 700;
+  text-align: right;
+}
+
+/* Below desktop the hero's button and then the fixed action bar are the way in; the panel keeps the notes. */
+@media (max-width: 1023.98px) {
+  .comp__panel .panel__choice,
+  .comp__panel .btn {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .comp {
+    padding-bottom: 0;
+  }
+
+  /* The text keeps the page; the panel is a margin note beside it, not a second column of equal weight. */
+  .comp__layout {
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 300px);
+    column-gap: clamp(var(--s-7), 5vw, var(--s-9));
+    align-items: start;
+  }
+
+  .comp__panel {
+    position: sticky;
+    top: calc(var(--header-h) + var(--s-5));
+  }
+}
+
+/* ---- State after entries close: "results are being prepared" / "results are out" ---- */
+.comp-state {
+  display: grid;
+  gap: var(--s-4);
+  margin-top: var(--s-6);
+  padding: var(--s-5);
+  border-left: 6px solid var(--ink);
+  background: var(--stone);
+}
+
+.comp-state--results {
+  border-left-color: var(--accent);
+  background: var(--paper-raised);
+  box-shadow: inset 0 0 0 1px var(--line);
+}
+
+.comp-state__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-600);
+  font-weight: 780;
+  font-stretch: 82%;
+  line-height: var(--lh-heading);
+}
+
+.comp-state__text {
+  display: grid;
+  gap: var(--s-2);
+  max-width: 62ch;
+}
+
+.comp-state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+}
+
+@media (max-width: 479.98px) {
+  .comp-state__actions .btn {
+    flex: 1 1 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  .comp-state {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: var(--s-7);
+  }
+}
+
+/* ---- What can be won: straight after the hero, because it is the second thing anybody wants to know ---- */
+.comp-prizes,
+.comp-steps {
+  display: grid;
+  gap: var(--s-5);
+  padding-block: clamp(var(--s-6), 5vw, var(--s-8));
+  border-bottom: 1px solid var(--line);
+}
+
+.comp-prizes__title,
+.comp-steps__title {
+  font-size: var(--fs-700);
+  font-weight: 800;
+  font-stretch: 72%;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+/* Three places side by side on every screen, so the ranking and the sums are read in one glance. */
+.comp-prizes .prizes__list {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-3) var(--s-4);
+}
+
+.comp-prizes .prizes__item:first-child .prizes__award {
+  color: var(--accent);
+}
+
+@media (max-width: 619.98px) {
+  .comp-prizes .prizes__award {
+    font-size: var(--fs-600);
+  }
+
+  .comp-prizes .prizes__place {
+    font-size: var(--fs-200);
+  }
+}
+
+/* ---- Three steps: how little stands between the reader and an entry ---- */
+.comp-steps__list {
+  display: grid;
+  gap: var(--s-4);
+}
+
+.comp-steps__item {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  column-gap: var(--s-3);
+  row-gap: 2px;
+}
+
+.comp-steps__n {
+  grid-row: span 2;
+  font-family: var(--font-display);
+  font-size: var(--fs-600);
+  font-weight: 860;
+  font-stretch: 62%;
+  line-height: 1;
+  color: var(--accent);
+}
+
+.comp-steps__name {
+  font-size: var(--fs-400);
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.comp-steps__text {
+  color: var(--ink-2);
+  max-width: 44ch;
+}
+
+@media (min-width: 768px) {
+  .comp-steps__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--s-6);
+  }
+}
+
+/* ---- The long texts: sections on a wide screen, folded under their headings on a phone ---- */
+.comp__details {
+  display: grid;
+  gap: clamp(var(--s-8), 6vw, var(--s-9));
+}
+
+@media (max-width: 767.98px) {
+  .comp__content {
+    gap: var(--s-7);
+  }
+
+  .comp__details {
+    gap: 0;
+    border-bottom: 1px solid var(--line);
+  }
+}
+
+.comp-fold {
+  border-top: 1px solid var(--line);
+}
+
+.comp-fold__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-4);
+  min-height: 56px;
+  padding-block: var(--s-3);
+  cursor: pointer;
+  list-style: none;
+}
+
+.comp-fold__summary::-webkit-details-marker {
+  display: none;
+}
+
+.comp-fold__summary:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+
+.comp-fold__title {
+  font-size: var(--fs-500);
+  font-weight: 760;
+  font-stretch: 86%;
+  line-height: 1.15;
+  scroll-margin-top: calc(var(--header-h) + 24px);
+}
+
+/* A plus that becomes a minus: the same two strokes, one of them turning. */
+.comp-fold__mark {
+  position: relative;
+  flex: none;
+  width: 14px;
+  height: 14px;
+}
+
+.comp-fold__mark::before,
+.comp-fold__mark::after {
+  content: '';
+  position: absolute;
+  inset: 6px 0 auto;
+  height: 2px;
+  background: currentColor;
+}
+
+.comp-fold__mark::after {
+  transform: rotate(90deg);
+  transition: transform 160ms ease;
+}
+
+.comp-fold[open] .comp-fold__mark::after {
+  transform: rotate(0deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .comp-fold__mark::after {
+    transition: none;
+  }
+}
+
+.comp-fold__body {
+  padding-bottom: var(--s-5);
+}
+
+/* ---- The public vote, while it is on ---- */
+
+.comp-voting {
+  display: grid;
+  gap: var(--s-4);
+  align-items: center;
+  margin-top: var(--s-6);
+  padding: var(--s-5);
+  border: 2px solid var(--ink);
+  background: var(--paper-raised);
+}
+
+.comp-voting__eyebrow {
+  margin: 0;
+  font-size: var(--fs-100);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.comp-voting__title {
+  margin: var(--s-2) 0 var(--s-2);
+  font-size: var(--fs-400);
+}
+
+.comp-voting__text p:last-child {
+  margin: 0;
+  color: var(--ink-2);
+}
+
+.comp-voting__actions {
+  display: flex;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+
+@media (min-width: 768px) {
+  .comp-voting {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+
+/* The vote's review stage, in the place the vote had on this page. */
+.comp-review {
+  margin-block: var(--s-7);
+}

@@ -1,0 +1,241 @@
+/* Homepage-local Stitch vocabulary: institutional surfaces and rhythm without repainting the whole product. */
+.home-stage,
+.home-intro,
+.home-open,
+.home-finalists,
+.about-strip,
+.steps-band {
+  --home-card: #ffffff;
+  --home-subtle: #f1f2ee;
+  --home-border: #e2e5dd;
+  --home-hairline: #eaece6;
+  --home-muted: #64748b;
+  --home-terracotta: #c26d45;
+}
+
+/* The last homepage band meets the institutional footer directly instead of leaving an old page-size gap. */
+.main:has(.steps-band) + .site-footer {
+  margin-top: 0;
+}
+
+.home-stage {
+  margin-top: var(--s-5);
+}
+
+/* While the bands under the lead are being decided: their space, so the footer stays below the fold. */
+.home-pending {
+  min-height: 100vh;
+}
+
+.home-stage + .home-open,
+.home-intro + .home-open {
+  padding-top: clamp(2rem, 4vw, 3.5rem);
+}
+
+.home-finalists {
+  margin-top: clamp(2rem, 4vw, 3.5rem);
+}
+
+/* The live ranking, between the stage and the works. Nothing until it has loaded, so no empty gap either. */
+.home-live:empty {
+  display: none;
+}
+
+.home-live {
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+/* Ordinary days still have a lead, but it now speaks the same white-card editorial language as the stage. */
+.home-intro {
+  padding-top: var(--s-5);
+}
+
+.home-intro__panel {
+  display: grid;
+  gap: var(--s-5);
+  padding: clamp(var(--s-5), 4vw, var(--s-7));
+  background: var(--home-card);
+  border: 1px solid var(--home-border);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgb(14 31 35 / 4%);
+}
+
+.home-intro__title {
+  max-width: 11ch;
+  font-size: clamp(2.75rem, 2rem + 4vw, 5.5rem);
+  font-weight: 820;
+  font-stretch: 68%;
+  line-height: 0.94;
+}
+
+.hero__word {
+  display: inline-block;
+  animation: home-word-rise 620ms var(--ease-out) both;
+}
+
+@keyframes home-word-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.25em);
+  }
+}
+
+.home-intro__copy {
+  display: grid;
+  align-content: end;
+  gap: var(--s-4);
+}
+
+.home-intro__lede {
+  max-width: 34ch;
+  color: var(--ink-2);
+  font-size: var(--fs-500);
+  line-height: 1.45;
+}
+
+.home-intro__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-5);
+}
+
+.home-intro__actions a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  border-bottom: 2px solid var(--ink);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.home-open {
+  padding-bottom: clamp(2.5rem, 5vw, 4.5rem);
+}
+
+.home-open .section-head {
+  align-items: baseline;
+  padding-bottom: var(--s-4);
+  margin-bottom: var(--s-5);
+  border-bottom: 1px solid var(--home-border);
+}
+
+.home-open .section-head h2 {
+  font-size: clamp(1.85rem, 1.45rem + 1.7vw, 2.75rem);
+  font-stretch: 82%;
+}
+
+.home-open .section-head__aside {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ink-2);
+  font-weight: 600;
+}
+
+.about-strip {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-3);
+  margin-top: clamp(2.5rem, 5vw, 4.5rem);
+  padding: clamp(var(--s-5), 4vw, var(--s-7));
+  background: var(--home-card);
+  border: 1px solid var(--home-border);
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgb(14 31 35 / 4%);
+}
+
+.about-strip p {
+  max-width: 68ch;
+  color: var(--ink-2);
+  font-size: var(--fs-400);
+}
+
+.steps-band {
+  margin-top: clamp(2.5rem, 5vw, 4.5rem);
+  padding-block: clamp(3rem, 6vw, 5rem);
+  background: var(--home-subtle);
+  border-block: 1px solid var(--home-border);
+}
+
+.steps-band__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-bottom: var(--s-6);
+}
+
+.steps-band__head h2 {
+  font-size: clamp(1.85rem, 1.45rem + 1.7vw, 2.75rem);
+}
+
+.steps-band__head a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+}
+
+.steps {
+  display: grid;
+  gap: var(--s-5);
+}
+
+.steps__item {
+  display: grid;
+  gap: var(--s-2);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--ink);
+}
+
+.steps__n {
+  color: var(--home-terracotta);
+  font-family: var(--font-display);
+  font-size: var(--fs-600);
+  font-weight: 760;
+  line-height: 1;
+}
+
+.steps__item h3 {
+  font-size: var(--fs-500);
+  font-stretch: 90%;
+}
+
+.steps__item p {
+  max-width: 36ch;
+  color: var(--ink-2);
+}
+
+@media (min-width: 768px) {
+  .home-intro__panel {
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.8fr);
+    align-items: end;
+  }
+
+  .steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .steps {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 430px) {
+  .home-open .section-head {
+    display: grid;
+    gap: 0;
+  }
+
+  .home-open .section-head__aside {
+    justify-self: start;
+  }
+
+  .about-strip {
+    margin-inline: var(--gutter);
+    width: auto;
+  }
+}

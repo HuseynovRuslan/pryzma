@@ -1,0 +1,189 @@
+/*
+  The campaign card: an announcement pinned to a wall, not a product tile. The poster leads — on a phone it takes
+  the card's full width at 3:4, the proportion the posters are drawn at; from tablet width up the stage is as tall
+  as a share of the window instead, so the title and the button stay in the same view as the artwork. The artwork
+  is always shown whole: contained and centred, never stretched to the card. Under it, only one line of state, the
+  title, a sentence and one action. No frame, no badge row, no second surface.
+*/
+.poster-card {
+  min-width: 0;
+}
+
+.poster-card__link {
+  display: grid;
+  gap: var(--s-4);
+  height: 100%;
+  align-content: start;
+  text-decoration: none;
+  color: inherit;
+}
+
+.poster-card__link:focus-visible {
+  box-shadow: none;
+  outline: 3px solid var(--ink);
+  outline-offset: 8px;
+}
+
+.poster-card__stage {
+  position: relative;
+  display: grid;
+  /* An explicit track, so the artwork's height can be a share of the stage instead of sizing the stage itself. */
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  place-items: center;
+  /* Phones: the poster at the card's full width. Wider screens take a height instead — see below. */
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  /* Only shows where an artwork is not 3:4: a mount behind the poster, never a card around it. */
+  background: var(--stone);
+  border-bottom: 5px solid var(--accent);
+  /* The drawn fallback paints at z-index -1; without its own stacking context it would fall behind this field. */
+  isolation: isolate;
+}
+
+.poster-card__art {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+  transition: transform 500ms var(--ease-out);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .poster-card__link:hover .poster-card__art {
+    transform: scale(1.015);
+  }
+}
+
+/* Without a poster the competition still needs a face: its colour field and the buta, with the title over it. */
+.poster-card__stage--drawn {
+  background: var(--accent);
+  color: var(--on-accent);
+  padding: var(--s-5);
+  align-items: end;
+  justify-items: start;
+}
+
+.poster-card__drawn-title {
+  position: relative;
+  max-width: 13ch;
+  font-family: var(--font-display);
+  font-size: var(--fs-600);
+  font-weight: 800;
+  font-stretch: 78%;
+  line-height: 1.02;
+  text-wrap: balance;
+}
+
+.poster-card__body {
+  display: grid;
+  gap: var(--s-4);
+  justify-items: start;
+}
+
+/* One line, not a badge row: the state, and the date only when there is one. */
+.poster-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-5);
+  color: var(--muted);
+  font-size: var(--fs-200);
+}
+
+.poster-card__title {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 1.05rem + 1.5vw, 2.5rem);
+  font-weight: 820;
+  font-stretch: 72%;
+  line-height: 0.98;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+.poster-card__link:hover .poster-card__title {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.14em;
+}
+
+.poster-card__desc {
+  max-width: 46ch;
+  color: var(--ink-2);
+  font-size: var(--fs-400);
+  line-height: 1.5;
+}
+
+/*
+  From tablet width the stage stops following the artwork's ratio: a full-width portrait poster would be taller
+  than the screen and push the title and the button out of view. The height follows the window — 440px at worst,
+  560px at most — and the width follows the artwork, so the poster's own edges are the card's edges and no mount
+  shows beside it, whatever proportions are uploaded.
+*/
+@media (min-width: 620px) {
+  .poster-card__stage {
+    aspect-ratio: auto;
+    height: var(--stage-h);
+    width: fit-content;
+    max-width: 100%;
+  }
+
+  .poster-card__art {
+    width: auto;
+    max-width: 100%;
+  }
+
+  /* Nothing to hug: the drawn fallback is a colour field and keeps the card's width. */
+  .poster-card__stage--drawn {
+    width: 100%;
+  }
+}
+
+/* A button in every way but the element: the whole card is already the link. */
+.poster-card__cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  margin-top: var(--s-1);
+  padding-inline: var(--s-6);
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 640;
+  transition: background var(--t-fast) var(--ease-out);
+}
+
+.poster-card__link:hover .poster-card__cta {
+  background: var(--ink-hover);
+}
+
+/* ---- The grid the cards stand in ---- */
+
+.poster-grid {
+  --stage-h: clamp(440px, 52vh, 560px);
+  display: grid;
+  gap: var(--section-gap) var(--col-gap);
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 860px) {
+  .poster-grid {
+    gap: var(--s-8) clamp(var(--s-6), 4vw, var(--s-9));
+  }
+
+  /* A column a little wider than a portrait poster at this height: the artwork nearly fills it, and the text
+     under it still gets a readable measure. */
+  .poster-grid--2,
+  .poster-grid--3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .poster-card__body {
+    gap: var(--s-4);
+  }
+}
+
+@media (min-width: 1240px) {
+  .poster-grid--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}

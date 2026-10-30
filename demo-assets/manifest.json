@@ -1,0 +1,162 @@
+{
+  "projects": [
+    {
+      "file": "projects/xezer-sahili-cover.webp",
+      "title": "Xəzər sahili",
+      "size": [
+        377,
+        212
+      ]
+    },
+    {
+      "file": "projects/yasil-baki-cover.webp",
+      "title": "Yaşıl Bakı",
+      "size": [
+        375,
+        212
+      ]
+    },
+    {
+      "file": "projects/abseron-irsi-cover.webp",
+      "title": "Abşeron irsi",
+      "size": [
+        375,
+        212
+      ]
+    }
+  ],
+  "submissions": [
+    {
+      "file": "submissions/balaxani-01.webp",
+      "settlement": "Balaxanı",
+      "size": [
+        151,
+        190
+      ]
+    },
+    {
+      "file": "submissions/ramana-01.webp",
+      "settlement": "Ramana",
+      "size": [
+        149,
+        190
+      ]
+    },
+    {
+      "file": "submissions/mastaga-01.webp",
+      "settlement": "Maştağa",
+      "size": [
+        149,
+        190
+      ]
+    },
+    {
+      "file": "submissions/merdekan-01.webp",
+      "settlement": "Mərdəkan",
+      "size": [
+        149,
+        190
+      ]
+    },
+    {
+      "file": "submissions/suvelan-01.webp",
+      "settlement": "Şüvəlan",
+      "size": [
+        148,
+        190
+      ]
+    },
+    {
+      "file": "submissions/buzovna-01.webp",
+      "settlement": "Buzovna",
+      "size": [
+        150,
+        190
+      ]
+    },
+    {
+      "file": "submissions/nardaran-01.webp",
+      "settlement": "Nardaran",
+      "size": [
+        149,
+        190
+      ]
+    },
+    {
+      "file": "submissions/pirsagi-01.webp",
+      "settlement": "Pirşağı",
+      "size": [
+        149,
+        190
+      ]
+    },
+    {
+      "file": "submissions/zire-01.webp",
+      "settlement": "Zirə",
+      "size": [
+        149,
+        190
+      ]
+    },
+    {
+      "file": "submissions/bilgeh-01.webp",
+      "settlement": "Bilgəh",
+      "size": [
+        146,
+        190
+      ]
+    },
+    {
+      "file": "submissions/emircan-01.webp",
+      "settlement": "Əmircan",
+      "size": [
+        151,
+        190
+      ]
+    },
+    {
+      "file": "submissions/bileceri-01.webp",
+      "settlement": "Biləcəri",
+      "size": [
+        149,
+        190
+      ]
+    }
+  ],
+  "results": [
+    {
+      "file": "results/baki-kendleri-results-cover.webp",
+      "title": "Bakı kəndləri — şevron dizayn müsabiqəsi nəticələri",
+      "size": [
+        546,
+        235
+      ]
+    }
+  ],
+  "competitions": [
+    {
+      "file": "competitions/xezerin-nefesi-poster-cover.webp",
+      "title": "Xəzərin nəfəsi — poster müsabiqəsi",
+      "size": [
+        176,
+        234
+      ]
+    },
+    {
+      "file": "competitions/yasil-seher-vizual-cover.webp",
+      "title": "Yaşıl şəhər — vizual kimlik",
+      "size": [
+        180,
+        234
+      ]
+    },
+    {
+      "file": "competitions/das-yaddasi-photo-cover.webp",
+      "title": "Daş yaddaşı — foto müsabiqəsi",
+      "size": [
+        185,
+        234
+      ]
+    }
+  ]
+}

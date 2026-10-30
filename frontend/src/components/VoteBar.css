@@ -1,0 +1,54 @@
+/* A work's public vote as one bar (VoteBar): green valid, red set aside by an approved audit decision. */
+
+.vbar {
+  --vbar-valid: #2e8b57;
+  --vbar-invalid: #c8372d;
+
+  display: block;
+  height: 0.5rem;
+  background: #e6e7e2;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.vbar__fill {
+  display: flex;
+  height: 100%;
+}
+
+.vbar__valid {
+  background: var(--vbar-valid);
+}
+
+.vbar__invalid {
+  background: var(--vbar-invalid);
+}
+
+.vbar-key {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.15em 0.9em;
+}
+
+.vbar-key__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  white-space: nowrap;
+}
+
+.vbar-key__swatch {
+  display: inline-block;
+  width: 0.9em;
+  height: 0.6em;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+.vbar-key__swatch--valid {
+  background: #2e8b57;
+}
+
+.vbar-key__swatch--invalid {
+  background: #c8372d;
+}

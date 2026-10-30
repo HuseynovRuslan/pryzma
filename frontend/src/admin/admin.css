@@ -1,0 +1,2767 @@
+/*
+  MEYDAN admin. Same brand (ink, saffron, Archivo + Schibsted), tuned for work: denser type, tables,
+  one dark rail for navigation, no decorative plates. Public pages are never styled from here.
+*/
+
+.admin {
+  --a-rail: 232px;
+  --a-gap: clamp(1rem, 0.6rem + 1.5vw, 2rem);
+  --a-line: #d3d6ce;
+  --a-surface: #fbfbf9;
+  min-height: 100dvh;
+  background: var(--paper);
+  font-size: 0.9375rem;
+}
+
+/* ---- Rail & top bar ---- */
+
+.a-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.a-brand__word {
+  font-family: var(--font-display);
+  font-weight: 820;
+  font-stretch: 125%;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.a-brand__role {
+  padding-left: 8px;
+  margin-left: 2px;
+  border-left: 1px solid rgb(243 244 240 / 0.3);
+  font-size: var(--fs-100);
+  color: #b9c6c3;
+}
+
+.a-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: 0 var(--a-gap);
+  height: 56px;
+  background: var(--ink);
+}
+
+.a-topbar__menu {
+  min-height: 44px;
+  padding: 0 var(--s-3);
+  border: 1px solid rgb(243 244 240 / 0.35);
+  border-radius: var(--r-1);
+  background: transparent;
+  color: var(--paper);
+  font-weight: 600;
+  font-size: var(--fs-200);
+}
+
+.a-sidebar {
+  display: none;
+  flex-direction: column;
+  gap: var(--s-5);
+  background: var(--ink);
+  color: var(--paper);
+  padding: var(--s-5) var(--s-4);
+}
+
+.a-sidebar[data-open='true'] {
+  display: flex;
+  position: fixed;
+  inset: 56px 0 0 0;
+  z-index: 29;
+  overflow-y: auto;
+}
+
+.a-brand--side {
+  display: none;
+}
+
+.a-nav {
+  display: grid;
+  gap: 2px;
+}
+
+.a-nav__link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--s-3);
+  border-radius: var(--r-1);
+  color: #d5dcda;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.a-nav__link:hover {
+  background: rgb(243 244 240 / 0.07);
+  color: var(--paper);
+}
+
+.a-nav__link.active {
+  background: rgb(243 244 240 / 0.1);
+  color: var(--paper);
+  font-weight: 700;
+}
+
+.a-nav__link.active::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 10px;
+  bottom: 10px;
+  width: 4px;
+  background: var(--saffron);
+}
+
+.a-sidebar :focus-visible,
+.a-topbar :focus-visible {
+  box-shadow: 0 0 0 2px var(--ink), 0 0 0 4.5px var(--saffron);
+}
+
+.a-sidebar__foot {
+  margin-top: auto;
+  display: grid;
+  gap: var(--s-2);
+  padding-top: var(--s-4);
+  border-top: 1px solid rgb(243 244 240 / 0.15);
+  font-size: var(--fs-200);
+}
+
+.a-sidebar__site,
+.a-sidebar__logout {
+  justify-self: start;
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #d5dcda;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.a-sidebar__user {
+  color: #9fb0ad;
+}
+
+.a-main {
+  padding: var(--s-5) var(--a-gap) var(--s-8);
+  min-width: 0;
+}
+
+.a-main:focus {
+  outline: none;
+}
+
+@media (min-width: 1024px) {
+  .admin {
+    display: grid;
+    grid-template-columns: var(--a-rail) minmax(0, 1fr);
+  }
+
+  .a-topbar {
+    display: none;
+  }
+
+  .a-sidebar,
+  .a-sidebar[data-open='true'] {
+    display: flex;
+    position: sticky;
+    inset: auto;
+    top: 0;
+    height: 100dvh;
+    overflow-y: auto;
+  }
+
+  .a-brand--side {
+    display: inline-flex;
+    flex-wrap: wrap;
+  }
+
+  .a-main {
+    padding-top: var(--s-6);
+  }
+}
+
+/* ---- Page header ---- */
+
+.a-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--s-4);
+  padding-bottom: var(--s-4);
+  margin-bottom: var(--s-5);
+  border-bottom: 2px solid var(--ink);
+}
+
+.a-head__text {
+  display: grid;
+  gap: var(--s-1);
+  min-width: 0;
+}
+
+.a-crumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+  font-size: var(--fs-100);
+  color: var(--muted);
+}
+
+.a-crumbs li + li::before {
+  content: '/';
+  margin-right: 8px;
+  opacity: 0.5;
+}
+
+.a-crumbs a {
+  color: inherit;
+}
+
+.a-head__title {
+  font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.25rem);
+  font-weight: 800;
+  font-stretch: 72%;
+  line-height: 1.02;
+  overflow-wrap: anywhere;
+}
+
+.a-head__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-4);
+  font-size: var(--fs-200);
+  color: var(--ink-2);
+}
+
+.a-head__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+/* ---- Badges ---- */
+
+.a-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px 3px 6px;
+  border: 1px solid var(--a-line);
+  border-radius: 2px;
+  background: var(--a-surface);
+  font-size: var(--fs-100);
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+.a-badge__dot {
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid currentColor;
+}
+
+.a-badge--draft {
+  color: var(--ink-2);
+}
+
+.a-badge--live .a-badge__dot {
+  border-radius: 50%;
+  background: var(--saffron);
+  border-color: var(--ink);
+}
+
+.a-badge--review {
+  border-color: #c9a64a;
+  background: #fbf3dc;
+}
+
+.a-badge--review .a-badge__dot {
+  background: linear-gradient(135deg, currentColor 50%, transparent 50%);
+}
+
+.a-badge--good {
+  border-color: #9cc4ad;
+  background: var(--success-soft);
+  color: var(--success);
+}
+
+.a-badge--good .a-badge__dot {
+  background: currentColor;
+}
+
+.a-badge--bad {
+  border-color: #e4b1ab;
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.a-badge--bad .a-badge__dot {
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.a-badge--closed .a-badge__dot,
+.a-badge--archived .a-badge__dot {
+  background: currentColor;
+}
+
+.a-badge--archived {
+  color: var(--muted);
+  border-style: dashed;
+}
+
+/* Demo content: a hatched swatch, like a specimen label. */
+.a-badge--demo {
+  color: var(--ink-2);
+  border-style: dotted;
+  background: transparent;
+}
+
+.a-badge--demo .a-badge__dot {
+  background: repeating-linear-gradient(135deg, currentColor 0 1.5px, transparent 1.5px 3px);
+}
+
+.a-phase {
+  font-size: var(--fs-100);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.a-phase--open {
+  color: var(--success);
+}
+
+/* ---- Panels, grids, forms ---- */
+
+.a-panel {
+  display: grid;
+  gap: var(--s-4);
+  padding: var(--s-5);
+  border: 1px solid var(--a-line);
+  background: var(--a-surface);
+  min-width: 0;
+}
+
+.a-panel__title {
+  font-size: var(--fs-400);
+  font-weight: 760;
+  font-stretch: 85%;
+}
+
+.a-panel__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-2) var(--s-4);
+}
+
+.a-split {
+  display: grid;
+  gap: var(--a-gap);
+  align-items: start;
+}
+
+@media (min-width: 1100px) {
+  .a-split {
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+  }
+
+  .a-split--wide-aside {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+  }
+}
+
+.a-form {
+  display: grid;
+  gap: var(--s-4);
+}
+
+.a-form__row {
+  display: grid;
+  gap: var(--s-4);
+}
+
+@media (min-width: 640px) {
+  .a-form__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .a-form__row--3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.admin .input {
+  min-height: 44px;
+}
+
+.admin textarea.input {
+  min-height: 112px;
+  padding-block: var(--s-3);
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.admin select.input {
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%),
+    linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+  background-size: 5px 5px;
+  background-repeat: no-repeat;
+  padding-right: 36px;
+}
+
+.a-field {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.a-field__label {
+  font-size: var(--fs-200);
+  font-weight: 700;
+}
+
+.a-field__hint {
+  font-size: var(--fs-100);
+  color: var(--muted);
+}
+
+.a-field__error {
+  font-size: var(--fs-100);
+  font-weight: 600;
+  color: var(--danger);
+}
+
+.a-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
+}
+
+.a-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  padding-top: var(--s-2);
+}
+
+.a-confirm {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.a-btn--danger {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
+.a-btn--danger:hover {
+  background: var(--danger-soft);
+}
+
+.a-btn--danger-solid {
+  border-color: var(--danger);
+  background: var(--danger);
+  color: #fff;
+}
+
+.a-muted {
+  color: var(--muted);
+  font-size: var(--fs-200);
+}
+
+/* The permanent-deletion dialog: what goes, spelled out, then the word to type. */
+.a-delete {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.a-delete__list {
+  display: grid;
+  gap: 2px;
+  padding-left: var(--s-5);
+  list-style: disc;
+}
+
+.a-delete__warn {
+  font-weight: 700;
+  color: var(--danger);
+}
+
+.a-notice {
+  padding: var(--s-3) var(--s-4);
+  border-left: 4px solid var(--ink);
+  background: var(--stone);
+  font-size: var(--fs-200);
+}
+
+.a-notice--error {
+  border-color: var(--danger);
+  background: var(--danger-soft);
+}
+
+.a-notice--success {
+  border-color: var(--success);
+  background: var(--success-soft);
+}
+
+.a-notice--warn {
+  border-color: var(--saffron);
+  background: #fbf3dc;
+}
+
+.a-notice ul {
+  margin: var(--s-1) 0 0;
+  padding-left: 1.2em;
+}
+
+/* ---- Stats ---- */
+
+/* The overview's competition choice: wide enough for a competition's name, not the whole row. */
+.a-dashboard__choice {
+  max-width: 420px;
+}
+
+.a-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-2);
+}
+
+@media (min-width: 768px) {
+  .a-stats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1280px) {
+  .a-stats {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+
+.a-stat {
+  display: grid;
+  gap: 2px;
+  padding: var(--s-4);
+  border: 1px solid var(--a-line);
+  background: var(--a-surface);
+  color: inherit;
+  text-decoration: none;
+}
+
+.a-stat--link:hover {
+  border-color: var(--ink);
+}
+
+.a-stat__value {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 1.3rem + 1.4vw, 2.5rem);
+  font-weight: 800;
+  font-stretch: 80%;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.a-stat__label {
+  font-size: var(--fs-200);
+  color: var(--ink-2);
+}
+
+/* ---- Tables (stack into cards on narrow screens) ---- */
+
+.a-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-200);
+}
+
+.a-table th {
+  text-align: left;
+  font-weight: 600;
+  color: var(--muted);
+  padding: var(--s-2) var(--s-3);
+  border-bottom: 1px solid var(--ink);
+  white-space: nowrap;
+}
+
+.a-table td {
+  padding: var(--s-3);
+  border-bottom: 1px solid var(--a-line);
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.a-table tr.is-muted td {
+  color: var(--muted);
+}
+
+.a-table__primary {
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.a-table__link {
+  font-weight: 700;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.a-table__link:hover {
+  text-decoration: underline;
+}
+
+.a-table__sub {
+  display: block;
+  font-size: var(--fs-100);
+  color: var(--muted);
+}
+
+.a-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (max-width: 767.98px) {
+  .a-table--stack thead {
+    display: none;
+  }
+
+  .a-table--stack,
+  .a-table--stack tbody,
+  .a-table--stack tr,
+  .a-table--stack td {
+    display: block;
+    width: 100%;
+  }
+
+  .a-table--stack tr {
+    padding: var(--s-3) 0;
+    border-bottom: 1px solid var(--a-line);
+  }
+
+  .a-table--stack td {
+    display: grid;
+    grid-template-columns: 110px minmax(0, 1fr);
+    gap: var(--s-2);
+    padding: 4px 0;
+    border: 0;
+  }
+
+  /* Everything a cell holds (title + sub line) stays in the value column, beside its label. */
+  .a-table--stack td > * {
+    grid-column: 2;
+  }
+
+  .a-table--stack td[data-label=''] > * {
+    grid-column: 1;
+  }
+
+  .a-table--stack td::before {
+    content: attr(data-label);
+    color: var(--muted);
+    font-size: var(--fs-100);
+  }
+
+  .a-table--stack td.num {
+    text-align: left;
+  }
+
+  .a-table--stack td[data-label=''] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .a-table--stack td[data-label='']::before {
+    display: none;
+  }
+}
+
+/* ---- Tabs ---- */
+
+.a-tabs {
+  display: flex;
+  gap: 2px;
+  overflow-x: auto;
+  margin-bottom: var(--s-5);
+  border-bottom: 1px solid var(--a-line);
+  scrollbar-width: thin;
+}
+
+.a-tabs a {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 var(--s-4);
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+  color: var(--ink-2);
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.a-tabs a[aria-current='page'] {
+  border-bottom-color: var(--ink);
+  color: var(--ink);
+}
+
+.a-tabs__count {
+  font-size: var(--fs-100);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Lists with ordering ---- */
+
+.a-order {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.a-order button {
+  display: grid;
+  place-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--a-line);
+  border-radius: 2px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 0.8rem;
+}
+
+.a-order button:hover:not(:disabled) {
+  border-color: var(--ink);
+}
+
+.a-order button:disabled {
+  opacity: 0.35;
+}
+
+.a-fieldlist {
+  display: grid;
+  gap: 6px;
+}
+
+.a-fieldrow {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--s-3);
+  align-items: center;
+  padding: var(--s-3);
+  border: 1px solid var(--a-line);
+  background: var(--a-surface);
+}
+
+.a-fieldrow.is-selected {
+  border-color: var(--ink);
+  box-shadow: inset 4px 0 0 var(--saffron);
+}
+
+.a-fieldrow.is-inactive {
+  opacity: 0.6;
+}
+
+.a-fieldrow__main {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.a-fieldrow__label {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.a-fieldrow__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+  font-size: var(--fs-100);
+  color: var(--muted);
+}
+
+.a-fieldrow__actions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+@media (min-width: 768px) {
+  .a-fieldrow {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+  }
+
+  .a-fieldrow__actions {
+    grid-column: auto;
+  }
+}
+
+.a-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.a-tag--strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* ---- Filters & pagination ---- */
+
+.a-filters {
+  display: grid;
+  gap: var(--s-3);
+  margin-bottom: var(--s-4);
+  padding: var(--s-4);
+  border: 1px solid var(--a-line);
+  background: var(--a-surface);
+}
+
+@media (min-width: 640px) {
+  .a-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .a-filters {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .a-filters__search {
+    grid-column: span 2;
+  }
+}
+
+.a-filters__foot {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+  font-size: var(--fs-200);
+  color: var(--ink-2);
+}
+
+.a-pager {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding-top: var(--s-4);
+  font-size: var(--fs-200);
+}
+
+/* ---- Timeline, notes, files ---- */
+
+.a-timeline {
+  display: grid;
+  gap: var(--s-3);
+  border-left: 2px solid var(--a-line);
+  padding-left: var(--s-4);
+}
+
+.a-timeline li {
+  position: relative;
+  display: grid;
+  gap: 2px;
+  font-size: var(--fs-200);
+}
+
+.a-timeline li::before {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--s-4) - 6px);
+  top: 5px;
+  width: 8px;
+  height: 8px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+}
+
+.a-timeline__what {
+  font-weight: 600;
+}
+
+.a-timeline__who {
+  font-size: var(--fs-100);
+  color: var(--muted);
+}
+
+.a-notes {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.a-note {
+  padding: var(--s-3);
+  border-left: 3px solid var(--saffron);
+  background: var(--paper);
+  font-size: var(--fs-200);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.a-note__meta {
+  display: block;
+  margin-top: 4px;
+  font-size: var(--fs-100);
+  color: var(--muted);
+  white-space: normal;
+}
+
+.a-files {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(120px, 100%), 1fr));
+  gap: var(--s-3);
+}
+
+.a-file {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+  font-size: var(--fs-100);
+}
+
+.a-file__visual {
+  display: block;
+  aspect-ratio: 1;
+  border: 1px solid var(--a-line);
+  background: var(--stone);
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.a-file__visual .thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.a-file__name {
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.a-answers {
+  display: grid;
+  margin: 0;
+  border-top: 1px solid var(--a-line);
+}
+
+.a-answer {
+  display: grid;
+  gap: 4px;
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--a-line);
+}
+
+.a-answer dt {
+  font-size: var(--fs-100);
+  font-weight: 700;
+  color: var(--ink-2);
+}
+
+.a-answer dd {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 768px) {
+  .a-answer {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 5fr);
+    gap: var(--s-4);
+  }
+}
+
+.a-kv {
+  display: grid;
+  gap: var(--s-2);
+  margin: 0;
+  font-size: var(--fs-200);
+}
+
+.a-kv div {
+  display: grid;
+  grid-template-columns: 110px minmax(0, 1fr);
+  gap: var(--s-2);
+}
+
+.a-kv dt {
+  color: var(--muted);
+}
+
+.a-kv dd {
+  overflow-wrap: anywhere;
+  font-weight: 600;
+}
+
+.a-empty {
+  display: grid;
+  gap: var(--s-3);
+  justify-items: start;
+  padding: var(--s-6) var(--s-5);
+  border: 1.5px dashed var(--a-line);
+}
+
+.a-empty__title {
+  font-weight: 700;
+}
+
+.a-denied {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-4);
+  max-width: 560px;
+  margin: 12vh auto;
+  padding: 0 var(--s-5);
+}
+
+.a-denied h1 {
+  font-size: var(--fs-700);
+  font-stretch: 72%;
+}
+
+/* Colour field + live identity preview */
+.a-colour {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  align-items: end;
+  gap: var(--s-2);
+}
+
+.a-colour input[type='color'] {
+  width: 52px;
+  height: 44px;
+  padding: 2px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-1);
+  background: var(--paper-raised);
+}
+
+.a-preview {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  min-height: 180px;
+  padding: var(--s-4);
+  overflow: hidden;
+  background: var(--accent);
+  color: var(--on-accent);
+  clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%);
+  isolation: isolate;
+}
+
+.a-preview img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+}
+
+.a-preview .motif {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.a-preview__name {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 820;
+  font-stretch: 72%;
+  line-height: 0.95;
+  overflow-wrap: anywhere;
+}
+
+.a-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+}
+
+.a-checks .check {
+  min-height: 36px;
+  font-size: var(--fs-200);
+}
+
+/* ---- Results (Phase 4) ---- */
+
+.a-tag--public {
+  color: var(--success);
+  font-weight: 700;
+}
+
+.a-public-toggle {
+  gap: var(--s-2);
+  padding: var(--s-3) var(--s-4);
+  background: var(--paper);
+}
+
+.a-list {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding-left: 1.2em;
+  font-size: var(--fs-200);
+}
+
+.a-empty-inline {
+  display: grid;
+  gap: var(--s-3);
+  justify-items: start;
+}
+
+/* ---- Artwork previews (admin): always whole — emblems and badges keep their edges ---- */
+
+.a-art {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: var(--paper-raised);
+}
+
+.a-art--none,
+.a-art--empty {
+  padding: var(--s-2);
+  font-size: var(--fs-100);
+  line-height: 1.3;
+  text-align: center;
+  color: var(--ink-2); /* muted grey on stone falls short of 4.5:1 */
+  background: var(--stone);
+}
+
+.a-art--empty {
+  background: transparent;
+}
+
+.a-file__visual .a-art {
+  padding: 4px;
+}
+
+/* ---- Results: stats, category rows, picker, banner ---- */
+
+@media (min-width: 1280px) {
+  .a-stats--results {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.a-slotbar {
+  display: grid;
+  gap: var(--s-3);
+  align-items: end;
+}
+
+@media (min-width: 768px) {
+  .a-slotbar {
+    grid-template-columns: minmax(0, 280px) auto;
+    justify-content: space-between;
+  }
+}
+
+/* Segmented filter made of real radio buttons. */
+.a-seg {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.a-seg__option {
+  position: relative;
+}
+
+.a-seg__option input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.a-seg__option > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 40px;
+  padding: 0 var(--s-3);
+  margin-left: -1px;
+  border: 1px solid var(--a-line);
+  background: var(--a-surface);
+  font-size: var(--fs-200);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.a-seg__option:first-of-type > span {
+  margin-left: 0;
+}
+
+.a-seg__option input:checked + span {
+  position: relative;
+  z-index: 1;
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.a-seg__option input:focus-visible + span {
+  z-index: 2;
+  box-shadow: var(--focus);
+}
+
+.a-seg__n {
+  font-weight: 500;
+  opacity: 0.75;
+}
+
+/* "Şübhəli səslər": the reasons under each suspicious vote, and the folded lists. */
+.a-reasons {
+  margin: 0;
+  padding-left: 1.1em;
+  font-size: var(--fs-100);
+}
+
+.a-subtitle {
+  margin: var(--s-4) 0 var(--s-2);
+  font-size: var(--fs-300);
+}
+
+.a-details {
+  margin-top: var(--s-3);
+}
+
+.a-details > summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: var(--s-2) 0;
+}
+
+/* ---- Ranked lists (the vote tally, the results ranking) ---- */
+
+/* On a narrow panel a five-column table squeezes names into single letters. There each work becomes one block:
+   its rank, its name and code, the count on the right, the participant under the name. */
+.a-ranked {
+  container: ranked / inline-size;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@container ranked (max-width: 559.98px) {
+  .a-rank thead {
+    display: none;
+  }
+
+  .a-rank,
+  .a-rank tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .a-rank tr {
+    display: grid;
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      'place work votes'
+      '. who votes'
+      '. extra extra';
+    gap: 2px var(--s-3);
+    padding: var(--s-3) 0;
+    border-bottom: 1px solid var(--a-line);
+  }
+
+  .a-rank td {
+    display: block;
+    padding: 0;
+    border: 0;
+    overflow-wrap: break-word;
+  }
+
+  .a-rank__place {
+    grid-area: place;
+    font-weight: 700;
+  }
+
+  .a-rank__work {
+    grid-area: work;
+  }
+
+  .a-rank__who {
+    grid-area: who;
+    font-size: var(--fs-100);
+    color: var(--ink-2);
+  }
+
+  .a-rank td.a-rank__votes {
+    grid-area: votes;
+    max-width: 6.5rem;
+    text-align: right;
+    font-weight: 700;
+  }
+
+  .a-rank__votes .a-muted {
+    font-weight: 400;
+  }
+
+  .a-rank__extra {
+    grid-area: extra;
+  }
+
+  .a-rank td.a-rank__extra:empty {
+    display: none;
+  }
+}
+
+/* The vote ranking, made to be reviewed: the work's picture, title and reference are one control that opens it. */
+.a-rank__open {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  max-width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: zoom-in;
+}
+
+.a-rank__open:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+
+.a-rank__open:hover .a-rank__title {
+  text-decoration: underline;
+}
+
+.a-rank__thumb {
+  flex: none;
+}
+
+.a-rank__name {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.a-rank__title {
+  color: var(--accent, var(--ink));
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+
+.a-rank__marks {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px var(--s-2);
+  margin-top: var(--s-1);
+  font-size: var(--fs-100);
+}
+
+.a-rank__pdf {
+  padding: 0 6px;
+  border: 1px solid var(--a-line);
+  font-weight: 650;
+}
+
+.a-rank__preview {
+  color: var(--ink-2);
+}
+
+.a-rank__official {
+  white-space: nowrap;
+}
+
+.a-rank__view {
+  text-align: right;
+}
+
+/* On a narrow panel each work is a card: rank, picture and name, votes on the right; the participant, the official
+   place and "İşə bax" under the name. */
+@container ranked (max-width: 559.98px) {
+  /* The work gets the card's whole width; its votes go to the next line, beside the participant. */
+  .a-rank--review tr {
+    grid-template-columns: 2rem minmax(0, 1fr) auto;
+    grid-template-areas:
+      'place work work'
+      '. who votes'
+      '. official view';
+  }
+
+  .a-rank--review .a-rank__thumb {
+    width: 48px;
+    height: 60px;
+  }
+
+  .a-rank__official {
+    grid-area: official;
+    align-self: center;
+    font-size: var(--fs-100);
+  }
+
+  .a-rank td.a-rank__view {
+    grid-area: view;
+  }
+}
+
+/* ---- The work viewer: the quick preview's frame, a page bar, full-size reading and the opening screen's facts ---- */
+
+.a-qp__stage.a-wv__stage {
+  grid-template-rows: minmax(0, 1fr) auto auto;
+}
+
+.a-wv__pagebar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+}
+
+.a-wv__where {
+  min-width: 14ch;
+  text-align: center;
+  font-size: var(--fs-100);
+  font-weight: 650;
+}
+
+/* Full size: the page at its own pixels, scrolled inside the stage. */
+.a-wv__zoom {
+  min-height: 240px;
+  overflow: auto;
+  background: var(--paper-raised);
+  cursor: zoom-out;
+}
+
+.a-wv__zoom img {
+  display: block;
+  max-width: none;
+}
+
+.a-wv__badge {
+  padding: 0 6px;
+  border: 1px solid var(--a-line);
+  font-size: var(--fs-100);
+}
+
+.a-wv__context {
+  display: grid;
+  gap: var(--s-2);
+  padding: var(--s-3);
+  border-left: 3px solid var(--ink);
+  background: var(--a-surface);
+}
+
+.a-wv__context-title {
+  font-size: var(--fs-200);
+  font-weight: 700;
+}
+
+.a-wv__concept {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.a-wv__concept p {
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 899.98px) {
+  .a-qp__stage.a-wv__stage {
+    grid-template-rows: auto auto auto;
+  }
+
+  .a-wv__zoom {
+    height: 56vh;
+  }
+}
+
+/* ---- "Şübhəli səslər" ---- */
+
+/* The panel is its own container: it lays itself out by the room it has, not by the screen — beside the admin's
+   rail a tablet is as narrow as a phone. The one strong element is each work's strip; the rest stays quiet. */
+.a-susp {
+  --susp-high: var(--danger);
+  --susp-mid: #c9a64a;
+  --susp-low: var(--stone-2);
+  container: susp / inline-size;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.a-susp__intro {
+  max-width: 72ch;
+  margin: 0;
+}
+
+/* The three counts, which are also the key to the strips. */
+.a-susp__totals {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--s-2);
+  margin: 0;
+}
+
+.a-susp__total {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--a-line);
+}
+
+.a-susp__total dd {
+  order: -1;
+  margin: 0;
+}
+
+.a-susp__total-label {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: var(--fs-200);
+  color: var(--ink-2);
+}
+
+.a-susp__key {
+  flex: none;
+  width: 10px;
+  height: 10px;
+}
+
+.a-susp__range {
+  display: block;
+  font-size: var(--fs-100);
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.a-susp__key--high,
+.a-susp__seg--high {
+  background: var(--susp-high);
+}
+
+.a-susp__key--mid,
+.a-susp__seg--mid {
+  background: var(--susp-mid);
+}
+
+.a-susp__key--low,
+.a-susp__seg--low {
+  background: var(--susp-low);
+}
+
+/* A work's votes as one strip of its whole count: how much of it is in doubt, at a glance. */
+.a-susp__strip {
+  display: flex;
+  gap: 1px;
+  width: 100%;
+  min-width: 96px;
+  height: 8px;
+}
+
+.a-susp__seg {
+  height: 100%;
+}
+
+.a-susp__works .a-susp__share {
+  width: 22%;
+  vertical-align: middle;
+}
+
+.a-susp__clean strong {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.a-susp__weights td:last-child {
+  width: 34%;
+  color: var(--ink-2);
+}
+
+/* Narrow: one block per work — its name and the number an admin acts on, the strip, then the four counts. */
+@container susp (max-width: 719.98px) {
+  .a-susp__works thead,
+  .a-susp__list thead {
+    display: none;
+  }
+
+  .a-susp__works,
+  .a-susp__works tbody,
+  .a-susp__list,
+  .a-susp__list tbody {
+    display: block;
+    width: 100%;
+  }
+
+  .a-susp__works tr {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-areas:
+      'work work work clean'
+      'share share share share'
+      'votes high mid fake';
+    gap: var(--s-2) var(--s-3);
+    padding: var(--s-3) 0;
+    border-bottom: 1px solid var(--a-line);
+  }
+
+  .a-susp__works td,
+  .a-susp__works td.num,
+  .a-susp__list td {
+    display: block;
+    padding: 0;
+    border: 0;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .a-susp__work {
+    grid-area: work;
+  }
+
+  .a-susp__works .a-susp__share {
+    grid-area: share;
+    width: auto;
+  }
+
+  .a-susp__votes {
+    grid-area: votes;
+  }
+
+  .a-susp__high {
+    grid-area: high;
+  }
+
+  .a-susp__mid {
+    grid-area: mid;
+  }
+
+  .a-susp__fake {
+    grid-area: fake;
+  }
+
+  .a-susp__works td.a-susp__clean {
+    grid-area: clean;
+    text-align: right;
+  }
+
+  /* Each count names itself under its number, since the header row is gone. */
+  .a-susp__works td[data-label]::after {
+    content: attr(data-label);
+    display: block;
+    font-size: var(--fs-100);
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  .a-susp__clean strong {
+    display: block;
+    font-size: 1.5rem;
+    line-height: 1.1;
+  }
+
+  .a-susp__list tr {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'score ref'
+      'who who'
+      'why why';
+    align-items: center;
+    gap: var(--s-2) var(--s-3);
+    padding: var(--s-3) 0;
+    border-bottom: 1px solid var(--a-line);
+  }
+
+  .a-susp__score {
+    grid-area: score;
+  }
+
+  .a-susp__ref {
+    grid-area: ref;
+    color: var(--muted);
+  }
+
+  .a-susp__who {
+    grid-area: who;
+  }
+
+  .a-susp__why {
+    grid-area: why;
+  }
+
+  .a-susp__weights td:last-child {
+    width: 40%;
+  }
+}
+
+/* A phone: the panel's own padding gives way to the content. */
+@media (max-width: 600px) {
+  .a-susp {
+    padding: var(--s-4) var(--s-3);
+  }
+
+  .a-susp__total {
+    padding: var(--s-3);
+  }
+}
+
+.a-slots {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--a-line);
+}
+
+/* First, second and third place being chosen: one select per place, side by side where there is room. */
+.a-places {
+  display: grid;
+  gap: var(--s-3);
+}
+
+@media (min-width: 1100px) {
+  .a-places {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.a-slot {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: var(--s-2) var(--s-3);
+  align-items: center;
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--a-line);
+}
+
+.a-slot__art {
+  width: 64px;
+  height: 64px;
+  border: 1px dashed var(--a-line);
+  overflow: hidden;
+}
+
+.a-slot.is-won .a-slot__art {
+  border: 1px solid var(--ink);
+}
+
+.a-slot__main {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+  font-size: var(--fs-200);
+}
+
+.a-slot__name {
+  font-family: var(--font-display);
+  font-size: var(--fs-400);
+  font-weight: 760;
+  font-stretch: 88%;
+  line-height: 1.15;
+}
+
+.a-slot__winner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px var(--s-2);
+  overflow-wrap: anywhere;
+}
+
+.a-slot__ref {
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+/* A settlement still without a winner: one compact line, no empty picture frame. */
+.a-slot--open {
+  grid-template-columns: minmax(0, 1fr);
+  padding: var(--s-2) 0;
+}
+
+.a-slot--open .a-slot__name {
+  font-size: var(--fs-300);
+}
+
+.a-slot--open .a-slot__actions {
+  grid-column: 1;
+}
+
+.a-slot__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  grid-column: 2;
+}
+
+@media (min-width: 1100px) {
+  .a-slot {
+    grid-template-columns: 72px minmax(0, 1fr) auto;
+  }
+
+  .a-slot__art {
+    width: 72px;
+    height: 72px;
+  }
+
+  .a-slot__actions {
+    grid-column: auto;
+    justify-content: flex-end;
+  }
+
+  .a-slot--open {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .a-slot--open .a-slot__actions {
+    grid-column: auto;
+  }
+}
+
+/* Choosing a winner inside the dialog: one radio per work, with its thumbnail. */
+.a-pick {
+  display: grid;
+  gap: var(--s-2);
+  max-height: min(50vh, 440px);
+  overflow-y: auto;
+  margin: 0;
+  padding: 2px;
+  border: 0;
+}
+
+.a-pick__option {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 56px minmax(0, 1fr);
+  gap: var(--s-3);
+  align-items: center;
+  padding: var(--s-2);
+  border: 1px solid var(--a-line);
+  background: var(--a-surface);
+  cursor: pointer;
+}
+
+.a-pick__option:has(input:checked) {
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+
+.a-pick__option.is-current {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.a-pick__art {
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--a-line);
+  overflow: hidden;
+}
+
+.a-pick__text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  font-size: var(--fs-200);
+  overflow-wrap: anywhere;
+}
+
+/* The results banner preview: shown whole, never cropped. */
+.a-cover {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 120px;
+  max-height: 260px;
+  border: 1px solid var(--a-line);
+  background: var(--stone);
+  overflow: hidden;
+}
+
+.a-cover img {
+  display: block;
+  max-width: 100%;
+  max-height: 260px;
+  object-fit: contain;
+}
+
+.a-cover--empty {
+  color: var(--ink-2); /* muted grey on stone falls short of 4.5:1 */
+  font-size: var(--fs-200);
+}
+
+.a-cover__flag {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 4px var(--s-2);
+  background: var(--ink);
+  color: var(--paper);
+  font-size: var(--fs-100);
+  font-weight: 600;
+}
+
+.a-winner-panel {
+  border-top: 3px solid var(--ink);
+}
+
+.a-publish-actions {
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--a-line);
+}
+
+.a-table tbody tr.is-winner td:first-child {
+  box-shadow: inset 3px 0 0 var(--ink);
+}
+
+.a-table .winner-badge {
+  margin-top: 4px;
+}
+
+/* Confirmation dialog — portalled to <body>, so it only relies on global tokens. */
+.a-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: var(--s-4);
+}
+
+.a-modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(16 38 43 / 0.55);
+}
+
+.a-modal__box {
+  position: relative;
+  display: grid;
+  gap: var(--s-4);
+  width: min(100%, 520px);
+  max-height: calc(100dvh - 2 * var(--s-4));
+  overflow-y: auto;
+  padding: var(--s-5);
+  border-top: 4px solid var(--ink);
+  background: var(--paper-raised);
+  box-shadow: 0 24px 60px rgb(16 38 43 / 0.28);
+  font-size: 0.9375rem;
+}
+
+.a-modal__title {
+  font-size: var(--fs-500);
+  font-weight: 780;
+  font-stretch: 85%;
+  line-height: var(--lh-heading);
+}
+
+.a-modal__body {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.a-modal__body p {
+  margin: 0;
+}
+
+.a-modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--s-2);
+}
+
+.a-kv--dialog {
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+@media (max-width: 479.98px) {
+  .a-modal {
+    align-items: end;
+    padding: 0;
+  }
+
+  .a-modal__box {
+    width: 100%;
+    max-height: 90dvh;
+  }
+
+  .a-modal__actions .btn {
+    flex: 1 1 auto;
+  }
+}
+
+/* A wider confirmation, for a choice that needs room. */
+.a-modal__box--wide {
+  width: min(100%, 880px);
+}
+
+/* "Önizləmə səhifəsini seç": every page of a PDF as a card, the chosen one framed. */
+.a-pages {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(132px, 100%), 1fr));
+  gap: var(--s-3);
+}
+
+.a-page {
+  display: grid;
+  gap: 4px;
+  padding: 4px;
+  border: 2px solid var(--a-line);
+  background: var(--paper);
+  cursor: pointer;
+}
+
+.a-page__art {
+  display: block;
+  aspect-ratio: 3 / 4;
+  background: var(--paper-raised);
+}
+
+.a-page.is-chosen {
+  border-color: var(--ink);
+  box-shadow: inset 0 0 0 1px var(--ink);
+}
+
+.a-page:has(input:focus-visible) {
+  box-shadow: var(--focus);
+}
+
+.a-page__label {
+  font-size: var(--fs-100);
+  font-weight: 650;
+}
+
+.a-page__auto {
+  font-weight: 400;
+  color: var(--ink-2);
+}
+
+.a-pages__chosen {
+  font-weight: 700;
+}
+
+.a-file__page {
+  font-size: var(--fs-100);
+}
+
+/* ---- File public state (Phase 5) ---- */
+
+.a-file__visual {
+  position: relative;
+}
+
+.a-file.is-preview .a-file__visual {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.a-file__flag {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  padding: 2px 8px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: var(--fs-100);
+  font-weight: 700;
+}
+
+.a-file__flag--hidden {
+  bottom: auto;
+  top: 0;
+  background: var(--danger);
+}
+
+.a-file.is-hidden .a-file__visual .a-art {
+  opacity: 0.45;
+}
+
+.a-file__public {
+  display: grid;
+  gap: 2px;
+  font-size: var(--fs-100);
+}
+
+.a-state {
+  color: var(--ink-2);
+}
+
+.a-state--ok {
+  color: var(--success);
+  font-weight: 700;
+}
+
+.a-state--bad {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.a-link {
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--ink);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* A competition's poster at its own size, never enlarged. */
+.a-poster {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: min(100%, 180px);
+  border: 1px solid var(--a-line);
+}
+
+/* The last column of a table: a row's own actions, out of the way of the data. The explanatory line the delete
+   control carries belongs under a panel, not inside a table cell. */
+.a-table__actions {
+  width: 1%;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.a-table__actions .a-muted {
+  display: none;
+}
+
+/* ---- Submissions: table / gallery, and the quick preview ---- */
+
+/* The switch sits at the end of the filter line, after the count and "clear filters". */
+.a-viewswitch {
+  order: 3;
+  margin-left: auto;
+}
+
+/* A small picture beside the reference: enough to recognise a work, and the way into its quick preview. */
+.a-table__preview-col {
+  width: 76px;
+}
+
+.a-table .a-table__preview {
+  padding-block: 6px;
+}
+
+.a-table__thumb {
+  display: block;
+  width: 56px;
+  height: 70px;
+  padding: 0;
+  border: 1px solid var(--a-line);
+  background: var(--paper-raised);
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.a-table__thumb:hover {
+  border-color: var(--ink);
+}
+
+.a-table__thumb:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+
+.a-table__thumb .a-art--none {
+  padding: 3px;
+  font-size: 10px;
+}
+
+/*
+  The gallery: the same page of results, the pictures large. At most four across however wide the screen gets —
+  a reviewer compares works, and a fifth or sixth column only makes each one smaller — and two on a phone.
+*/
+.a-gallery {
+  --a-gallery-gap: var(--s-4);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(max(220px, calc((100% - 3 * var(--a-gallery-gap)) / 4)), 1fr));
+  gap: var(--s-5) var(--a-gallery-gap);
+  margin: 0 0 var(--s-5);
+  padding: 0;
+  list-style: none;
+}
+
+@media (max-width: 519.98px) {
+  .a-gallery {
+    --a-gallery-gap: var(--s-3);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.a-card {
+  min-width: 0;
+}
+
+.a-card__open {
+  display: grid;
+  gap: var(--s-3);
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: zoom-in;
+}
+
+/* Portrait by default, the shape most of these works are; anything else is shown whole inside it. */
+.a-card__visual {
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  border: 1px solid var(--a-line);
+  background: var(--paper-raised);
+  overflow: hidden;
+}
+
+.a-card__visual > .a-art {
+  position: absolute;
+  inset: 0;
+}
+
+.a-card__open:hover .a-card__visual {
+  border-color: var(--ink);
+}
+
+.a-card__open:focus-visible {
+  outline: none;
+}
+
+.a-card__open:focus-visible .a-card__visual {
+  box-shadow: var(--focus);
+}
+
+.a-card.is-winner .a-card__visual {
+  border-color: var(--saffron);
+  box-shadow: inset 0 0 0 1px var(--saffron);
+}
+
+/* "3 fayl": there is more inside than the cover. */
+.a-card__files {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  padding: 2px 6px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: var(--fs-100);
+  font-weight: 650;
+}
+
+.a-card__body {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  font-size: var(--fs-200);
+}
+
+.a-card__ref {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  color: var(--muted);
+  font-size: var(--fs-100);
+  font-weight: 600;
+}
+
+.a-card__title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  font-size: var(--fs-300);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.a-card__line {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.a-card__line--muted {
+  color: var(--ink-2);
+}
+
+.a-card__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px var(--s-2);
+  margin-top: var(--s-1);
+  color: var(--muted);
+  font-size: var(--fs-100);
+}
+
+/* The quick preview: the work on the left, what it is and who sent it on the right, one step to the next. */
+.a-qp {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: clamp(0px, 3vw, var(--s-6));
+}
+
+.a-qp__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(16 38 43 / 0.72);
+}
+
+.a-qp__box {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  width: min(1240px, 100%);
+  height: min(900px, 100%);
+  overflow: hidden;
+  background: var(--paper);
+  box-shadow: 0 24px 64px rgb(0 0 0 / 0.3);
+}
+
+.a-qp__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
+  padding: var(--s-2) var(--s-4);
+  border-bottom: 1px solid var(--a-line);
+  background: var(--a-surface);
+}
+
+.a-qp__count {
+  min-width: 6ch;
+  font-size: var(--fs-200);
+  font-weight: 650;
+}
+
+.a-qp__nav {
+  display: inline-flex;
+  gap: var(--s-2);
+  margin-inline: auto;
+}
+
+.a-qp__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+  min-height: 0;
+}
+
+.a-qp__stage {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: var(--s-3);
+  min-height: 0;
+  padding: var(--s-4);
+  background: var(--stone);
+}
+
+.a-qp__large {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 240px;
+  object-fit: contain;
+  background: var(--paper-raised);
+}
+
+.a-qp__large.a-art--none {
+  display: grid;
+  place-items: center;
+  padding: var(--s-5);
+  font-size: var(--fs-200);
+}
+
+.a-qp__strip {
+  display: flex;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 2px;
+  list-style: none;
+  overflow-x: auto;
+}
+
+.a-qp__thumb {
+  display: block;
+  flex: none;
+  width: 64px;
+  height: 80px;
+  padding: 0;
+  border: 2px solid transparent;
+  background: var(--paper-raised);
+  cursor: pointer;
+}
+
+.a-qp__thumb[aria-pressed='true'] {
+  border-color: var(--ink);
+}
+
+.a-qp__thumb:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+
+.a-qp__thumb .a-art--none {
+  font-size: 10px;
+}
+
+.a-qp__meta {
+  display: grid;
+  align-content: start;
+  gap: var(--s-4);
+  padding: var(--s-5);
+  overflow-y: auto;
+  border-left: 1px solid var(--a-line);
+}
+
+.a-qp__ref {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+  color: var(--muted);
+  font-size: var(--fs-200);
+  font-weight: 650;
+}
+
+.a-qp__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-600);
+  font-weight: 780;
+  font-stretch: 84%;
+  line-height: 1.1;
+  overflow-wrap: anywhere;
+}
+
+.a-qp__wrap {
+  overflow-wrap: anywhere;
+}
+
+.a-qp__file {
+  color: var(--muted);
+  font-size: var(--fs-100);
+}
+
+/* In the narrow side panel the question sits over its answer, so a long concept gets the panel's whole width. */
+.a-qp__answers .a-answer {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 4px;
+}
+
+/* On a phone or a narrow window: the picture on top, the facts under it, one scroll for both. */
+@media (max-width: 899.98px) {
+  .a-qp {
+    padding: 0;
+  }
+
+  .a-qp__box {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Rows as tall as their content: in a box of fixed height, a row allowed to shrink would let the picture
+     collapse under the facts that follow it. */
+  .a-qp__body {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: max-content;
+    overflow-y: auto;
+  }
+
+  .a-qp__stage {
+    grid-template-rows: auto auto;
+    min-height: auto;
+  }
+
+  /* Count and "Bağla" on one line, the two steps under them at full width — thumbs reach them easily. */
+  .a-qp__close {
+    order: 2;
+    margin-left: auto;
+  }
+
+  .a-qp__nav {
+    order: 3;
+    flex: 1 1 100%;
+    margin-inline: 0;
+  }
+
+  .a-qp__nav .btn {
+    flex: 1;
+  }
+
+  .a-qp__large {
+    height: 56vh;
+  }
+
+  .a-qp__meta {
+    overflow: visible;
+    border-left: 0;
+    border-top: 1px solid var(--a-line);
+  }
+}
+
+/* ---- "Səslərin yoxlanışı": one work's votes under review, and the decision on them (D12) ---- */
+
+.a-susp__review {
+  display: inline-flex;
+  margin-top: var(--s-2);
+}
+
+.a-susp__evidence {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--fs-100);
+  color: var(--danger);
+}
+
+.a-review {
+  container: review / inline-size;
+  grid-template-columns: minmax(0, 1fr);
+  border-color: var(--ink);
+}
+
+.a-review__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+/* The evidence as a grid of small facts: two columns on a phone, more where there is room. */
+.a-review__facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+  gap: var(--s-3) var(--s-4);
+  margin: 0;
+}
+
+.a-review__fact dt {
+  font-size: var(--fs-100);
+  color: var(--muted);
+}
+
+.a-review__fact dd {
+  margin: 2px 0 0;
+  font-weight: 600;
+}
+
+.a-review__fact dd .a-muted {
+  font-weight: 400;
+}
+
+.a-review__policy {
+  margin: 0;
+  max-width: 75ch;
+}
+
+.a-review__tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  justify-content: space-between;
+}
+
+.a-review__filter,
+.a-review__groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.a-review__list {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--a-line);
+}
+
+/* One vote: the box, the score and the account on the first line; groups, reasons and status under them. */
+.a-review__vote {
+  display: grid;
+  grid-template-columns: auto 7.5rem minmax(0, 1fr);
+  grid-template-areas:
+    'check score who'
+    '. tags tags'
+    '. why why'
+    '. status status';
+  gap: 4px var(--s-3);
+  padding: var(--s-3) 0;
+  border-bottom: 1px solid var(--a-line);
+}
+
+.a-review__vote.is-invalidated {
+  background: var(--stone);
+}
+
+.a-review__vote.is-invalidated .a-table__primary {
+  text-decoration: line-through;
+}
+
+.a-review__check {
+  grid-area: check;
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+}
+
+.a-review__score {
+  grid-area: score;
+}
+
+.a-review__evidence {
+  display: block;
+  margin-top: 2px;
+  font-size: var(--fs-100);
+  color: var(--muted);
+}
+
+.a-review__who {
+  grid-area: who;
+  display: grid;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.a-review__tags {
+  grid-area: tags;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.a-review__tag {
+  padding: 1px 6px;
+  border: 1px solid var(--a-line);
+  border-radius: var(--r-1);
+  font-size: var(--fs-100);
+}
+
+.a-review__why {
+  grid-area: why;
+  margin: 0;
+}
+
+.a-review__status {
+  grid-area: status;
+  margin: 0;
+  font-size: var(--fs-100);
+  color: var(--danger);
+}
+
+/* The decision bar stays in reach while a long list scrolls. */
+.a-review__bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-3);
+  padding: var(--s-3) 0;
+  border-top: 1px solid var(--ink);
+  background: var(--a-surface);
+}
+
+.a-review__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  margin-left: auto;
+}
+
+.a-review__confirm {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 4px var(--s-3);
+  margin: 0 0 var(--s-4);
+}
+
+.a-review__confirm dt {
+  color: var(--muted);
+}
+
+.a-review__confirm dd {
+  margin: 0;
+}
+
+@container review (max-width: 559.98px) {
+  .a-review__vote {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      'check score'
+      '. who'
+      '. tags'
+      '. why'
+      '. status';
+  }
+
+  .a-review__actions {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .a-review__actions .btn {
+    flex: 1 1 100%;
+  }
+}

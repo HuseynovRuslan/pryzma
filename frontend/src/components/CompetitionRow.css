@@ -1,0 +1,150 @@
+.competition-row {
+  border-bottom: 1px solid var(--line);
+}
+
+.competition-row:first-child {
+  border-top: 1px solid var(--line);
+}
+
+.competition-row__link {
+  position: relative;
+  display: grid;
+  grid-template-columns: 6px minmax(0, 1fr);
+  gap: var(--s-2) var(--s-4);
+  padding-block: var(--s-5);
+  text-decoration: none;
+  color: inherit;
+}
+
+.competition-row__link:focus-visible {
+  box-shadow: none;
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.competition-row__swatch {
+  grid-row: 1 / span 2;
+  width: 6px;
+  background: var(--accent);
+  transition: width var(--t-med) var(--ease-out);
+}
+
+.competition-row__main {
+  display: grid;
+  gap: var(--s-2);
+  min-width: 0;
+}
+
+.competition-row__project {
+  font-size: var(--fs-200);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.competition-row__title {
+  font-size: var(--fs-600);
+  font-stretch: 82%;
+  max-width: 28ch;
+}
+
+.competition-row__desc {
+  color: var(--ink-2);
+  max-width: 60ch;
+}
+
+.competition-row__meta {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-5);
+  padding-top: var(--s-2);
+}
+
+.competition-row__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-1) var(--s-4);
+  font-size: var(--fs-200);
+  color: var(--ink-2);
+}
+
+.competition-row__cta {
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.3em;
+}
+
+.competition-row__link:hover .competition-row__cta {
+  text-decoration-color: var(--saffron);
+  text-decoration-thickness: 3px;
+}
+
+.competition-row__link:hover .competition-row__title {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.12em;
+}
+
+/* With a poster: a small portrait beside the title, never enlarged beyond its own size. */
+.competition-row--poster .competition-row__link {
+  grid-template-columns: 6px minmax(0, 1fr) auto;
+}
+
+.competition-row__poster {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: start;
+  width: 64px;
+  max-width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  background: var(--stone);
+}
+
+.competition-row--poster .competition-row__meta {
+  grid-column: 2 / -1;
+}
+
+@media (min-width: 1024px) {
+  .competition-row__link {
+    grid-template-columns: 6px minmax(0, 1fr) minmax(220px, 300px);
+    column-gap: var(--s-6);
+    padding-block: var(--s-6);
+  }
+
+  .competition-row__swatch {
+    grid-row: 1;
+  }
+
+  .competition-row__meta {
+    grid-column: 3;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: var(--s-1);
+  }
+
+  .competition-row__facts {
+    flex-direction: column;
+  }
+
+  .competition-row__link:hover .competition-row__swatch {
+    width: 12px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .competition-row--poster .competition-row__link {
+    grid-template-columns: 6px minmax(0, 1fr) auto minmax(220px, 300px);
+  }
+
+  .competition-row__poster {
+    width: 96px;
+  }
+
+  .competition-row--poster .competition-row__meta {
+    grid-column: 4;
+  }
+}

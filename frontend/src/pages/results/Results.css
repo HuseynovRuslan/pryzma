@@ -1,0 +1,888 @@
+/*
+  Results & gallery — "a register of emblems". Every work sits whole on its own sheet of paper (contained, never
+  cropped: badges and chevrons keep their edges), every card the same size. A winner is marked by the "Qalib" plate
+  and a heavier frame, not by being bigger. The project colour appears only as a swatch and thin rules; saffron only
+  in the "Qalib" dot.
+*/
+
+/* ---- The artwork frame (shared) ---- */
+
+.art-frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: var(--paper-raised);
+  border: 1px solid var(--line);
+}
+
+/* The image is fitted inside the frame's padding: whole (contain), and never enlarged past its own size
+   (scale-down), so a tiny emblem stays crisp instead of being blown up. */
+.art-frame > img {
+  position: absolute;
+  inset: var(--art-pad, var(--s-4));
+  width: calc(100% - 2 * var(--art-pad, var(--s-4)));
+  height: calc(100% - 2 * var(--art-pad, var(--s-4)));
+  object-fit: scale-down;
+}
+
+/* No picture: the frame says why (being made / could not be made / not published) — quietly. */
+.art-state {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--s-2);
+  padding: var(--s-3);
+  color: var(--ink-2); /* muted grey on stone falls short of 4.5:1 */
+  background: var(--stone);
+  text-align: center;
+}
+
+.art-state__buta {
+  width: min(28%, 64px);
+  color: var(--accent);
+  stroke-width: 1.4;
+  opacity: 0.4;
+}
+
+.art-state__text {
+  font-size: var(--fs-100);
+  font-weight: 600;
+}
+
+.art-state--processing {
+  background: repeating-linear-gradient(90deg, var(--stone) 0 12px, var(--paper-raised) 12px 24px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .art-state--processing {
+    animation: art-processing 1.6s linear infinite;
+    background-size: 48px 100%;
+  }
+
+  @keyframes art-processing {
+    to {
+      background-position: 48px 0;
+    }
+  }
+}
+
+/* ---- Results page: header ---- */
+
+.results {
+  padding-top: var(--s-5);
+  padding-bottom: var(--section-gap);
+}
+
+.results__head {
+  display: grid;
+  gap: var(--s-3);
+  padding-top: var(--s-5);
+  padding-bottom: var(--s-6);
+}
+
+.results__project,
+.rlist__project {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-weight: 600;
+  font-size: var(--fs-200);
+}
+
+.results__swatch,
+.rlist__swatch {
+  width: 14px;
+  height: 14px;
+  background: var(--accent);
+}
+
+.results__title {
+  font-size: var(--fs-900);
+  font-weight: 820;
+  font-stretch: 76%;
+  line-height: var(--lh-tight);
+  letter-spacing: -0.015em;
+}
+
+.results__competition {
+  max-width: 34ch;
+  font-family: var(--font-display);
+  font-size: var(--fs-600);
+  font-weight: 720;
+  font-stretch: 86%;
+  line-height: var(--lh-heading);
+}
+
+.results__competition a {
+  text-decoration: none;
+}
+
+.results__competition a:hover {
+  text-decoration: underline;
+}
+
+/* The figures of the result: the number first, its word under it. */
+.results__facts,
+.rlist__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4) var(--s-7);
+  margin: var(--s-4) 0 0;
+  padding-top: var(--s-4);
+  border-top: 2px solid var(--ink);
+}
+
+.results__facts > div,
+.rlist__facts > div {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 2px;
+}
+
+.results__facts dt,
+.rlist__facts dt {
+  font-size: var(--fs-200);
+  color: var(--ink-2);
+}
+
+.results__facts dd,
+.rlist__facts dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-600);
+  font-weight: 780;
+  font-stretch: 84%;
+  line-height: 1;
+}
+
+/* The admin's results banner: a poster is shown whole, on stone, at most most of a screen tall. */
+.results__cover {
+  margin: 0 0 var(--s-7);
+  background: var(--stone);
+  border-block: 2px solid var(--ink);
+}
+
+.results__cover img {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: min(100%, var(--max));
+  max-height: min(72vh, 760px);
+  margin-inline: auto;
+}
+
+.results__body {
+  display: grid;
+  gap: var(--s-8);
+}
+
+.results__announcement {
+  max-width: 68ch;
+  font-size: var(--fs-400);
+}
+
+.results__section-title {
+  font-size: var(--fs-700);
+  font-weight: 800;
+  font-stretch: 80%;
+  line-height: var(--lh-heading);
+}
+
+/* ---- Winners by settlement ---- */
+
+.rwinners {
+  display: grid;
+  gap: var(--s-4);
+}
+
+.rwinners__tools {
+  display: grid;
+  gap: var(--s-4);
+  align-items: end;
+}
+
+@media (min-width: 900px) {
+  .rwinners__tools {
+    grid-template-columns: minmax(0, 360px) auto;
+    justify-content: space-between;
+  }
+}
+
+.rwinners__search {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.rwinners__label {
+  font-weight: 700;
+  font-size: var(--fs-200);
+}
+
+.rwinners__count {
+  font-size: var(--fs-200);
+  color: var(--muted);
+}
+
+.rwinners__none {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2);
+  color: var(--ink-2);
+}
+
+/* Segmented choice built from real radio buttons (keyboard and screen readers get them for free). */
+.seg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.seg__option {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+}
+
+.seg__option input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.seg__option > span {
+  display: inline-flex;
+  flex: 1 1 auto;
+  justify-content: center;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 44px;
+  padding: 0 var(--s-4);
+  border: 1px solid var(--line);
+  margin: 0 0 -1px -1px;
+  background: var(--paper-raised);
+  font-weight: 600;
+  font-size: var(--fs-200);
+  white-space: nowrap;
+}
+
+.seg__option:first-of-type > span {
+  margin-left: 0;
+}
+
+@media (min-width: 900px) {
+  .seg__option,
+  .seg__option > span {
+    flex: 0 0 auto;
+  }
+}
+
+.seg__option input:checked + span {
+  position: relative;
+  z-index: 1;
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.seg__option input:focus-visible + span {
+  z-index: 2;
+  box-shadow: var(--focus);
+}
+
+.seg__option:hover input:not(:checked) + span {
+  border-color: var(--ink);
+  z-index: 1;
+}
+
+.seg__n {
+  font-weight: 500;
+  opacity: 0.75;
+}
+
+/* Winner cards: one per settlement, the same size everywhere. */
+.wgrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s-6) var(--col-gap);
+}
+
+@media (min-width: 520px) {
+  .wgrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 900px) {
+  .wgrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1200px) {
+  .wgrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.wgrid--single {
+  grid-template-columns: minmax(0, 520px);
+}
+
+/* First, second and third place: one row of three from tablet width up, in order — never a podium that reorders. */
+@media (min-width: 720px) {
+  .wgrid--podium {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.wcard--place-1 .wcard__visual {
+  border-width: 3px;
+}
+
+.wcard {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--s-3);
+  min-width: 0;
+}
+
+.wcard__visual {
+  aspect-ratio: 1;
+  border: 2px solid var(--ink);
+}
+
+.wcard__text {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: 4px;
+  min-width: 0;
+}
+
+.wcard__place {
+  margin-top: var(--s-1);
+  font-family: var(--font-display);
+  font-size: var(--fs-600);
+  font-weight: 800;
+  font-stretch: 82%;
+  line-height: var(--lh-heading);
+  overflow-wrap: anywhere;
+}
+
+.wcard__title {
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.wcard__name {
+  color: var(--ink-2);
+  overflow-wrap: anywhere;
+}
+
+.wcard__ref {
+  font-size: var(--fs-100);
+  color: var(--muted);
+}
+
+/* How a place was reached in the jury final (D13): the public side, the jury side and the sum, one line each. */
+.wcard__final {
+  display: grid;
+  gap: 2px;
+  margin: var(--s-2) 0 0;
+  padding-top: var(--s-2);
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-100);
+}
+
+.wcard__final > div {
+  display: grid;
+  grid-template-columns: 6.5em minmax(0, 1fr);
+  gap: var(--s-2);
+}
+
+.wcard__final dt {
+  color: var(--muted);
+}
+
+.wcard__final dd {
+  margin: 0;
+}
+
+.wcard__final-total {
+  padding-top: 2px;
+  font-size: var(--fs-200);
+}
+
+/* The one link of the card, stretched over all of it: one tab stop, the whole card clickable. */
+.wcard__link {
+  margin-top: var(--s-2);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.wcard__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.wcard:hover .wcard__visual {
+  border-color: var(--accent);
+}
+
+.wcard__link:focus-visible {
+  outline: none;
+}
+
+.wcard:has(.wcard__link:focus-visible) .wcard__visual {
+  box-shadow: var(--focus);
+}
+
+/* Settlements still without a winner: a compact, neutral list. */
+.ropen {
+  display: grid;
+  gap: var(--s-3);
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line);
+}
+
+.ropen__title {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s-2);
+  font-size: var(--fs-500);
+  font-weight: 760;
+  font-stretch: 88%;
+}
+
+/* Name over its count: two compact columns on a phone, five or six on a wide screen. */
+.ropen__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(150px, 45%), 1fr));
+  gap: 0 var(--col-gap);
+}
+
+.ropen__list li {
+  display: grid;
+  align-content: start;
+  gap: 1px;
+  padding: var(--s-2) 0;
+  border-bottom: 1px solid var(--line);
+  min-width: 0;
+}
+
+.ropen__name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.ropen__n {
+  flex: none;
+  font-size: var(--fs-200);
+  color: var(--ink-2);
+}
+
+.ropen__n--none {
+  color: var(--muted);
+}
+
+.results__gallery-link {
+  display: grid;
+  gap: var(--s-3);
+  justify-items: start;
+  padding-top: var(--s-6);
+  border-top: 2px solid var(--ink);
+}
+
+.results__gallery-link h2 {
+  font-size: var(--fs-600);
+  font-weight: 780;
+  font-stretch: 82%;
+}
+
+/* ---- Answers (results & work page) ---- */
+
+.work-answers {
+  display: grid;
+  gap: var(--s-5);
+  margin: 0;
+}
+
+.work-answers dt {
+  font-size: var(--fs-200);
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.work-answers dd {
+  display: grid;
+  gap: var(--s-2);
+  margin: var(--s-1) 0 0;
+  overflow-wrap: anywhere;
+}
+
+/* ---- Gallery ---- */
+
+.gallery {
+  padding-top: var(--s-5);
+  padding-bottom: var(--section-gap);
+}
+
+.gallery__head {
+  display: grid;
+  gap: var(--s-4);
+  align-items: end;
+  padding-top: var(--s-4);
+  padding-bottom: var(--s-5);
+  border-bottom: 2px solid var(--ink);
+}
+
+@media (min-width: 768px) {
+  .gallery__head {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+.gallery__title {
+  font-size: var(--fs-800);
+  font-weight: 820;
+  font-stretch: 78%;
+  line-height: var(--lh-tight);
+}
+
+.gallery__meta {
+  margin-top: var(--s-3);
+  color: var(--ink-2);
+  max-width: 62ch;
+}
+
+.gallery__count {
+  margin: var(--s-5) 0 var(--s-3);
+  font-weight: 600;
+}
+
+/* Every card the same size: the same column, the same square sheet, the same text block. */
+.gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--s-5) var(--col-gap);
+}
+
+@media (min-width: 768px) {
+  .gallery__grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+}
+
+.gcard {
+  min-width: 0;
+}
+
+.gcard__link {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--s-2);
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+}
+
+.gcard__visual {
+  --art-pad: var(--s-3);
+  aspect-ratio: 1;
+}
+
+.gcard__link:hover .gcard__visual,
+.gcard__link:focus-visible .gcard__visual {
+  border-color: var(--ink);
+}
+
+.gcard__link:focus-visible {
+  outline: none;
+}
+
+.gcard__link:focus-visible .gcard__visual {
+  box-shadow: var(--focus);
+}
+
+.gcard__text {
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  min-width: 0;
+}
+
+.gcard__title {
+  font-weight: 700;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.gcard__link:hover .gcard__title {
+  text-decoration: underline;
+}
+
+.gcard__category {
+  font-size: var(--fs-200);
+  color: var(--muted);
+}
+
+.gcard__winner {
+  font-size: var(--fs-200);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.gcard__badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+/* A winner: the same size as everyone, a heavier ink frame and the "Qalib" plate. */
+.gcard--winner .gcard__visual {
+  border: 2px solid var(--ink);
+}
+
+.gallery__more {
+  display: grid;
+  justify-items: center;
+  gap: var(--s-3);
+  margin-top: var(--s-7);
+}
+
+/* ---- One work (and a winner's page) ---- */
+
+.work {
+  padding-top: var(--s-5);
+  padding-bottom: var(--section-gap);
+}
+
+.work__head {
+  display: grid;
+  justify-items: start;
+  gap: var(--s-3);
+  padding-top: var(--s-4);
+  padding-bottom: var(--s-6);
+}
+
+.work__title {
+  font-size: var(--fs-800);
+  font-weight: 820;
+  font-stretch: 78%;
+  line-height: var(--lh-tight);
+  overflow-wrap: anywhere;
+}
+
+.work__meta {
+  color: var(--ink-2);
+  font-weight: 600;
+}
+
+/* Who won, what, and its number — label over value, in a row that wraps. */
+.work__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-4) var(--s-7);
+  margin: var(--s-2) 0 0;
+}
+
+.work__facts > div {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.work__facts dt {
+  font-size: var(--fs-200);
+  color: var(--muted);
+}
+
+.work__facts dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-500);
+  font-weight: 740;
+  font-stretch: 90%;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.work__facts .work__winner {
+  font-size: var(--fs-600);
+  font-weight: 800;
+}
+
+/* The artwork is the hero: a large sheet on stone, the image whole within it. */
+.work__stage {
+  padding-block: var(--s-6);
+  background: var(--stone);
+  border-block: 2px solid var(--ink);
+}
+
+.work__hero {
+  --art-pad: clamp(var(--s-3), 3vw, var(--s-7));
+  height: min(78vh, 820px);
+  min-height: 280px;
+  margin: 0;
+}
+
+@media (max-width: 767px) {
+  .work__hero {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 1;
+  }
+}
+
+.work__note {
+  margin-top: var(--s-2);
+  color: var(--muted);
+  font-size: var(--fs-200);
+}
+
+.work__body {
+  display: grid;
+  gap: var(--s-7);
+  padding-top: var(--s-7);
+}
+
+.work__more {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(240px, 100%), 1fr));
+  gap: var(--col-gap);
+}
+
+.work__more figure {
+  aspect-ratio: 1;
+  margin: 0;
+}
+
+.work__answers {
+  max-width: 72ch;
+}
+
+.work__back {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  padding-top: var(--s-5);
+  border-top: 2px solid var(--ink);
+}
+
+/* ---- Results list ---- */
+
+.rlist {
+  display: grid;
+  gap: var(--s-7);
+}
+
+.rlist__item {
+  display: grid;
+  gap: var(--s-4);
+  padding-top: var(--s-5);
+  border-top: 2px solid var(--ink);
+}
+
+@media (min-width: 768px) {
+  .rlist__item {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--s-6);
+    align-items: start;
+  }
+}
+
+.rlist__visual {
+  position: relative;
+  display: block;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: var(--accent);
+  isolation: isolate;
+}
+
+.rlist__visual img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* The admin's results poster is shown whole. */
+.rlist__visual--poster {
+  background: var(--stone);
+}
+
+.rlist__visual--poster img {
+  object-fit: contain;
+}
+
+.rlist__text {
+  display: grid;
+  align-content: start;
+  gap: var(--s-3);
+}
+
+.rlist__title {
+  font-size: var(--fs-600);
+  font-weight: 780;
+  font-stretch: 82%;
+  line-height: var(--lh-heading);
+}
+
+.rlist__title a {
+  text-decoration: none;
+}
+
+.rlist__title a:hover {
+  text-decoration: underline;
+}
+
+.rlist__facts {
+  margin: 0;
+}
+
+.rlist__meta {
+  font-size: var(--fs-200);
+  color: var(--muted);
+}
+
+.rlist__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+/* A work on a podium of a two-choice result: each choice it stands in, one line each. */
+.work__awards {
+  display: grid;
+  gap: var(--s-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-weight: 700;
+}
+
+.work__awards li::before {
+  content: '';
+  display: inline-block;
+  width: 0.6em;
+  height: 0.6em;
+  margin-right: var(--s-2);
+  background: var(--saffron);
+}

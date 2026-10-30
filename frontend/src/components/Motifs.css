@@ -1,0 +1,20 @@
+/* A project's fallback visual (see ProjectFallback): one fine buta outline on its colour field, never a pattern. */
+.motif {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  transition: transform 700ms var(--ease-out);
+}
+
+.motif__buta {
+  position: absolute;
+  right: -7%;
+  top: calc(-16% + var(--motif-shift, 0%));
+  height: 132%;
+  width: auto;
+  color: var(--on-accent);
+  stroke-width: 1.4;
+  opacity: 0.28;
+  transform: scaleX(var(--motif-flip, 1));
+}

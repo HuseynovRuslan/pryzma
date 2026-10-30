@@ -1,0 +1,93 @@
+.auth {
+  display: grid;
+  align-items: center;
+  gap: var(--s-7);
+  padding-top: var(--s-6);
+  padding-bottom: var(--s-8);
+}
+
+.auth__main {
+  display: grid;
+  align-content: start;
+  gap: var(--s-5);
+  width: 100%;
+  max-width: 520px;
+}
+
+.auth__title {
+  font-size: var(--fs-800);
+  font-weight: 840;
+  font-stretch: 66%;
+  line-height: 0.95;
+}
+
+.auth__intro {
+  color: var(--ink-2);
+}
+
+.auth__intro a {
+  font-weight: 600;
+}
+
+.auth__intent {
+  display: grid;
+  gap: var(--s-1);
+  padding: var(--s-4) var(--s-4) var(--s-4) var(--s-5);
+  border-left: 6px solid var(--saffron);
+  background: var(--stone);
+}
+
+.auth__intent-lead {
+  font-size: var(--fs-200);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.auth__intent-title {
+  font-family: var(--font-display);
+  font-weight: 740;
+  font-stretch: 82%;
+  font-size: var(--fs-500);
+  line-height: 1.15;
+}
+
+.auth__intent-meta {
+  font-size: var(--fs-200);
+  color: var(--ink-2);
+}
+
+.auth__aside {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .auth {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    column-gap: var(--s-9);
+    padding-top: var(--s-8);
+  }
+
+  .auth__aside {
+    position: relative;
+    display: grid;
+    align-content: center;
+    overflow: hidden;
+    /* min-height: 520px;
+    max-height: 640px; */
+    /* padding: var(--s-7); */
+    background: var(--ink);
+    color: var(--paper);
+    clip-path: polygon(0 0, calc(100% - var(--chamfer)) 0, 100% var(--chamfer), 100% 100%, 0 100%);
+  }
+}
+
+/* The picture is shown whole, never cropped, and never taller than the panel. */
+.auth__image {
+  display: block;
+  width: 100%;
+  /* max-width: 320px;
+  max-height: 340px; */
+  object-fit: cover;
+  height: 100%;
+  margin-inline: auto;
+}

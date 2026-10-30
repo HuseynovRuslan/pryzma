@@ -1,0 +1,226 @@
+/* The admin-only vote analytics catalog (VoteAnalyticsPrint) — on top of print.css and jury-print.css. */
+
+.va-sheet {
+  padding: 11mm 12mm 9mm;
+}
+
+.va-head {
+  display: flex;
+  align-items: baseline;
+  gap: 4mm;
+  margin-bottom: 2.5mm;
+  padding-bottom: 2mm;
+  border-bottom: 0.4mm solid #000;
+  font-size: 8.5pt;
+}
+
+.va-head__flag {
+  flex: none;
+  padding: 0.4mm 2mm;
+  background: #000;
+  color: #fff;
+  font-size: 7.5pt;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.va-head__title {
+  flex: 1;
+  overflow: hidden;
+  color: var(--pr-ink-2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.va-head__page {
+  font-weight: 700;
+}
+
+.va-summary {
+  margin-bottom: 3mm;
+  font-size: 8.5pt;
+}
+
+.va-summary__numbers {
+  margin: 0 0 1.2mm;
+}
+
+.va-summary .va-bar {
+  height: 3.2mm;
+}
+
+.va-legend {
+  margin: 1.2mm 0 0;
+  color: var(--pr-muted);
+  font-size: 7.5pt;
+}
+
+.va-legend__note {
+  font-style: italic;
+}
+
+.va-key {
+  display: inline-block;
+  width: 3mm;
+  height: 2.2mm;
+  margin: 0 1mm 0 2.5mm;
+  vertical-align: -0.2mm;
+}
+
+.va-key:first-child {
+  margin-left: 0;
+}
+
+.va-key--valid {
+  background: #2e8b57;
+}
+
+.va-key--invalid {
+  background: #c8372d;
+}
+
+.va-grid {
+  flex: 1 1 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 3.5mm;
+}
+
+.va-card {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1mm;
+  padding: 2.2mm;
+  border: 0.3mm solid var(--pr-rule);
+  break-inside: avoid;
+}
+
+.va-card__top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2mm;
+}
+
+.va-card__pos {
+  min-width: 9mm;
+  padding: 0.3mm 1.5mm;
+  background: #000;
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 11pt;
+  font-weight: 800;
+  text-align: center;
+}
+
+.va-card__ref {
+  font-size: 8pt;
+  font-weight: 700;
+}
+
+.va-card__fig {
+  position: relative;
+  flex: 1 1 0;
+  min-height: 0;
+  margin: 0;
+  display: grid;
+  background: var(--pr-soft);
+  place-items: center;
+  overflow: hidden;
+}
+
+.va-card__fig img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.va-card__title {
+  margin: 0;
+  overflow: hidden;
+  font-size: 8pt;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.va-card__votes {
+  margin: 0;
+  font-size: 8.5pt;
+}
+
+.va-card__votes strong {
+  font-family: var(--font-display);
+  font-size: 12pt;
+}
+
+.va-card__invalid {
+  color: #a32c23;
+  font-weight: 700;
+}
+
+.va-card__why {
+  min-height: 1.2em;
+  margin: 0;
+  overflow: hidden;
+  color: var(--pr-muted);
+  font-size: 7pt;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The bar: its length is the work's votes against the most-voted work; green valid, red set aside. */
+.va-bar {
+  display: block;
+  height: 2.6mm;
+  background: #ececec;
+}
+
+.va-bar__fill {
+  display: flex;
+  height: 100%;
+}
+
+.va-bar__valid {
+  background: #2e8b57;
+}
+
+.va-bar__invalid {
+  background: #c8372d;
+}
+
+.va-foot {
+  font-size: 7.5pt;
+}
+
+.va-controls {
+  max-width: 210mm;
+  margin: 0 auto var(--s-3);
+}
+
+/* On a phone the A4 sheets are shown whole, scaled down, instead of a strip to scroll sideways. Screen only. */
+@media screen and (max-width: 40rem) {
+  .va .pr-sheet {
+    zoom: 0.46;
+  }
+}
+
+@media screen and (min-width: 40.01rem) and (max-width: 52rem) {
+  .va .pr-sheet {
+    zoom: 0.8;
+  }
+}
+
+@media print {
+  .va-controls,
+  .va-status {
+    display: none !important;
+  }
+}

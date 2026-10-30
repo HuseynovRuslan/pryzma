@@ -1,0 +1,65 @@
+/* The two podiums of a two-choice result in the admin's results tab (AwardsPanel). */
+
+.a-award {
+  display: grid;
+  gap: var(--s-3);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--line);
+}
+
+.a-award__list {
+  display: grid;
+  gap: var(--s-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.a-award__list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--s-1) var(--s-3);
+  padding: var(--s-2) 0;
+  border-bottom: 1px dashed var(--line);
+  overflow-wrap: anywhere;
+}
+
+.a-award__place {
+  min-width: 4.5rem;
+  font-weight: 700;
+}
+
+.a-award__name {
+  font-weight: 600;
+}
+
+.a-award__row {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1.4fr) minmax(0, 0.8fr);
+  gap: var(--s-2) var(--s-3);
+  margin: 0;
+  padding: var(--s-3);
+  border: 1px solid var(--line);
+}
+
+.a-award__row legend {
+  padding: 0 var(--s-1);
+  font-weight: 700;
+}
+
+.a-award__row select,
+.a-award__row input {
+  width: 100%;
+}
+
+@media (max-width: 47.99rem) {
+  .a-award__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.a-award__stale {
+  color: var(--danger);
+  font-weight: 700;
+}

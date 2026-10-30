@@ -1,0 +1,339 @@
+/*
+  The provisional stage: after the vote, before the official result (ReviewStatus, AuditUpdates).
+
+  Calm on purpose: warm ivory, deep green type, one soft green accent, hairline rules. One thing moves — the small
+  status dot beside "Səslər yoxlanılır" — and only for a reader who has not asked for less motion. The site has no
+  dark theme and loads no further font; the faces are the site's own (styles/tokens.css).
+*/
+
+.vreview,
+.vaudit,
+.vnotice {
+  --vr-ivory: #f8f5ec;
+  --vr-ivory-raised: #fcfaf4;
+  --vr-ink: #1d3a2f;
+  --vr-ink-2: #3f5a4e;
+  --vr-muted: #5f7268;
+  --vr-green: #4d7a5e;
+  --vr-green-soft: #e1eadf;
+  --vr-line: #e3ddcd;
+
+  background: var(--vr-ivory);
+  color: var(--vr-ink);
+  border: 1px solid var(--vr-line);
+  border-radius: 8px;
+}
+
+.vreview {
+  padding: clamp(1.25rem, 0.9rem + 2vw, 2.75rem);
+}
+
+.vreview__grid {
+  display: grid;
+  gap: clamp(1.25rem, 0.8rem + 2.4vw, 3rem);
+}
+
+@media (min-width: 900px) {
+  .vreview__grid {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+    align-items: center;
+  }
+}
+
+.vreview__eyebrow {
+  margin: 0 0 var(--s-3);
+  font-size: var(--fs-100);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--vr-green);
+}
+
+.vreview__title {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 1.35rem + 2.6vw, 3.4rem);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.012em;
+  color: var(--vr-ink);
+  overflow-wrap: anywhere;
+}
+
+/* The one moving thing: a soft ring that breathes out from the dot. */
+.vreview__pulse {
+  position: relative;
+  flex: none;
+  inline-size: 0.32em;
+  block-size: 0.32em;
+  border-radius: 50%;
+  background: var(--vr-green);
+}
+
+.vreview__pulse::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--vr-green);
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .vreview__pulse::after {
+    animation: vreview-pulse 2.2s ease-out infinite;
+  }
+}
+
+@keyframes vreview-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.45;
+  }
+  100% {
+    transform: scale(3.2);
+    opacity: 0;
+  }
+}
+
+.vreview__lede {
+  margin: var(--s-4) 0 0;
+  font-size: var(--fs-400);
+  line-height: var(--lh-text);
+  color: var(--vr-ink-2);
+}
+
+.vreview__second {
+  display: flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin: var(--s-2) 0 0;
+  font-size: var(--fs-400);
+  font-weight: 600;
+  color: var(--vr-ink);
+}
+
+.vreview__mark {
+  flex: none;
+  inline-size: 0.55rem;
+  block-size: 0.55rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--vr-green);
+  background: var(--vr-green-soft);
+}
+
+.vreview__note {
+  margin: var(--s-4) 0 0;
+  padding-top: var(--s-3);
+  max-width: 40rem;
+  border-top: 1px solid var(--vr-line);
+  font-size: var(--fs-200);
+  line-height: 1.5;
+  color: var(--vr-muted);
+}
+
+.vreview__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-3);
+  margin-top: var(--s-4);
+}
+
+.vreview .btn {
+  border-color: var(--vr-ink);
+  color: var(--vr-ink);
+  background: transparent;
+}
+
+.vreview .btn:hover {
+  background: var(--vr-green-soft);
+}
+
+/* ---- the totals ---- */
+
+.vreview__totals {
+  display: grid;
+  gap: var(--s-2);
+  margin: 0;
+}
+
+.vreview__total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  background: var(--vr-ivory-raised);
+  border: 1px solid var(--vr-line);
+  border-radius: 6px;
+}
+
+.vreview__total dt {
+  font-size: var(--fs-200);
+  color: var(--vr-ink-2);
+}
+
+.vreview__total dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-500);
+  font-weight: 600;
+  color: var(--vr-ink);
+}
+
+.vreview__total--valid dd {
+  color: var(--vr-green);
+}
+
+/* ---- audit updates ---- */
+
+.vaudit {
+  padding: clamp(1rem, 0.8rem + 1.2vw, 1.75rem);
+}
+
+.vaudit__title {
+  margin: 0 0 var(--s-3);
+  font-family: var(--font-display);
+  font-size: var(--fs-500);
+  font-weight: 600;
+}
+
+.vaudit__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+}
+
+.vaudit__item {
+  display: grid;
+  grid-template-columns: minmax(9.5rem, auto) minmax(0, 1fr);
+  gap: var(--s-1) var(--s-4);
+  padding: var(--s-3) 0;
+  border-top: 1px solid var(--vr-line);
+}
+
+.vaudit__item:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+@media (max-width: 560px) {
+  .vaudit__item {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.vaudit__time {
+  font-size: var(--fs-200);
+  color: var(--vr-muted);
+}
+
+.vaudit__text {
+  color: var(--vr-ink);
+  overflow-wrap: anywhere;
+}
+
+.vaudit__empty,
+.vaudit__fine {
+  margin: 0;
+  font-size: var(--fs-200);
+  color: var(--vr-muted);
+}
+
+.vaudit__fine {
+  margin-top: var(--s-3);
+}
+
+/* ---- "Səsvermə auditi yeniləndi": why the ranking changed after the vote ---- */
+
+.vnotice {
+  display: grid;
+  gap: var(--s-3);
+  margin-block: var(--s-4);
+  padding: clamp(1rem, 0.8rem + 1.2vw, 1.75rem);
+  border-left: 4px solid var(--vr-green);
+}
+
+.vnotice__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-500);
+  font-weight: 600;
+}
+
+.vnotice__body,
+.vnotice__rule,
+.vnotice__fair {
+  margin: 0;
+  max-width: 72ch;
+}
+
+.vnotice__totals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-5);
+  margin: 0;
+}
+
+.vnotice__totals div {
+  display: grid;
+  gap: 2px;
+}
+
+.vnotice__totals dt {
+  font-size: var(--fs-200);
+  color: var(--vr-muted);
+}
+
+.vnotice__totals dd {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-500);
+  font-weight: 600;
+}
+
+.vnotice__fair {
+  font-size: var(--fs-200);
+  color: var(--vr-muted);
+}
+
+.vaudit__rules {
+  display: grid;
+  gap: var(--s-2);
+  margin-top: var(--s-4);
+  padding-top: var(--s-4);
+  border-top: 1px solid var(--vr-line);
+}
+
+.vaudit__subtitle {
+  margin: 0;
+  font-size: var(--fs-300);
+  font-weight: 600;
+}
+
+.vaudit__rulelist {
+  display: grid;
+  gap: var(--s-2);
+  margin: 0;
+}
+
+.vaudit__rule dt {
+  font-weight: 600;
+  color: var(--vr-ink);
+}
+
+.vaudit__rule dd {
+  margin: 2px 0 0;
+  font-size: var(--fs-200);
+  color: var(--vr-muted);
+}
+
+.vaudit__sum {
+  margin: 0;
+  font-size: var(--fs-200);
+  color: var(--vr-muted);
+}

@@ -1,0 +1,178 @@
+# Production stack for prizma.qrlog.az (PRIZMA; meydan.qrlog.az redirects to it) on the shared QRLog VPS.
+# Run from /opt/meydan with:
+#   docker compose --env-file /opt/meydan/.env -f /opt/meydan/current/deploy/compose.yml <command>
+# (deploy/scripts/deploy.sh does this in the right order). See deploy/README.md.
+#
+# Public traffic reaches this stack through the VPS's existing reverse proxy — the QRLog stack's Caddy, which
+# terminates HTTPS and joins the shared network below. Only "web" (nginx) is on that network, under a
+# project-unique alias; the API and the database are on this project's private network and publish no port.
+#
+# Migrations are an explicit deployment step (`docker compose run --rm migrate`), never a side effect of the API
+# starting: the API refuses to start against a database with pending migrations.
+
+name: meydan
+
+networks:
+  internal:
+    driver: bridge
+  shared-proxy:
+    external: true
+    name: ${SHARED_PROXY_NETWORK:?SHARED_PROXY_NETWORK must be set in /opt/meydan/.env}
+
+volumes:
+  pgdata:
+  # The served /assets directory, shared across releases: a deploy adds to it, never replaces it, so the bundle a
+  # browser already has can still fetch its chunks. Pruned by age on start (ASSET_RETENTION_DAYS, default 30).
+  webassets:
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "20m"
+    max-file: "5"
+
+# Everything the API reads. Compose only passes variables named here — a value in .env alone reaches nothing.
+x-api-environment: &api-environment
+  ASPNETCORE_ENVIRONMENT: Production
+  ConnectionStrings__Meydan: "Host=db;Port=5432;Database=${APP_DB_NAME:?};Username=${APP_DB_USER:?};Password=${APP_DB_PASSWORD:?}"
+  Jwt__SigningKey: ${Jwt__SigningKey:?set Jwt__SigningKey in /opt/meydan/.env}
+  App__PublicUrl: ${App__PublicUrl:?}
+  AllowedHosts: ${AllowedHosts:-prizma.qrlog.az;meydan.qrlog.az;localhost;meydan-api}
+  AuthCookie__Secure: "true"
+  Uploads__StorageRoot: /var/lib/meydan/uploads
+  Database__MigrateOnStartup: "false"
+  # X-Forwarded-* is trusted only from this stack's own network (nginx); nothing else can reach the API.
+  ReverseProxy__KnownNetworks__0: ${ReverseProxy__KnownNetworks__0:-172.16.0.0/12}
+  # Mail: Disabled until a provider exists; switch to Smtp with the Email__Smtp__* values (no code change).
+  Email__Mode: ${Email__Mode:?set Email__Mode (Smtp or Disabled) in /opt/meydan/.env}
+  Email__FromAddress: ${Email__FromAddress:-}
+  Email__FromName: ${Email__FromName:-PRYZMA}
+  Email__Smtp__Host: ${Email__Smtp__Host:-}
+  Email__Smtp__Port: ${Email__Smtp__Port:-587}
+  Email__Smtp__Security: ${Email__Smtp__Security:-StartTls}
+  Email__Smtp__Username: ${Email__Smtp__Username:-}
+  Email__Smtp__Password: ${Email__Smtp__Password:-}
+  # "QRLog ilə daxil ol": switched on/off in .env; the secret must equal QRLog's
+  # ExternalSignIn__Apps__meydan__VouchSecret (both files are server-only, never in Git).
+  QrlogSso__Enabled: ${QrlogSso__Enabled:-false}
+  QrlogSso__VouchSecret: ${QrlogSso__VouchSecret:-}
+  QrlogSso__AuthorizeUrl: ${QrlogSso__AuthorizeUrl:-}
+  # R2, coordinated identity (docs/voting/R2-COORDINATED-IDENTITY.md): shown to admins always, ground to set a vote
+  # aside only when the owner switches it on.
+  Voting__CoordinatedIdentity__Enabled: ${Voting__CoordinatedIdentity__Enabled:-false}
+  Voting__CoordinatedIdentity__NameGroupMin: ${Voting__CoordinatedIdentity__NameGroupMin:-5}
+  Voting__CoordinatedIdentity__SameIpMin: ${Voting__CoordinatedIdentity__SameIpMin:-5}
+  Voting__CoordinatedIdentity__PhoneCorroborates: ${Voting__CoordinatedIdentity__PhoneCorroborates:-false}
+  # D14, disposable e-mail during the vote (OWNER-DECISIONS.md): shown to admins always, ground to set a vote aside only
+  # when the owner switches it on.
+  Voting__DisposableEmail__Enabled: ${Voting__DisposableEmail__Enabled:-false}
+  # E-mail confirmation before voting (docs/voting/EMAIL-CONFIRMATION.md): unset = off; ignored while Email__Mode is
+  # Disabled. An ISO date-time with offset, e.g. 2026-10-10T12:00:00+04:00.
+  Auth__EmailConfirmation__RequiredForAccountsFrom: ${Auth__EmailConfirmation__RequiredForAccountsFrom:-}
+  Auth__EmailConfirmationTokenLifetime: ${Auth__EmailConfirmationTokenLifetime:-2.00:00:00}
+  # Email-first registration: the address is proven before any account exists (needs Email__Mode=Smtp).
+  Auth__Registration__EmailFirst: ${Auth__Registration__EmailFirst:-false}
+  Auth__Registration__LinkMinutes: ${Auth__Registration__LinkMinutes:-45}
+  Auth__Registration__ProofMinutes: ${Auth__Registration__ProofMinutes:-30}
+  # Registration robot check, Cloudflare Turnstile (docs/voting/CAPTCHA.md): on only when all three are set.
+  Captcha__Provider: ${Captcha__Provider:-}
+  Captcha__SiteKey: ${Captcha__SiteKey:-}
+  Captcha__SecretKey: ${Captcha__SecretKey:-}
+  Captcha__FailOpen: ${Captcha__FailOpen:-false}
+
+services:
+  db:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      # Bootstrap superuser, used once by db/init to create the application role and database; the API never
+      # connects as it. Kept in .env for maintenance only.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in /opt/meydan/.env}
+      POSTGRES_INITDB_ARGS: --encoding=UTF8 --locale=C
+      APP_DB_NAME: ${APP_DB_NAME:?}
+      APP_DB_USER: ${APP_DB_USER:?}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?}
+    volumes:
+      # postgres:18+ images keep the cluster in a version-named subdirectory under /var/lib/postgresql and refuse a
+      # mount at the old /var/lib/postgresql/data path — so the volume is mounted one level up.
+      - pgdata:/var/lib/postgresql
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    networks: [internal]
+    # No ports: PostgreSQL is reachable only from containers on the internal network.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    logging: *default-logging
+
+  # One-shot: `dotnet Meydan.Api.dll migrate` applies pending migrations and the idempotent content seed, then
+  # exits. The bootstrap admin is created here on the first run only (Seed__*), and only if that e-mail has no
+  # account; the API container never sees those two values.
+  migrate:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+      labels:
+        org.opencontainers.image.title: meydan-api
+        org.opencontainers.image.revision: ${MEYDAN_COMMIT:-unknown}
+        org.opencontainers.image.version: ${IMAGE_TAG:-local}
+    image: meydan-api:${IMAGE_TAG:-local}
+    command: ["migrate"]
+    environment:
+      <<: *api-environment
+      Seed__AdminEmail: ${Seed__AdminEmail:-}
+      Seed__AdminPassword: ${Seed__AdminPassword:-}
+    volumes:
+      - /var/lib/meydan/uploads:/var/lib/meydan/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    networks: [internal]
+    restart: "no"
+    logging: *default-logging
+
+  api:
+    image: meydan-api:${IMAGE_TAG:-local}
+    environment: *api-environment
+    volumes:
+      # Persistent, outside every deployment directory; owned by the image's non-root user (UID 1654).
+      - /var/lib/meydan/uploads:/var/lib/meydan/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      internal:
+        aliases:
+          - meydan-api
+    # No ports: reachable only through web (nginx).
+    restart: unless-stopped
+    logging: *default-logging
+
+  web:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+      labels:
+        org.opencontainers.image.title: meydan-web
+        org.opencontainers.image.revision: ${MEYDAN_COMMIT:-unknown}
+        org.opencontainers.image.version: ${IMAGE_TAG:-local}
+    image: meydan-web:${IMAGE_TAG:-local}
+    depends_on:
+      api:
+        condition: service_healthy
+    environment:
+      ASSET_RETENTION_DAYS: "${ASSET_RETENTION_DAYS:-30}"
+    volumes:
+      - webassets:/usr/share/nginx/html/assets
+    networks:
+      internal: {}
+      shared-proxy:
+        aliases:
+          - meydan-web
+    ports:
+      # Diagnostics from the VPS itself only (loopback); public traffic arrives over shared-proxy.
+      - "127.0.0.1:${APP_HTTP_PORT:-8040}:80"
+    restart: unless-stopped
+    logging: *default-logging

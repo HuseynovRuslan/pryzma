@@ -1,0 +1,288 @@
+/*
+  The public vote on paper (LeaderboardPrintPage), on top of the print view's own sheets (print.css): white pages,
+  black text, the site's faces, the brand only in the head and foot. The Top 10 is one landscape A4 page — a named
+  page, so the jury's portrait sheets keep their own size; the full ranking is portrait A4, one fixed number of rows
+  to a sheet, so every page number is known before printing.
+*/
+
+@page lb-landscape {
+  size: A4 landscape;
+  margin: 0;
+}
+
+.lb-sheet--landscape {
+  page: lb-landscape;
+  width: 297mm;
+  height: 209mm;
+  padding: 11mm 14mm 8mm;
+}
+
+.lb-mode {
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.lb-mode[aria-current='page'] {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+/* ---- the head ---- */
+
+.lb-head {
+  flex: none;
+  display: grid;
+  gap: 1mm;
+  padding-bottom: 3mm;
+  margin-bottom: 3mm;
+  border-bottom: 0.3mm solid var(--pr-ink);
+}
+
+.lb-head__competition {
+  margin: 0;
+  font-size: 9pt;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pr-muted);
+}
+
+.lb-head__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 20pt;
+  line-height: 1.1;
+}
+
+.lb-head__sub {
+  margin: 0;
+  font-size: 11pt;
+  color: var(--pr-ink-2);
+}
+
+.lb-head__meta,
+.lb-totals {
+  margin: 0;
+  font-size: 9.5pt;
+  color: var(--pr-ink-2);
+}
+
+.lb-head--compact .lb-head__title {
+  font-size: 14pt;
+}
+
+.lb-head--compact .lb-head__sub {
+  font-size: 9.5pt;
+}
+
+/* ---- the table ---- */
+
+.lb-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.lb-table th {
+  padding: 1.5mm 2mm;
+  text-align: start;
+  font-size: 8pt;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--pr-muted);
+  border-bottom: 0.3mm solid var(--pr-ink);
+}
+
+.lb-table td {
+  padding: 0 2mm;
+  border-bottom: 0.2mm solid var(--pr-rule);
+  vertical-align: middle;
+}
+
+.lb-num {
+  text-align: end !important;
+  white-space: nowrap;
+}
+
+.lb-ref {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* A long title wraps to another line; nothing is cut off at the side. */
+.lb-title {
+  overflow-wrap: anywhere;
+}
+
+/* Top 10: rank, picture, reference over title, votes, points — ten rows of 13 mm. */
+.lb-table--top {
+  font-size: 11pt;
+}
+
+.lb-col-rank {
+  width: 15mm;
+}
+
+.lb-col-thumb {
+  width: 15mm;
+}
+
+.lb-table--top .lb-col-votes {
+  width: 44mm;
+}
+
+.lb-col-points {
+  width: 36mm;
+}
+
+.lb-table--top td {
+  height: 13.2mm;
+}
+
+.lb-rank {
+  font-family: var(--font-display);
+  font-size: 16pt;
+  font-weight: 800;
+}
+
+.lb-thumb {
+  padding: 0 !important;
+}
+
+.lb-thumb img,
+.lb-thumb__none {
+  display: block;
+  width: 11mm;
+  height: 11mm;
+  object-fit: contain;
+  background: var(--pr-soft);
+  border: 0.2mm solid var(--pr-rule);
+}
+
+.lb-table--top .lb-ref,
+.lb-table--top .lb-title {
+  display: block;
+}
+
+.lb-table--top .lb-title {
+  font-size: 10pt;
+  color: var(--pr-ink-2);
+}
+
+.lb-note {
+  flex: none;
+  margin: 3mm 0 0;
+  font-size: 9.5pt;
+  font-style: italic;
+  color: var(--pr-ink-2);
+}
+
+/* Full ranking: rank, reference, title, votes — 32 rows of at least 6.6 mm on a portrait page. */
+.lb-table--full {
+  font-size: 9pt;
+}
+
+.lb-col-ref {
+  width: 34mm;
+}
+
+.lb-table--full .lb-col-votes {
+  width: 24mm;
+}
+
+.lb-table--full td {
+  height: 6.6mm;
+  line-height: 1.25;
+}
+
+.lb-foot span:first-child {
+  letter-spacing: 0.04em;
+}
+
+/* ---- the cards: the same four-to-a-page sheet as the jury's, with the rank and the votes on top ---- */
+
+.lb-head--cards {
+  gap: 0.6mm;
+  padding-bottom: 2.5mm;
+  margin-bottom: 3.5mm;
+}
+
+.lb-head--cards .lb-head__title {
+  font-size: 14pt;
+}
+
+.lb-head--cards .lb-head__meta {
+  font-size: 8.5pt;
+}
+
+.lb-head__note {
+  margin: 0;
+  font-size: 8.5pt;
+  font-style: italic;
+  color: var(--pr-ink-2);
+}
+
+.lb-card__top {
+  flex: none;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 3mm;
+  margin-bottom: 1.5mm;
+  padding-bottom: 1.5mm;
+  border-bottom: 0.25mm solid var(--pr-rule);
+}
+
+/* The rank, large: the public's order — never called a place or a prize. */
+.lb-card__rank {
+  margin: 0;
+  display: grid;
+  line-height: 1;
+}
+
+.lb-card__rank-n {
+  font-family: var(--font-display);
+  font-size: 24pt;
+  font-weight: 800;
+}
+
+.lb-card__rank-label {
+  margin-top: 0.8mm;
+  font-size: 6.5pt;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--pr-muted);
+}
+
+.lb-card__votes {
+  text-align: end;
+}
+
+.lb-card__count,
+.lb-card__points {
+  margin: 0;
+  font-size: 9.5pt;
+  white-space: nowrap;
+}
+
+.lb-card__count strong {
+  font-family: var(--font-display);
+  font-size: 15pt;
+}
+
+.lb-card__points {
+  margin-top: 0.6mm;
+}
+
+.lb-card .pr-figure {
+  margin-bottom: 0;
+}
+
+.lb-author {
+  color: var(--pr-ink-2);
+}

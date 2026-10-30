@@ -1,0 +1,7 @@
+# /etc/cron.d/meydan — MEYDAN (meydan.qrlog.az) on the shared QRLog VPS. Times are Asia/Baku (the host's zone).
+# Runs as root: the uploads directory belongs to the API's container user and the backups directory is root-only.
+#
+# nightly database dump + uploads archive → /var/lib/meydan/backups (30-day retention; same disk — copy off-site)
+20 3 * * * root /bin/bash /opt/meydan/current/deploy/scripts/backup.sh >> /var/lib/meydan/backups/backup.log 2>&1
+# weekly restore drill into a throwaway database — never touches production data
+40 4 * * 0 root /bin/bash /opt/meydan/current/deploy/scripts/restore-test.sh >> /var/lib/meydan/backups/restore-test.log 2>&1

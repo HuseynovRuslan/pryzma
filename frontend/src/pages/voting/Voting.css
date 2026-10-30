@@ -1,0 +1,869 @@
+/* The public vote. The ballot borrows the gallery's frames and chips so a work looks the same wherever it is
+   shown; what is new here is the one control, and the four things it can say. */
+
+.voting {
+  padding-block: var(--s-5) var(--s-8);
+}
+
+.voting__head {
+  max-width: 62ch;
+  margin-block: var(--s-5) var(--s-6);
+}
+
+.voting__eyebrow {
+  font-size: var(--fs-100);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 0;
+}
+
+.voting__title {
+  margin: var(--s-2) 0 0;
+}
+
+.voting__lede {
+  margin: var(--s-3) 0 0;
+  color: var(--ink-2);
+  font-size: var(--fs-300);
+}
+
+.voting__window {
+  margin: var(--s-4) 0 0;
+  padding: var(--s-3) var(--s-4);
+  border: 1px solid var(--stone-2);
+  border-left: 3px solid var(--accent);
+  background: var(--paper-raised);
+  font-size: var(--fs-200);
+}
+
+.voting__window--closed {
+  border-left-color: var(--stone-2);
+  color: var(--ink-2);
+}
+
+.voting__pulse {
+  margin-top: var(--s-3);
+}
+
+/* A returning voter's invitation, folded away: one line until they want the message. */
+.voting__invite {
+  margin-top: var(--s-3);
+  border: 1px solid var(--stone-2);
+  background: var(--paper-raised);
+}
+
+.voting__invite > summary {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-3);
+  padding: var(--s-3) var(--s-4);
+  font-size: var(--fs-200);
+  font-weight: 600;
+  list-style: none;
+  cursor: pointer;
+}
+
+.voting__invite > summary::-webkit-details-marker {
+  display: none;
+}
+
+.voting__invite > summary::after {
+  content: '+';
+  color: var(--st-terracotta);
+  font-weight: 700;
+}
+
+.voting__invite[open] > summary::after {
+  content: '−';
+}
+
+.voting__invite > summary:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+
+.voting__invite[open] > summary {
+  border-bottom: 1px solid var(--stone-2);
+}
+
+.voting__invite .vshare {
+  padding: var(--s-4);
+}
+
+/* ---- the invitation to pass the vote on ---- */
+
+.vshare {
+  display: grid;
+  gap: var(--s-3);
+}
+
+.vshare__lead {
+  margin: 0;
+  font-size: var(--fs-200);
+  color: var(--ink-2);
+}
+
+/* The message as it will arrive: a chat bubble in the voter's own words, the link under them. Shown before it is
+   sent, so nobody shares what they have not read — and so they can see it says nothing about their choice. */
+.vshare__message {
+  margin: 0;
+  padding: var(--s-3) var(--s-4);
+  background: var(--st-subtle);
+  border: 1px solid var(--st-structural);
+  border-radius: 14px 14px 14px 4px;
+  font-size: var(--fs-200);
+  line-height: 1.5;
+  text-align: left;
+}
+
+.vshare__message p {
+  margin: 0;
+}
+
+.vshare__message .vshare__url {
+  margin-top: 6px;
+  color: var(--st-on-peach);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.vshare__actions {
+  display: grid;
+  gap: var(--s-2);
+}
+
+.vshare__error {
+  margin: 0;
+  color: var(--danger);
+  font-size: var(--fs-100);
+}
+
+@media (min-width: 480px) {
+  .vshare__actions {
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+  }
+}
+
+/* The live ranking sits between the header and the works; it draws its own frame. Empty until it has loaded. */
+.voting__live:not(:empty) {
+  margin-bottom: var(--s-6);
+}
+
+.voting__filters {
+  display: grid;
+  gap: var(--s-4);
+  margin-bottom: var(--s-5);
+}
+
+.vsearch {
+  display: grid;
+  gap: var(--s-2);
+  max-width: 420px;
+}
+
+.voting__count {
+  margin: 0 0 var(--s-4);
+  color: var(--ink-2);
+}
+
+.voting__grid {
+  display: grid;
+  gap: var(--s-5);
+  grid-template-columns: 1fr;
+  margin: 0;
+  padding: 0;
+}
+
+.voting__more {
+  display: grid;
+  justify-items: center;
+  gap: var(--s-3);
+  margin-top: var(--s-6);
+  text-align: center;
+}
+
+.voting__actions {
+  display: flex;
+  gap: var(--s-3);
+  flex-wrap: wrap;
+}
+
+/* ---- A work on the ballot ----
+   After the approved Stitch screen: a white card on a hairline rule, a 4:3 picture carrying the work's code,
+   and one full-width action. Depth comes from the border and a contact shadow, not from a drop shadow. */
+
+.vcard {
+  display: flex;
+  flex-direction: column;
+  background: var(--st-card, #fff);
+  border: 1px solid var(--st-structural, var(--stone-2));
+  border-radius: var(--st-radius, 8px);
+  box-shadow: var(--st-shadow, 0 1px 3px rgb(14 31 35 / 4%));
+  overflow: hidden;
+  transition:
+    box-shadow 160ms ease,
+    border-color 160ms ease;
+}
+
+.vcard:hover,
+.vcard:focus-within {
+  border-color: var(--ink);
+  box-shadow: var(--st-shadow-lift, 0 8px 24px -4px rgb(14 31 35 / 6%));
+}
+
+.vcard__visual {
+  position: relative;
+  display: block;
+  flex: none;
+  aspect-ratio: 4 / 3;
+  background: var(--st-subtle, var(--stone));
+  border-bottom: 1px solid var(--st-hairline, var(--stone-2));
+  overflow: hidden;
+}
+
+.vcard__visual img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* The work's own reference, which is how the public side already names it — never an invented code. */
+/* The work's number, small and quiet in the corner: the work is the picture, not its bookkeeping. */
+.vcard__code {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 1px 7px;
+  border-radius: var(--st-radius-sm, 4px);
+  background: rgb(255 255 255 / 85%);
+  box-shadow: 0 0 0 1px rgb(16 38 43 / 8%);
+  color: var(--ink-2);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* A column, so the action can be held at the foot however much the work above it wrote. */
+.vcard__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: var(--s-2);
+  padding: var(--s-4);
+}
+
+.vcard__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin: 0;
+  font-size: 12px;
+}
+
+/* One line, always: a long settlement name is cut rather than allowed to add a line to this card alone. */
+.vcard__nomination {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+  color: var(--st-muted, var(--muted));
+}
+
+/* The name and the description, in a block the same size on every card: two lines of name, three of
+   description. A work that wrote less leaves its slack here, above the button, rather than opening a gap
+   under its title — so cards in a row end at the same height and their buttons sit on one line. */
+.vcard__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  min-height: 124px; /* 2 × 28px title + 8px + 3 × 20px description */
+}
+
+.vcard__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: 28px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.vcard__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.vcard__title a:hover,
+.vcard__title a:focus-visible {
+  text-decoration: underline;
+}
+
+/* Three lines at most, which is what the block above reserves room for. The server already sends a preview
+   rather than the whole answer, and the whole text is on the work's own page. */
+.vcard__desc {
+  margin: 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--st-muted, var(--muted));
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+/* Held at the foot of the card, so the button's place does not move with the length of the text above it. */
+.vcard__actions {
+  display: grid;
+  gap: var(--s-2);
+  margin-top: auto;
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--st-hairline, var(--stone-2));
+}
+
+/* After somebody votes, some cards carry a line under the button and others do not. Where a page has both,
+   keep that line's room in every card, so the buttons stay on one line; where nobody has one — a signed-out
+   visitor, the usual case — nothing is reserved and no card carries empty space. */
+.voting__grid:has(.vnote) .vcard__body:not(:has(.vnote))::after,
+.vgrid__grid:has(.vnote) .vcard__body:not(:has(.vnote))::after {
+  content: '';
+  margin-top: var(--s-2);
+  min-height: 20px; /* one line of .vnote */
+}
+
+.vcard__more {
+  justify-self: center;
+  font-size: var(--fs-200);
+  font-weight: 600;
+  color: var(--ink-2);
+  text-decoration: none;
+}
+
+.vcard__more:hover {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.vcard--skeleton {
+  border-color: var(--st-hairline, var(--stone-2));
+  box-shadow: none;
+}
+
+.vcard--skeleton .vcard__body {
+  gap: var(--s-3);
+}
+
+/* ---- The count ---- */
+
+.vcount {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- The control, in the states it can be in ---- */
+
+/* Not a button: there is nothing to press. It keeps a button's shape so the card's rhythm does not change
+   between a work that can be voted for and one that cannot. */
+.vbtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-height: 48px; /* a button's height, so a card that cannot be voted for still ends where its neighbours do */
+  padding: 0.55em 1.1em;
+  border: 2px solid var(--stone-2);
+  font-weight: 700;
+  font-size: var(--fs-200);
+  text-align: center;
+  color: var(--ink-2);
+  background: var(--paper-raised);
+}
+
+.vbtn--block {
+  width: 100%;
+}
+
+/* Confirm your e-mail first: the reason, and a quiet button for a new link under it. */
+.vconfirm {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--s-2);
+}
+
+.vconfirm .vnote {
+  margin: 0;
+}
+
+/* A vote of your own, acknowledged. */
+.vbtn--done {
+  border-color: var(--ink);
+  color: var(--ink);
+  background: var(--saffron-soft);
+}
+
+.vnote {
+  margin: var(--s-2) 0 0;
+  font-size: var(--fs-100);
+  line-height: 20px; /* the height a card keeps for it when only some of its works carry one */
+  color: var(--muted);
+}
+
+/* ---- One work ---- */
+
+.vwork__layout {
+  display: grid;
+  gap: var(--s-6);
+  align-items: start;
+  margin-top: var(--s-4);
+}
+
+.vwork__hero {
+  margin: 0;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--ink);
+  background: var(--paper);
+  padding: var(--s-4);
+}
+
+.vwork__hero img {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.vwork__note {
+  margin: var(--s-3) 0 0;
+  font-size: var(--fs-100);
+  color: var(--muted);
+}
+
+.vwork__more {
+  display: grid;
+  gap: var(--s-4);
+  margin: var(--s-5) 0 0;
+  padding: 0;
+}
+
+.vwork__more figure {
+  margin: 0;
+  border: 1px solid var(--stone-2);
+  padding: var(--s-3);
+}
+
+.vwork__more img {
+  width: 100%;
+  height: auto;
+}
+
+.vwork__page {
+  margin-top: var(--s-2);
+  font-size: var(--fs-100);
+  color: var(--muted);
+  text-align: center;
+}
+
+/* On a phone the bar has room for the count and the button only: the work's name, squeezed beside them, broke
+   into single letters. The page's own title says which work this is. */
+@media (max-width: 479px) {
+  .vwork .action-bar__choice {
+    display: none;
+  }
+
+  .vwork .action-bar .btn {
+    flex: 1 1 auto;
+  }
+}
+
+.vwork__panel {
+  display: grid;
+  align-content: start;
+  gap: var(--s-3);
+}
+
+.vwork__badge {
+  justify-self: start;
+  margin: 0;
+  padding: 0.25em 0.7em;
+  border: 1px solid var(--ink);
+  font-size: var(--fs-100);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.vwork__title {
+  margin: 0;
+  font-size: var(--fs-500);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.vwork__ref {
+  margin: 0;
+  color: var(--muted);
+  font-size: var(--fs-100);
+}
+
+.vwork__answers {
+  margin-top: var(--s-2);
+}
+
+.vstatus {
+  display: grid;
+  gap: 2px;
+  padding: var(--s-4);
+  border: 2px solid var(--ink);
+  background: var(--paper);
+}
+
+.vstatus__label {
+  font-size: var(--fs-100);
+  color: var(--muted);
+}
+
+.vstatus__count {
+  font-size: var(--fs-400);
+}
+
+.vstatus__mine {
+  margin-top: var(--s-2);
+  font-size: var(--fs-100);
+  font-weight: 700;
+}
+
+.vwork__cta {
+  display: grid;
+}
+
+.vwork__back {
+  margin-top: var(--s-3);
+}
+
+/* ---- The confirmation ---- */
+
+.vdlg {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  place-items: end center;
+  padding: 0;
+}
+
+.vdlg__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 55%);
+}
+
+/* A sheet on a phone, a card in the middle of the screen above it. */
+.vdlg__box {
+  position: relative;
+  width: min(480px, 100%);
+  display: grid;
+  gap: var(--s-3);
+  padding: var(--s-4) var(--s-5) max(var(--s-5), env(safe-area-inset-bottom));
+  background: var(--paper);
+  border: 2px solid var(--ink);
+  border-bottom: none;
+}
+
+.vdlg__handle {
+  justify-self: center;
+  width: 44px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--stone-2);
+}
+
+.vdlg__mark {
+  justify-self: center;
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--ink);
+  border-radius: 50%;
+}
+
+.vdlg__mark svg {
+  width: 24px;
+  height: 24px;
+}
+
+.vdlg__title {
+  margin: 0;
+  text-align: center;
+  font-size: var(--fs-400);
+}
+
+.vdlg__text {
+  margin: 0;
+  text-align: center;
+  color: var(--ink-2);
+}
+
+.vdlg__work {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: var(--s-3);
+  border: 1px solid var(--stone-2);
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.vdlg__nomination {
+  font-size: var(--fs-100);
+  color: var(--muted);
+}
+
+/* D5: a vote is final, and this says so before it is cast — not after. */
+.vdlg__final {
+  margin: 0;
+  text-align: center;
+  font-size: var(--fs-100);
+  font-weight: 700;
+}
+
+.vdlg__error {
+  margin: 0;
+  padding: var(--s-3);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  font-size: var(--fs-200);
+}
+
+.vdlg__actions {
+  display: grid;
+  gap: var(--s-3);
+  margin-top: var(--s-2);
+}
+
+/* The receipt. The mark is stamped like a ballot — terracotta on peach, ringed like the current step of the
+   stage rail — once, as the answer to "Səsi təsdiqlə". Nothing else on the page moves. */
+.vdlg__mark--stamped {
+  border-color: var(--st-terracotta);
+  background: var(--st-peach);
+  color: var(--st-terracotta);
+  box-shadow: 0 0 0 4px var(--st-subtle);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .vdlg__mark--stamped {
+    animation: vdlg-stamp 460ms cubic-bezier(0.2, 0.8, 0.25, 1.15) both;
+  }
+}
+
+@keyframes vdlg-stamp {
+  0% {
+    transform: scale(1.7) rotate(-16deg);
+    opacity: 0;
+  }
+
+  60% {
+    transform: scale(0.94) rotate(3deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: none;
+  }
+}
+
+/* Focused only so a screen reader announces the receipt; it is not a control, so it draws no ring. */
+.vdlg__title[tabindex='-1']:focus {
+  outline: none;
+}
+
+.vdlg__dismiss {
+  justify-self: center;
+  padding: 6px 12px;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-weight: 600;
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+  cursor: pointer;
+}
+
+.vdlg__dismiss:focus-visible {
+  outline: none;
+  box-shadow: var(--focus);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .vdlg__box {
+    animation: vdlg-rise 180ms ease-out;
+  }
+}
+
+@keyframes vdlg-rise {
+  from {
+    transform: translateY(16px);
+  }
+}
+
+@media (min-width: 640px) {
+  .voting__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vwork__more {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .vdlg {
+    place-items: center;
+    padding: var(--s-5);
+  }
+
+  .vdlg__box {
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: var(--s-5);
+  }
+
+  .vdlg__handle {
+    display: none;
+  }
+
+  .vdlg__actions {
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+    direction: rtl; /* confirm on the right, cancel on the left, without reordering the DOM */
+  }
+
+  .vdlg__actions > * {
+    direction: ltr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .voting__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .voting__filters {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+  }
+
+  .vwork__layout {
+    grid-template-columns: minmax(0, 1fr) minmax(320px, 380px);
+  }
+
+  .vwork__panel {
+    position: sticky;
+    top: calc(var(--header-h) + var(--s-5));
+  }
+}
+
+/* ---- The finalists grid on the home page ----
+   The same cards as the ballot, introduced the way the design introduces them. */
+
+.vgrid {
+  display: grid;
+  gap: var(--s-5);
+  background: var(--st-card);
+  border: 1px solid var(--st-structural);
+  border-radius: var(--st-radius);
+  box-shadow: var(--st-shadow);
+  padding: var(--s-5) var(--s-4);
+}
+
+.vgrid__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.vgrid__eyebrow {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--st-terracotta);
+}
+
+.vgrid__title {
+  margin: 4px 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.375rem, 1.1rem + 1.1vw, 1.5rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  font-weight: 700;
+}
+
+.vgrid__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: var(--st-radius-sm);
+  background: var(--st-peach);
+  color: var(--st-on-peach);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.vgrid__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--s-4);
+  margin: 0;
+  padding: 0;
+}
+
+.vgrid__more {
+  margin: 0;
+  text-align: center;
+}
+
+@media (min-width: 640px) {
+  .vgrid__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .vgrid {
+    padding: var(--s-5);
+  }
+
+  .vgrid__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* The review stage at the head of the ballot, once the window has ended. */
+.voting__review {
+  margin-block: var(--s-5) var(--s-7);
+}
+
+/* The public audit lines, between the provisional ranking and the works. */
+.voting__audit {
+  margin-block: var(--s-6);
+}

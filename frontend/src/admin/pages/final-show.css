@@ -1,0 +1,629 @@
+/*
+  The final show (FinalShowPage): a dark editorial stage for a television or a projector. The site's own faces
+  (Archivo for the display lines, Schibsted Grotesk for the rest), ink-dark ground, warm ivory text and the platform's
+  saffron used sparingly — for the place, the points and the prize. Sizes follow the viewport so the same screen
+  reads from the back of a room on a 4K television and on a laptop beamer. Motion is a quiet fade and rise, and none
+  at all for anyone who asks the system for less.
+*/
+
+.fs {
+  --fs-ground: #0b1416;
+  --fs-ground-2: #122125;
+  --fs-ivory: #f4f1e8;
+  --fs-ivory-2: #c9c6bc;
+  --fs-muted: #8e9a9b;
+  --fs-line: rgb(244 241 232 / 14%);
+  --fs-saffron: #f0b323;
+  --fs-saffron-soft: rgb(240 179 35 / 16%);
+
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background:
+    radial-gradient(120% 90% at 50% 0%, var(--fs-ground-2) 0%, var(--fs-ground) 60%),
+    var(--fs-ground);
+  color: var(--fs-ivory);
+  font-family: var(--font-text);
+  overflow: hidden;
+}
+
+.fs--plain {
+  place-items: center;
+  align-content: center;
+  gap: 1.5rem;
+  font-size: clamp(1rem, 1.6vw, 1.6rem);
+  text-align: center;
+}
+
+.fs-link {
+  color: var(--fs-saffron);
+}
+
+/* ---- the frame ---- */
+
+.fs-top,
+.fs-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2vw;
+  padding: 1.6vh 2.5vw;
+}
+
+.fs-top__name {
+  font-size: clamp(0.75rem, 0.9vw, 1rem);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--fs-muted);
+}
+
+.fs-ghost,
+.fs-next,
+.fs-cta {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 999px;
+}
+
+.fs-ghost {
+  padding: 0.5em 1.1em;
+  border: 1px solid var(--fs-line);
+  background: transparent;
+  color: var(--fs-ivory-2);
+  font-size: clamp(0.8rem, 0.9vw, 1rem);
+}
+
+.fs-ghost:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.fs-next {
+  padding: 0.6em 1.4em;
+  border: 1px solid var(--fs-saffron);
+  background: transparent;
+  color: var(--fs-saffron);
+  font-size: clamp(0.85rem, 1vw, 1.1rem);
+  font-weight: 600;
+}
+
+.fs-ghost:focus-visible,
+.fs-next:focus-visible,
+.fs-cta:focus-visible {
+  outline: 2px solid var(--fs-saffron);
+  outline-offset: 3px;
+}
+
+.fs-progress {
+  flex: 1;
+  max-inline-size: 40vw;
+  block-size: 2px;
+  background: var(--fs-line);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.fs-progress__bar {
+  display: block;
+  block-size: 100%;
+  background: var(--fs-saffron);
+  transition: inline-size 400ms ease;
+}
+
+/* ---- every screen ---- */
+
+.fs-stage {
+  min-block-size: 0;
+  display: grid;
+  padding: 0 4vw;
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fs-stage > * {
+    animation: fs-rise 650ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+}
+
+@keyframes fs-rise {
+  from {
+    opacity: 0;
+    transform: translateY(1.5vh);
+  }
+}
+
+.fs-center {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 2.2vh;
+  text-align: center;
+}
+
+.fs-eyebrow {
+  margin: 0;
+  font-size: clamp(0.8rem, 1.1vw, 1.25rem);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fs-saffron);
+}
+
+.fs-brand {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 9vw, 10rem);
+  font-weight: 800;
+  font-stretch: 112%;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+}
+
+.fs-brand span {
+  color: var(--fs-saffron);
+}
+
+.fs-tagline {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.6vw, 3rem);
+  font-weight: 500;
+  color: var(--fs-ivory-2);
+}
+
+.fs-lede {
+  margin: 1vh 0 0;
+  max-inline-size: 48ch;
+  font-size: clamp(1rem, 1.8vw, 2rem);
+  line-height: 1.45;
+  color: var(--fs-ivory-2);
+}
+
+.fs-cta {
+  margin-top: 3vh;
+  padding: 0.8em 2.2em;
+  border: 0;
+  background: var(--fs-saffron);
+  color: #1a1407;
+  font-size: clamp(1rem, 1.5vw, 1.6rem);
+  font-weight: 700;
+}
+
+.fs-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.6vw, 4rem);
+  font-weight: 700;
+  line-height: 1.05;
+}
+
+.fs-title--intro {
+  font-size: clamp(2rem, 5.4vw, 6rem);
+  max-inline-size: 18ch;
+}
+
+.fs-note {
+  margin: 0;
+  font-size: clamp(0.85rem, 1.1vw, 1.2rem);
+  color: var(--fs-saffron);
+}
+
+/* ---- the artwork ---- */
+
+.fs-art {
+  position: relative;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  min-block-size: 0;
+  background: rgb(255 255 255 / 4%);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+/* The whole work, never cropped: the picture is laid over its frame and fitted inside it, whatever its proportions. */
+.fs-art img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+}
+
+.fs-art__none {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  inline-size: 30%;
+  aspect-ratio: 1;
+  border: 1px dashed var(--fs-line);
+  border-radius: 50%;
+}
+
+/* ---- the ten ---- */
+
+.fs-grid-slide {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 3vh;
+  min-block-size: 0;
+  padding-block: 1vh 2vh;
+}
+
+.fs-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 2.4vh 1.6vw;
+  min-block-size: 0;
+}
+
+.fs-grid__item {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  gap: 0.6vh;
+  min-block-size: 0;
+}
+
+.fs-ref {
+  margin: 0;
+  font-size: clamp(0.85rem, 1.15vw, 1.35rem);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.fs-grid__title {
+  font-size: clamp(0.75rem, 0.95vw, 1.1rem);
+  color: var(--fs-ivory-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---- one work, large ---- */
+
+.fs-spread-wrap {
+  position: relative;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 2vh;
+  min-block-size: 0;
+  padding-block: 1vh 1.5vh;
+}
+
+.fs-spread {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 4vw;
+  min-block-size: 0;
+}
+
+.fs-spread__art {
+  block-size: 64vh;
+  min-block-size: 0;
+}
+
+.fs-spread__text {
+  display: grid;
+  align-content: center;
+  gap: 2vh;
+}
+
+.fs-rank {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6.5vw, 7.5rem);
+  font-weight: 800;
+  line-height: 0.95;
+  color: var(--fs-saffron);
+}
+
+.fs-work__title {
+  margin: 0.4vh 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.4vw, 2.8rem);
+  font-weight: 600;
+  line-height: 1.1;
+}
+
+.fs-facts,
+.fs-sum,
+.fs-why {
+  margin: 0;
+  display: grid;
+  gap: 1vh;
+}
+
+.fs-fact,
+.fs-sum > div,
+.fs-why > div {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2vw;
+  padding-block: 0.8vh;
+  border-bottom: 1px solid var(--fs-line);
+  font-size: clamp(1rem, 1.9vw, 2.2rem);
+}
+
+.fs-fact dt,
+.fs-sum dt,
+.fs-why dt {
+  color: var(--fs-ivory-2);
+}
+
+.fs-fact dd,
+.fs-sum dd,
+.fs-why dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.fs-fact--strong dd,
+.fs-sum__total dd,
+.fs-why__total dd {
+  color: var(--fs-saffron);
+  font-weight: 800;
+}
+
+.fs-sum__total,
+.fs-why__total {
+  border-bottom: 0 !important;
+  border-top: 2px solid var(--fs-ivory);
+}
+
+/* The ones revealed so far, small, under the stage. */
+.fs-trail {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 0.8vw;
+  min-block-size: 0;
+}
+
+.fs-trail__item {
+  position: relative;
+  inline-size: clamp(36px, 5vw, 96px);
+  aspect-ratio: 1;
+}
+
+.fs-trail__item:last-child {
+  outline: 2px solid var(--fs-saffron);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+.fs-trail__rank {
+  position: absolute;
+  inset-block-end: 4px;
+  inset-inline-end: 6px;
+  padding: 0 0.4em;
+  border-radius: 4px;
+  background: rgb(11 20 22 / 82%);
+  font-size: clamp(0.7rem, 0.9vw, 1rem);
+  font-weight: 700;
+}
+
+/* ---- the top three ---- */
+
+.fs-placecard {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 12vw, 14rem);
+  font-weight: 800;
+  line-height: 0.9;
+  color: var(--fs-saffron);
+}
+
+.fs-placecard--winner {
+  font-size: clamp(2.6rem, 8vw, 9rem);
+  color: var(--fs-ivory);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fs-placecard--winner {
+    animation: fs-breathe 2.8s ease-in-out infinite;
+  }
+}
+
+@keyframes fs-breathe {
+  50% {
+    opacity: 0.55;
+  }
+}
+
+.fs-score {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4.6vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.fs-score span {
+  font-size: 0.45em;
+  font-weight: 600;
+  color: var(--fs-ivory-2);
+}
+
+.fs-money {
+  margin: 0;
+  justify-self: start;
+  padding: 0.25em 0.8em;
+  border: 1px solid var(--fs-saffron);
+  border-radius: 999px;
+  font-size: clamp(1.1rem, 2.2vw, 2.6rem);
+  font-weight: 700;
+  color: var(--fs-saffron);
+}
+
+.fs-why > div {
+  font-size: clamp(0.95rem, 1.5vw, 1.8rem);
+}
+
+.fs-why strong {
+  color: var(--fs-ivory);
+}
+
+.fs-why__total strong {
+  color: var(--fs-saffron);
+}
+
+/*
+  The winner: a slow warm light behind the work — no confetti. A soft saffron glow that breathes, and a faint ring of
+  light turning very slowly; both stand still for anyone who asks for less motion.
+*/
+.fs-glow {
+  position: absolute;
+  inset: -20% -10%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(40% 45% at 30% 50%, rgb(240 179 35 / 22%) 0%, transparent 70%),
+    conic-gradient(from 0deg at 30% 50%, transparent 0deg, rgb(240 179 35 / 7%) 20deg, transparent 40deg, transparent 90deg,
+      rgb(240 179 35 / 6%) 110deg, transparent 130deg, transparent 180deg, rgb(240 179 35 / 7%) 200deg, transparent 220deg,
+      transparent 270deg, rgb(240 179 35 / 6%) 290deg, transparent 310deg);
+}
+
+.fs-prize--winner .fs-spread {
+  position: relative;
+  z-index: 1;
+}
+
+.fs-prize--winner .fs-spread__art .fs-art {
+  box-shadow: 0 0 0 2px var(--fs-saffron), 0 0 80px rgb(240 179 35 / 25%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fs-glow {
+    animation: fs-turn 60s linear infinite, fs-breathe 6s ease-in-out infinite;
+  }
+
+  .fs-prize--winner .fs-spread__art {
+    animation: fs-arrive 1.4s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  }
+}
+
+@keyframes fs-turn {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fs-arrive {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+    filter: brightness(1.6);
+  }
+}
+
+/* ---- the final table ---- */
+
+.fs-table-slide {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 1.2vh;
+  min-block-size: 0;
+  padding-block: 0 1vh;
+}
+
+.fs-table-slide .fs-title {
+  font-size: clamp(1.4rem, 2.8vw, 3.2rem);
+}
+
+/* Ten rows and their header on one screen, from a 720p beamer to a 4K television. */
+.fs-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  font-size: clamp(0.75rem, min(1.05vw, 1.9vh), 1.3rem);
+}
+
+.fs-table th {
+  padding: 0.6vh 0.8vw;
+  text-align: start;
+  font-size: 0.8em;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fs-muted);
+  border-bottom: 1px solid var(--fs-line);
+}
+
+.fs-table td {
+  padding: 0.35vh 0.8vw;
+  border-bottom: 1px solid var(--fs-line);
+  vertical-align: middle;
+}
+
+.fs-num {
+  text-align: end !important;
+  white-space: nowrap;
+}
+
+.fs-table tr.is-top td {
+  background: var(--fs-saffron-soft);
+}
+
+.fs-table tr.is-top td:first-child {
+  color: var(--fs-saffron);
+  font-weight: 800;
+}
+
+.fs-table__work {
+  display: flex;
+  align-items: center;
+  gap: 0.8vw;
+}
+
+.fs-table__work .fs-art {
+  inline-size: clamp(26px, 5vh, 56px);
+  block-size: clamp(26px, 5vh, 56px);
+  flex: none;
+}
+
+.fs-table__title {
+  display: block;
+  font-size: 0.85em;
+  color: var(--fs-ivory-2);
+}
+
+.fs-tag {
+  display: inline-block;
+  margin: 0 0 0 0.6vw;
+  vertical-align: 0.1em;
+  padding: 0.1em 0.6em;
+  border: 1px solid var(--fs-saffron);
+  border-radius: 999px;
+  font-size: 0.72em;
+  color: var(--fs-saffron);
+}
+
+/* A narrow screen (a laptop beside the stage, a phone checking it): one column. */
+@media (max-width: 760px) {
+  .fs-spread {
+    grid-template-columns: 1fr;
+  }
+
+  .fs-spread__art {
+    max-block-size: 38vh;
+  }
+
+  .fs-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: none;
+    overflow-y: auto;
+  }
+
+  .fs-table-slide {
+    overflow: auto;
+  }
+}

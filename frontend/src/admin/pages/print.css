@@ -1,0 +1,571 @@
+/*
+  The submissions print view (SubmissionsPrintPage).
+
+  Each .pr-sheet is one A4 page, the same on screen and on paper: 210 × 296 mm (a millimetre short of 297, so
+  rounding can never push a sheet onto a second page), its own 14 mm margins inside, and @page margins of zero so
+  the browser adds none of its own — nor its date/URL header and footer, which have no room left to print in.
+  Black text on white; the toolbar exists on screen only. The site's own faces are used: they carry every
+  Azerbaijani letter, and nothing else is loaded.
+*/
+
+@page {
+  size: A4 portrait;
+  margin: 0;
+}
+
+.pr {
+  --pr-ink: #000;
+  --pr-ink-2: #222;
+  --pr-muted: #555;
+  --pr-rule: #b9b9b9;
+  --pr-soft: #f2f2f2;
+
+  min-height: 100vh;
+  padding: var(--s-5) var(--s-4) var(--s-8);
+  background: #e7e8e4;
+  color: var(--pr-ink);
+}
+
+/* ---- the toolbar (screen only) ---- */
+
+.pr-bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  box-sizing: border-box;
+  width: min(100%, 210mm);
+  margin: 0 auto var(--s-5);
+  padding: var(--s-4);
+  display: grid;
+  gap: var(--s-3);
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgb(16 38 43 / 8%);
+}
+
+.pr-bar__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+.pr-bar__row--options {
+  align-items: center;
+}
+
+.pr-bar__eyebrow {
+  margin: 0;
+  font-size: var(--fs-100);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.pr-bar__title {
+  margin: 2px 0 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-500);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.pr-bar__meta,
+.pr-bar__status,
+.pr-bar__hint,
+.pr-bar__warn {
+  margin: 0;
+  font-size: var(--fs-200);
+  color: var(--ink-2);
+}
+
+.pr-bar__hint {
+  color: var(--muted);
+}
+
+.pr-bar__warn {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+.pr-bar__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+}
+
+.pr-layout {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-4);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.pr-layout__legend {
+  float: left;
+  margin-right: var(--s-2);
+  font-size: var(--fs-200);
+  font-weight: 600;
+}
+
+.pr-radio,
+.pr-check {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: var(--fs-200);
+  cursor: pointer;
+}
+
+.pr-radio input,
+.pr-check input {
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  margin: 0;
+  accent-color: var(--ink);
+}
+
+.pr-empty {
+  text-align: center;
+  color: var(--muted);
+}
+
+/* ---- the sheets ---- */
+
+.pr-pages {
+  display: grid;
+  justify-content: center;
+  gap: 8mm;
+  /* A phone shows the pages as they are, sideways scrolling within this area only. */
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.pr-sheet {
+  position: relative;
+  box-sizing: border-box;
+  width: 210mm;
+  height: 296mm;
+  padding: 14mm 14mm 11mm;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  color: var(--pr-ink);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 18%);
+  font-family: var(--font-text);
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* Too much text even at the smallest size: the page may run on to a second one rather than lose anything. */
+.pr-sheet--long {
+  height: auto;
+  min-height: 296mm;
+}
+
+.pr-sheet__warn {
+  position: absolute;
+  top: 4mm;
+  left: 14mm;
+  right: 14mm;
+  margin: 0;
+  padding: 2px 6px;
+  font-size: 9pt;
+  color: #8a1c12;
+  background: #fbe9e7;
+  border-radius: 3px;
+}
+
+.pr-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8mm;
+  padding-bottom: 2.5mm;
+  margin-bottom: 4mm;
+  border-bottom: 0.3mm solid var(--pr-ink);
+  font-size: 9pt;
+  color: var(--pr-ink-2);
+  flex: none;
+}
+
+.pr-head__competition {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.pr-head__ref {
+  font-weight: 700;
+  font-size: 11pt;
+  color: var(--pr-ink);
+  white-space: nowrap;
+}
+
+.pr-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 20pt;
+  font-weight: 700;
+  line-height: 1.12;
+  color: var(--pr-ink);
+  overflow-wrap: anywhere;
+  flex: none;
+}
+
+.pr-meta {
+  margin: 2mm 0 0;
+  font-size: 10pt;
+  line-height: 1.4;
+  color: var(--pr-ink-2);
+  overflow-wrap: anywhere;
+  flex: none;
+}
+
+/* The picture takes the height the text leaves, keeps its proportions, and never goes below a useful size. */
+.pr-figure {
+  flex: 1 1 0;
+  min-height: 55mm;
+  margin: 4mm 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 0.25mm solid var(--pr-rule);
+}
+
+.pr-figure__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.pr-figure__none {
+  font-size: 10pt;
+  color: var(--pr-muted);
+}
+
+.pr-concept {
+  flex: none;
+}
+
+.pr-concept__label {
+  margin: 0 0 1.5mm;
+  font-size: 8.5pt;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--pr-muted);
+}
+
+.pr-concept__text {
+  font-size: 10.5pt;
+  line-height: 1.38;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  column-gap: 7mm;
+  color: var(--pr-ink);
+}
+
+.pr-eval {
+  flex: none;
+  margin-top: 5mm;
+  padding-top: 4mm;
+  border-top: 0.3mm solid var(--pr-ink);
+  font-size: 11pt;
+}
+
+.pr-eval__note {
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 2mm;
+}
+
+.pr-eval__note {
+  margin-top: 4mm;
+}
+
+/* The three criteria and the sum: the label on the left, the line to write on at the right. */
+.pr-marks {
+  margin: 0;
+  display: grid;
+}
+
+.pr-marks__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2mm;
+  min-height: 7.5mm;
+}
+
+.pr-marks__row dt,
+.pr-marks__row dd {
+  margin: 0;
+}
+
+.pr-marks__row dd {
+  white-space: nowrap;
+}
+
+.pr-marks__row--sum {
+  font-weight: 700;
+}
+
+/* The jury's sheets: the head wraps so the instruction runs the full width under the competition and the juror. */
+.pr-head--jury {
+  flex-wrap: wrap;
+  row-gap: 1.5mm;
+}
+
+.pr-head__blind {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: 9pt;
+  font-weight: 700;
+  color: var(--pr-ink);
+}
+
+/* The juror writes their name or number on each sheet of the final's set. */
+.pr-head__juror {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 2mm;
+  white-space: nowrap;
+}
+
+.pr-head__juror .pr-eval__blank {
+  inline-size: 40mm;
+}
+
+.pr-eval__blank {
+  display: inline-block;
+  inline-size: 18mm;
+  border-bottom: 0.3mm solid var(--pr-ink);
+}
+
+.pr-eval__line {
+  display: block;
+  height: 8mm;
+  border-bottom: 0.25mm solid var(--pr-ink);
+}
+
+.pr-foot {
+  flex: none;
+  display: flex;
+  justify-content: space-between;
+  gap: 8mm;
+  margin-top: auto;
+  padding-top: 3mm;
+  font-size: 8.5pt;
+  color: var(--pr-muted);
+}
+
+/* ---- four per page ---- */
+
+.pr-grid {
+  flex: 1 1 0;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 6mm;
+}
+
+.pr-card {
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 4mm;
+  border: 0.25mm solid var(--pr-rule);
+  overflow: hidden;
+}
+
+.pr-card__ref {
+  margin: 0;
+  font-size: 9.5pt;
+  font-weight: 700;
+}
+
+.pr-card__title {
+  margin: 1mm 0 0;
+  font-family: var(--font-display);
+  font-size: 12.5pt;
+  line-height: 1.15;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.pr-card .pr-meta {
+  margin-top: 1mm;
+  font-size: 8.5pt;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.pr-card .pr-figure {
+  min-height: 35mm;
+  margin: 2.5mm 0;
+}
+
+.pr-card__concept {
+  margin: 0;
+  font-size: 8.5pt;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  overflow: hidden;
+  flex: none;
+}
+
+/* The jury's marks on a card: three criteria and the sum, one line each, then a line for a note. */
+.pr-card__eval {
+  flex: none;
+  margin-top: 2mm;
+  padding-top: 1.5mm;
+  border-top: 0.25mm solid var(--pr-ink);
+  font-size: 8.5pt;
+}
+
+.pr-card__eval .pr-marks__row {
+  min-height: 5mm;
+}
+
+.pr-card__eval .pr-eval__blank {
+  inline-size: 11mm;
+}
+
+.pr-card__note {
+  margin: 1mm 0 0;
+  display: flex;
+  align-items: baseline;
+  gap: 2mm;
+}
+
+.pr-eval__rest {
+  flex: 1;
+  border-bottom: 0.25mm solid var(--pr-ink);
+}
+
+/* ---- paper ---- */
+
+@media print {
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  .pr {
+    min-height: 0;
+    padding: 0;
+    background: #fff;
+  }
+
+  .pr-bar,
+  .pr-sheet__warn,
+  .pr-empty {
+    display: none !important;
+  }
+
+  .pr-pages {
+    display: block;
+    overflow: visible;
+    padding: 0;
+  }
+
+  .pr-sheet {
+    margin: 0;
+    box-shadow: none;
+    break-after: page;
+    page-break-after: always;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .pr-sheet:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  /* A run-on page (see .pr-sheet--long) is the one place a work may continue onto the next sheet. */
+  .pr-sheet--long {
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+}
+
+/* ---- the PDF badge and the appendix ---- */
+
+.pr-badge {
+  display: inline-block;
+  margin-inline-start: 2mm;
+  padding: 0.2mm 1.6mm;
+  border: 0.25mm solid var(--pr-ink);
+  border-radius: 1mm;
+  font-size: 7.5pt;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  vertical-align: 0.15em;
+}
+
+.pr-title + .pr-meta + .pr-badge,
+.pr-meta + .pr-badge {
+  align-self: start;
+  margin: 1.5mm 0 0;
+}
+
+/* One page of a work's material: the picture as large as the sheet allows, never cropped. */
+.pr-appendix__title {
+  flex: none;
+  margin: 0;
+  font-size: 12pt;
+}
+
+.pr-appendix__meta {
+  flex: none;
+  margin: 1mm 0 0;
+  font-size: 9pt;
+  color: var(--pr-ink-2);
+}
+
+.pr-figure--appendix {
+  min-height: 0;
+  margin: 4mm 0 0;
+}
+
+/* Which page of a PDF the card shows, on screen only. */
+.pr-preview-note {
+  margin-inline-start: 2mm;
+  font-size: 7.5pt;
+  color: #555;
+  vertical-align: 0.15em;
+}
+
+/* A way to the whole material, on screen only. */
+.pr-material-link {
+  margin-inline-start: 2mm;
+  font-size: 7.5pt;
+  font-weight: 600;
+  vertical-align: 0.15em;
+}
+
+@media print {
+  .pr-screen-only {
+    display: none !important;
+  }
+}

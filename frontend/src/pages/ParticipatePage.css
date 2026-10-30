@@ -1,0 +1,135 @@
+.participate {
+  display: grid;
+  gap: var(--s-6);
+  padding-top: var(--s-5);
+  max-width: 980px;
+  margin-inline: auto;
+}
+
+.participate__head {
+  display: grid;
+  gap: var(--s-5);
+  padding-top: var(--s-4);
+}
+
+.participate__head h1 {
+  font-size: var(--fs-800);
+  font-weight: 840;
+  font-stretch: 66%;
+  line-height: 0.95;
+}
+
+.stepper {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--s-2);
+}
+
+.stepper li {
+  display: grid;
+  gap: var(--s-2);
+  padding-top: var(--s-3);
+  border-top: 3px solid var(--line);
+  color: var(--muted);
+  min-width: 0;
+}
+
+.stepper li.is-done {
+  border-top-color: var(--ink);
+  color: var(--ink);
+}
+
+.stepper li.is-current {
+  border-top-color: var(--saffron);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.stepper__n {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-stretch: 90%;
+  font-size: var(--fs-400);
+  line-height: 1;
+}
+
+.stepper__label {
+  font-size: var(--fs-100);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.selection {
+  display: grid;
+  grid-template-columns: 8px minmax(0, 1fr);
+  gap: var(--s-4) var(--s-5);
+  align-items: start;
+  padding: var(--s-5);
+  border: 2px solid var(--ink);
+  background: var(--paper-raised);
+}
+
+.selection__swatch {
+  grid-row: 1 / span 2;
+  align-self: stretch;
+  background: var(--accent);
+}
+
+.selection__list {
+  display: grid;
+  gap: var(--s-4);
+  margin: 0;
+  min-width: 0;
+}
+
+.selection__list dt {
+  font-size: var(--fs-200);
+  color: var(--muted);
+}
+
+.selection__list dd {
+  font-weight: 600;
+  font-size: var(--fs-400);
+  overflow-wrap: anywhere;
+}
+
+.selection__list dd.selection__value {
+  font-family: var(--font-display);
+  font-size: var(--fs-600);
+  font-weight: 780;
+  font-stretch: 80%;
+  line-height: 1.1;
+}
+
+.selection__list dd.is-missing {
+  color: var(--danger);
+}
+
+.selection .btn {
+  grid-column: 2;
+  justify-self: start;
+}
+
+.participate__next {
+  display: grid;
+  gap: var(--s-4);
+  justify-items: start;
+  padding-top: var(--s-5);
+  border-top: 1px solid var(--line);
+}
+
+.participate__next h2 {
+  font-size: var(--fs-600);
+}
+
+@media (min-width: 768px) {
+  .stepper__label {
+    font-size: var(--fs-200);
+  }
+
+  .selection__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: var(--s-5);
+  }
+}

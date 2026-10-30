@@ -1,0 +1,52 @@
+{
+  "name": "meydan-web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "typecheck": "tsc -b",
+    "e2e": "node e2e/flow.mjs",
+    "e2e:responsive": "node e2e/shots.mjs",
+    "e2e:glyphs": "node e2e/glyphs.mjs",
+    "e2e:qa": "node e2e/qa.mjs",
+    "e2e:admin": "node e2e/admin-flow.mjs",
+    "e2e:results": "node e2e/results-flow.mjs",
+    "e2e:phase5": "node e2e/phase5-flow.mjs",
+    "e2e:critical": "node e2e/critical-flow.mjs",
+    "e2e:a11y": "node e2e/a11y.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/archivo": "^5.3.0",
+    "@fontsource-variable/schibsted-grotesk": "^5.3.0",
+    "qrcode.react": "4.2.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.18.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.25.0",
+    "@playwright/test": "^1.63.0",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react": "^4.4.1",
+    "axe-core": "^4.13.0",
+    "eslint": "^9.25.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^16.0.0",
+    "jsdom": "^29.1.1",
+    "typescript": "~5.8.3",
+    "typescript-eslint": "^8.30.1",
+    "vite": "^6.3.5",
+    "vitest": "^4.1.11"
+  }
+}
