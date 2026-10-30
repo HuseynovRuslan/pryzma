@@ -12,6 +12,58 @@ import type {
 
 // Mirrors Meydan.Api.Features.Admin DTOs.
 
+/** One competition on the launch screen (VotingLaunchCompetitionDto). */
+export interface VotingLaunchCompetition {
+  id: number
+  title: string
+  slug: string
+  projectName: string
+  votingState: VotingState
+  votingStartsAt: string | null
+  votingEndsAt: string | null
+  /** Entries with a reference and a status that can win. */
+  finalWorks: number
+  /** Of those, the ones a voter would see today (placed in an active nomination). */
+  onBallot: number
+  /** Final entries with no public picture ready: their card shows a placeholder. */
+  withoutPicture: number
+  /** No active nomination yet: starting makes "Bütün işlər" and places every final entry in it. */
+  createsNomination: boolean
+  /** Why it cannot be started; empty when it can. */
+  problems: string[]
+  warnings: string[]
+}
+
+export interface VotingLaunch {
+  serverNow: string
+  competitions: VotingLaunchCompetition[]
+}
+
+export interface VotingLaunchResult {
+  startsAt: string
+  endsAt: string
+  competitions: { id: number; title: string; slug: string; onBallot: number; nominationCreated: boolean }[]
+}
+
+/** Where a work sent to the wrong competition may go, and what stands in the way. */
+export interface SubmissionMoveOptions {
+  submissionId: number
+  reference: string | null
+  competitionId: number
+  competitionTitle: string
+  /** Why it cannot be moved anywhere. */
+  blockers: string[]
+  targets: { id: number; title: string; projectName: string; problems: string[] }[]
+}
+
+export interface SubmissionMoved {
+  submissionId: number
+  reference: string | null
+  fromCompetitionId: number
+  toCompetitionId: number
+  toCompetitionTitle: string
+}
+
 export interface Paged<T> {
   items: T[]
   total: number
@@ -790,6 +842,16 @@ export const adminApi = {
     api<DeleteImpact>(`/api/admin/participants/${id}/delete-impact`, { signal }),
   deleteParticipantPermanently: (id: string) =>
     api<DeleteReport>(`/api/admin/participants/${id}/permanent`, { method: 'DELETE' }),
+
+  /** What is ready to be voted on, and why the rest is not (the launch screen). */
+  votingLaunch: (signal?: AbortSignal) => api<VotingLaunch>('/api/admin/voting/launch', { signal }),
+  /** Opens the vote now for every chosen competition, each until `endsAt`. All or none. */
+  launchVoting: (body: { competitionIds: number[]; endsAt: string }) =>
+    api<VotingLaunchResult>('/api/admin/voting/launch', { method: 'POST', body }),
+  submissionMoveOptions: (id: number, signal?: AbortSignal) =>
+    api<SubmissionMoveOptions>(`/api/admin/submissions/${id}/move`, { signal }),
+  moveSubmission: (id: number, competitionId: number) =>
+    api<SubmissionMoved>(`/api/admin/submissions/${id}/move`, { method: 'POST', body: { competitionId } }),
 
   /** The platform's own public words; the same shape the public /api/settings returns. */
   settings: (signal?: AbortSignal) => api<PlatformSettings>('/api/admin/settings', { signal }),
