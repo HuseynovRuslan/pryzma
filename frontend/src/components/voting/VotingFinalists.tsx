@@ -4,7 +4,7 @@ import { ApiError } from '../../api/client'
 import { votingApi } from '../../api/endpoints'
 import type { CompetitionSummary, Voting, VotingWork, VotingWorks } from '../../api/types'
 import { withLiveCount } from '../../pages/voting/leaderboard'
-import { applyVote, ballotSeed, countsVisible, isSinglePool } from '../../pages/voting/lib'
+import { applyVote, ballotSeed, countsVisible, isSinglePool, voteRefusal } from '../../pages/voting/lib'
 import { VoteDialog, VotingCard } from '../../pages/voting/shared'
 import '../../pages/voting/Voting.css'
 import './stage.css'
@@ -65,7 +65,7 @@ export function VotingFinalists({
       // The dialog stays, as the receipt and the invitation to pass the vote on.
       setCast(true)
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Səs göndərilmədi. Bir az sonra yenidən cəhd edin.')
+      setError(voteRefusal(err))
       // Whatever the refusal was, what this viewer may do has changed: ask again rather than keep a stale button.
       if (err instanceof ApiError && [401, 403, 409, 422].includes(err.status))
         votingApi.works(slug, { pageSize: SHOWN, seed: ballotSeed() }).then(setPage).catch(() => undefined)

@@ -12,7 +12,17 @@ import { useApi } from '../../lib/useApi'
 import { useTitle } from '../../lib/useTitle'
 import { usePlatform } from '../../platform/context'
 import { Answers, WorkVisual } from '../results/shared'
-import { countsVisible, isSinglePool, ONE_VOTE, votedViewer, votedWork, voteCopyFor, votesLabel, workName } from './lib'
+import {
+  countsVisible,
+  isSinglePool,
+  ONE_VOTE,
+  votedViewer,
+  votedWork,
+  voteCopyFor,
+  voteRefusal,
+  votesLabel,
+  workName,
+} from './lib'
 import { VoteButton, VoteCount, VoteDialog, VoteNote } from './shared'
 import { VotingLocked } from './state'
 import '../../components/voting/stage.css'
@@ -133,7 +143,7 @@ function WorkView({
       // The dialog stays, as the receipt and the invitation to pass the vote on.
       setCast(true)
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : 'Səs göndərilmədi. Bir az sonra yenidən cəhd edin.')
+      setError(voteRefusal(err))
       // Whatever the refusal was, what this viewer may do has changed: ask again rather than keep a stale button.
       if (err instanceof ApiError && [401, 403, 409, 422].includes(err.status)) onStale()
     } finally {

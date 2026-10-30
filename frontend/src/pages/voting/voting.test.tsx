@@ -596,7 +596,10 @@ describe('the robot check on a vote', () => {
 
   it('is asked afresh after a refused vote, since a token works only once', async () => {
     config.value = { ...noCheck, captchaSiteKey: '0x4AAAAAAAtestsitekey', voteCaptcha: true }
-    api.vote.mockRejectedValue(new ApiError(400, 'Robot olmadığınızı təsdiqləyin: yoxlamanı tamamlayıb yenidən göndərin.'))
+    // The server's own shape: a form's generic title, the reason under the field — the dialog shows the reason.
+    api.vote.mockRejectedValue(new ApiError(400, 'Formada düzəliş tələb olunur.', {
+      captcha: ['Robot olmadığınızı təsdiqləyin: yoxlamanı tamamlayıb yenidən göndərin.'],
+    }))
     const dialog = await openDialog()
     await waitFor(() => expect(widget.render).toHaveBeenCalledTimes(1))
     act(() => widget.callbacks[0]('token-1'))

@@ -15,7 +15,7 @@ import { VotePulse } from '../../components/voting/VotePulse'
 import { AuditNotice, AuditUpdates, ReviewStatus } from '../../components/voting/VotingReview'
 import { GalleryFilter } from '../results/GalleryFilter'
 import { useLeaderboard, withLiveCount } from './leaderboard'
-import { afterVote, appendPage, applyVote, ballotSeed, countsVisible, isSinglePool } from './lib'
+import { afterVote, appendPage, applyVote, ballotSeed, countsVisible, isSinglePool, voteRefusal } from './lib'
 import { ShareVote } from './ShareVote'
 import { VoteDialog, VotingCard } from './shared'
 import { VotingClosedNote, VotingLocked } from './state'
@@ -180,7 +180,7 @@ function Ballot({
     } catch (err) {
       // The server's own words: already voted, window shut, own work, account too new. The page then asks again,
       // because whatever it was, what this viewer may do has changed.
-      setVoteError(err instanceof ApiError ? err.message : 'Səs göndərilmədi. Bir az sonra yenidən cəhd edin.')
+      setVoteError(voteRefusal(err))
       if (err instanceof ApiError && [401, 403, 409, 422].includes(err.status)) works.retry()
       // 422 is the window: the page asks again, and turns into the review stage once the server says so.
       if (err instanceof ApiError && err.status === 422) void refreshVoting()
