@@ -55,7 +55,7 @@ archive="/tmp/meydan-$short.tgz"
 tar -czf "$archive" -C "$work/release" .
 
 say "$short: checks passed, deploying"
-if /opt/meydan/current/deploy/scripts/deploy.sh "$archive"; then
+if bash /opt/meydan/current/deploy/scripts/deploy.sh "$archive"; then
   echo "$sha" > "$state/deployed"
   say "$short: live"
 else
