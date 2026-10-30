@@ -24,12 +24,21 @@ public sealed class CaptchaOptions
     /// </summary>
     public bool FailOpen { get; set; }
 
+    /// <summary>
+    /// Casting a public vote asks for the check too (action "vote") while the check is on. The owner's switch for the
+    /// vote alone: false leaves voting unasked and keeps the check on the forms.
+    /// </summary>
+    public bool OnVote { get; set; } = true;
+
     public int TimeoutSeconds { get; set; } = 5;
     public string VerifyUrl { get; set; } = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
     public bool Enabled =>
         string.Equals(Provider, "Turnstile", StringComparison.OrdinalIgnoreCase)
         && !string.IsNullOrWhiteSpace(SiteKey) && !string.IsNullOrWhiteSpace(SecretKey);
+
+    /// <summary>A vote must carry a passing token.</summary>
+    public bool VoteEnabled => Enabled && OnVote;
 }
 
 public enum CaptchaOutcome

@@ -124,11 +124,11 @@ function WorkView({
     return () => observer.disconnect()
   }, [])
 
-  const confirm = async () => {
+  const confirm = async (captchaToken?: string) => {
     setCasting(true)
     setError(null)
     try {
-      const receipt = await votingApi.vote(slug, w.reference)
+      const receipt = await votingApi.vote(slug, w.reference, captchaToken)
       setDetail((d) => ({ ...d, work: votedWork(d.work, receipt), viewer: votedViewer(d.viewer, receipt) }))
       // The dialog stays, as the receipt and the invitation to pass the vote on.
       setCast(true)

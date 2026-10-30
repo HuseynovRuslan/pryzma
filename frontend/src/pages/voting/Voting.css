@@ -652,6 +652,13 @@
   font-size: var(--fs-200);
 }
 
+/* The robot check, when the vote asks for it: centred, its height held so the buttons do not jump as it loads. */
+.vdlg__captcha {
+  display: flex;
+  justify-content: center;
+  min-height: 65px;
+}
+
 .vdlg__actions {
   display: grid;
   gap: var(--s-3);

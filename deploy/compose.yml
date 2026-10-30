@@ -81,6 +81,8 @@ x-api-environment: &api-environment
   Captcha__SiteKey: ${Captcha__SiteKey:-}
   Captcha__SecretKey: ${Captcha__SecretKey:-}
   Captcha__FailOpen: ${Captcha__FailOpen:-false}
+  # The same check on casting a vote (docs/voting/CAPTCHA.md): on whenever the check is on; false turns off the vote's alone.
+  Captcha__OnVote: ${Captcha__OnVote:-true}
 
 services:
   db:

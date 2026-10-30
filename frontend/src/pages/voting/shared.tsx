@@ -6,6 +6,8 @@ import { authApi } from '../../api/endpoints'
 import type { VotingWork } from '../../api/types'
 import { authPath } from '../../auth/intent'
 import { Buta } from '../../components/Motifs'
+import { Turnstile } from '../../components/Turnstile'
+import { usePublicConfig } from '../../lib/publicConfig'
 import { WorkVisual } from '../results/shared'
 import { ONE_VOTE, voteCopyFor, voteNote, votesLabel, workName, workNumber } from './lib'
 import { ShareVote } from './ShareVote'
@@ -209,6 +211,10 @@ export function VotingCard({
  *
  * Keyboard behaviour follows the QRLog dialog: focus moves in on open and back to the opener on close, Tab is
  * trapped, Escape and the backdrop close it, and the page behind does not scroll.
+ *
+ * When the server asks for the robot check on the vote (PublicConfig.voteCaptcha), the question carries the widget
+ * and the vote cannot be confirmed until it has passed; its token goes with the vote. A token works once, so a
+ * refused vote asks for the check afresh.
  */
 export function VoteDialog({
   work,
@@ -222,7 +228,8 @@ export function VoteDialog({
   work: VotingWork
   busy: boolean
   error: string | null
-  onConfirm: () => void
+  /** `captchaToken`: the robot check's token, when the vote asks for one. */
+  onConfirm: (captchaToken?: string) => void
   onClose: () => void
   /** The vote is recorded: the dialog shows the receipt and the invitation instead of the question. */
   cast?: boolean
@@ -233,6 +240,19 @@ export function VoteDialog({
   const box = useRef<HTMLDivElement>(null)
   const cancel = useRef<HTMLButtonElement>(null)
   const title = useRef<HTMLHeadingElement>(null)
+  const config = usePublicConfig()
+  const siteKey = config.voteCaptcha ? (config.captchaSiteKey ?? null) : null
+  const [captcha, setCaptcha] = useState<string | null>(null)
+  const [captchaRound, setCaptchaRound] = useState(0)
+  // Until the server has said whether it asks for the check, the vote waits rather than go without a token.
+  const waiting = !config.ready || (siteKey !== null && !captcha)
+
+  // A refused vote spent its token (or never had a good one): the check is asked afresh.
+  useEffect(() => {
+    if (!error) return
+    setCaptcha(null)
+    setCaptchaRound((n) => n + 1)
+  }, [error])
 
   // The question's buttons are gone once the vote is in; the heading takes focus, so a screen reader hears the receipt.
   useEffect(() => {
@@ -261,7 +281,7 @@ export function VoteDialog({
       return
     }
     if (e.key !== 'Tab' || !box.current) return
-    const focusable = [...box.current.querySelectorAll<HTMLElement>('button:not([disabled]), a[href]')]
+    const focusable = [...box.current.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], iframe')]
     if (focusable.length === 0) return
     const first = focusable[0]
     const last = focusable[focusable.length - 1]
@@ -320,12 +340,17 @@ export function VoteDialog({
                 {error}
               </p>
             )}
+            {siteKey && (
+              <div className="vdlg__captcha">
+                <Turnstile key={captchaRound} siteKey={siteKey} action="vote" onToken={setCaptcha} />
+              </div>
+            )}
             <div className="vdlg__actions">
               <button
                 type="button"
                 className={`btn btn--primary${busy ? ' btn--waiting' : ''}`}
-                onClick={onConfirm}
-                disabled={busy}
+                onClick={() => onConfirm(captcha ?? undefined)}
+                disabled={busy || waiting}
               >
                 {busy ? 'Göndərilir…' : 'Səsi təsdiqlə'}
               </button>

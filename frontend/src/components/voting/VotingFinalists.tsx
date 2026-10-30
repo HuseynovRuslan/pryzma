@@ -54,12 +54,12 @@ export function VotingFinalists({
     return () => controller.abort()
   }, [slug])
 
-  const confirm = async () => {
+  const confirm = async (captchaToken?: string) => {
     if (!chosen) return
     setCasting(true)
     setError(null)
     try {
-      const receipt = await votingApi.vote(slug, chosen.reference)
+      const receipt = await votingApi.vote(slug, chosen.reference, captchaToken)
       setPage((current) => (current ? applyVote(current, receipt) : current))
       onVoted?.()
       // The dialog stays, as the receipt and the invitation to pass the vote on.

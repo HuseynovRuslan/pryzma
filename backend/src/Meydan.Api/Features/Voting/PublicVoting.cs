@@ -34,8 +34,13 @@ namespace Meydan.Api.Features.Voting;
 /// </summary>
 public sealed class PublicVoting(
     MeydanDbContext db, IFileStorage storage, AuditTrail audit, TimeProvider clock, DocumentPages pages,
-    IMemoryCache cache, IConfiguration config, Auth.EmailConfirmationPolicy confirmation)
+    IMemoryCache cache, IConfiguration config, Auth.EmailConfirmationPolicy confirmation,
+    Auth.ICaptchaVerifier captcha, Microsoft.Extensions.Options.IOptions<Auth.CaptchaOptions> captchaOptions,
+    ILogger<PublicVoting> logger)
 {
+    /// <summary>The robot check's action for a vote: a token made for registration or the contact form is not accepted here.</summary>
+    public const string CaptchaAction = "vote";
+
     private const string NoVote = "Bu müsabiqədə səsvermə yoxdur.";
     private const string NotOpenYet = "Səsvermə hələ başlamayıb.";
     private const string NotOnTheBallot = "Bu iş səsverməyə çıxarılmayıb.";
@@ -452,7 +457,8 @@ public sealed class PublicVoting(
     /// Exactly one row exists either way, and the per-nomination index still stands behind it.
     /// </para>
     /// </summary>
-    public async Task<VoteReceiptDto> CastAsync(Guid userId, string slug, string reference, CancellationToken ct)
+    public async Task<VoteReceiptDto> CastAsync(
+        Guid userId, string slug, string reference, string? captchaToken, string? ip, CancellationToken ct)
     {
         var gate = await OpenedGateAsync(slug, ct);
         if (gate.State != VotingState.Open)
@@ -467,6 +473,11 @@ public sealed class PublicVoting(
             ?? throw new ForbiddenException("Səs vermək üçün hesabınıza daxil olun.");
         if (confirmation.Requires(account.CreatedAt, account.EmailConfirmed))
             throw new ForbiddenException(Auth.EmailConfirmationPolicy.NotConfirmed);
+
+        // The robot check, after every refusal that needs no outside call and before the vote is written: a script
+        // that holds a session still cannot cast. A token works once, so a refused vote asks for a fresh one.
+        if (captchaOptions.Value.VoteEnabled)
+            await Auth.CaptchaGate.EnsureAsync(captcha, captchaOptions.Value, captchaToken, CaptchaAction, ip, logger, ct);
 
         var now = clock.GetUtcNow();
         var competitionId = gate.Competition.Id;

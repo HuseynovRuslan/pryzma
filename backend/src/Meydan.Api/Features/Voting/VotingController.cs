@@ -61,14 +61,19 @@ public sealed class VotingController(PublicVoting voting) : ControllerBase
 
     /// <summary>
     /// Casts this viewer's one vote in the work's nomination. 403 for their own work, 404 when the work is not on
-    /// the ballot, 409 when they have already voted in that nomination, 422 once the window has shut.
+    /// the ballot, 409 when they have already voted in that nomination, 422 once the window has shut, 400 on
+    /// <c>captcha</c> when the robot check is on and the body carries no passing token for it.
     /// </summary>
     [HttpPost("works/{reference}/vote")]
     [Authorize]
     [EnableRateLimiting(RateLimitPolicies.Vote)]
-    public async Task<ActionResult<VoteReceiptDto>> Vote(string slug, string reference, CancellationToken ct)
+    public async Task<ActionResult<VoteReceiptDto>> Vote(
+        string slug, string reference,
+        [FromBody(EmptyBodyBehavior = Microsoft.AspNetCore.Mvc.ModelBinding.EmptyBodyBehavior.Allow)] VoteRequest? req,
+        CancellationToken ct)
     {
-        var receipt = await voting.CastAsync(User.GetUserId(), slug, reference, ct);
+        var receipt = await voting.CastAsync(
+            User.GetUserId(), slug, reference, req?.CaptchaToken, HttpContext.Connection.RemoteIpAddress?.ToString(), ct);
         return Created($"/api/competitions/{slug}/voting/works/{reference}", receipt);
     }
 
