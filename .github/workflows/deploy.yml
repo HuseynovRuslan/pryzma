@@ -10,9 +10,11 @@ on:
   pull_request:
   workflow_dispatch:
 
+# A newer push makes an older run moot: the server deploys only the newest main, so the older run's live job
+# would only wait out its 25 minutes and hold the newer run in the queue behind it.
 concurrency:
-  group: ${{ github.event_name == 'pull_request' && format('checks-{0}', github.ref) || 'production' }}
-  cancel-in-progress: false
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
