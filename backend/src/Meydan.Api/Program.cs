@@ -63,6 +63,8 @@ builder.Services.AddScoped<Meydan.Api.Features.Jury.JuryEvaluationService>();
 builder.Services.AddScoped<Meydan.Api.Features.Jury.JuryFiles>();
 builder.Services.AddScoped<Meydan.Api.Features.Admin.PrintItems>();
 builder.Services.AddScoped<Meydan.Api.Features.Admin.PermanentDeletion>();
+builder.Services.AddScoped<Meydan.Api.Features.Admin.VotingLaunch>();
+builder.Services.AddScoped<Meydan.Api.Features.Admin.SubmissionMove>();
 builder.Services.AddScoped<Meydan.Api.Features.Platform.PlatformSettingsStore>();
 builder.Services.AddScoped<Meydan.Infrastructure.Email.IEmailComposer, Meydan.Api.Features.Email.EmailComposer>();
 builder.Services.Configure<Meydan.Api.Features.Auth.Qrlog.QrlogSsoOptions>(builder.Configuration.GetSection(Meydan.Api.Features.Auth.Qrlog.QrlogSsoOptions.Section));

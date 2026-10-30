@@ -105,6 +105,13 @@ public static class AuditActions
     /// decides who receives a prize: when the window changed, and who changed it, is not a detail of an edit.
     /// </summary>
     public const string VotingWindowChanged = "VotingWindowChanged";
+    /// <summary>
+    /// An admin started the public vote from the launch screen: the entity is the competition, the summary the
+    /// window and how many works went on the ballot (and whether the one nomination was made for them).
+    /// </summary>
+    public const string VotingLaunched = "VotingLaunched";
+    /// <summary>A work an entrant sent to the wrong competition was moved to another: the summary names both.</summary>
+    public const string SubmissionMoved = "SubmissionMoved";
     public const string QrlogLinked = "QrlogLinked";
     public const string QrlogUnlinked = "QrlogUnlinked";
     /// <summary>Demo content added by `seed-demo` / taken away by `remove-demo`; the summary holds the counts.</summary>

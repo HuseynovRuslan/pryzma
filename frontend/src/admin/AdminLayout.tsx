@@ -11,6 +11,7 @@ const nav = [
   { to: '/admin/projects', label: 'Layihələr' },
   { to: '/admin/competitions', label: 'Müsabiqələr' },
   { to: '/admin/submissions', label: 'Təkliflər' },
+  { to: '/admin/voting', label: 'Səsvermə' },
   { to: '/admin/participants', label: 'İştirakçılar' },
   { to: '/admin/settings', label: 'Parametrlər' },
 ]

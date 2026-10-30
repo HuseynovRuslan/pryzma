@@ -1,0 +1,72 @@
+/* The "voting has started" strip under the header: saffron, the site's colour for the vote, one line on a desktop. */
+.vannounce {
+  background: var(--saffron);
+  color: var(--ink);
+  border-bottom: 1px solid var(--ink);
+}
+
+.vannounce__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-2) var(--s-5);
+  padding-block: var(--s-3);
+}
+
+.vannounce__title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-300);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.vannounce__dot {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background: var(--danger);
+  animation: vannounce-pulse 1.6s ease-in-out infinite;
+}
+
+.vannounce__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2) var(--s-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.vannounce__link {
+  display: inline-block;
+  padding: var(--s-1) var(--s-3);
+  border: 1px solid var(--ink);
+  background: var(--paper-raised);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: var(--fs-200);
+  text-decoration: none;
+}
+
+.vannounce__link:hover,
+.vannounce__link[aria-current='page'] {
+  background: var(--ink);
+  color: var(--on-accent);
+}
+
+@keyframes vannounce-pulse {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vannounce__dot {
+    animation: none;
+  }
+}

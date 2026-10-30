@@ -12,6 +12,7 @@ import { useApi } from '../../lib/useApi'
 import { useTitle } from '../../lib/useTitle'
 import { adminApi, type AdminSubmissionDetail } from '../api'
 import { ConfirmDialog } from '../ConfirmDialog'
+import { MovePanel } from '../MovePanel'
 import { PdfPagePicker } from '../PdfPagePicker'
 import { PermanentDelete } from '../PermanentDelete'
 import { AField } from '../forms'
@@ -174,6 +175,8 @@ function Detail({ initial }: { initial: AdminSubmissionDetail }) {
               ))}
             </ol>
           </section>
+
+          <MovePanel submissionId={s.id} onMoved={() => adminApi.submission(s.id).then(setS)} />
 
           <section className="a-panel" aria-labelledby="delete-title">
             <h2 id="delete-title" className="a-panel__title">

@@ -6,6 +6,7 @@ import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { NotFoundState, PageLoading } from './components/PageState'
 import { StaleBundleBoundary } from './components/StaleBundle'
+import { VotingAnnouncement } from './components/voting/VotingAnnouncement'
 import { PlatformProvider } from './platform/PlatformProvider'
 import { campaigns } from './content/campaigns'
 import { useCanonical } from './lib/canonical'
@@ -61,6 +62,7 @@ const AdminSubmissionsPrint = lazy(() => import('./admin/pages/SubmissionsPrintP
 const AdminFinalShow = lazy(() => import('./admin/pages/FinalShowPage'))
 const AdminLeaderboardPrint = lazy(() => import('./admin/pages/LeaderboardPrintPage'))
 const AdminParticipants = lazy(() => import('./admin/pages/ParticipantsPage'))
+const AdminVotingLaunch = lazy(() => import('./admin/pages/VotingLaunchPage'))
 const ProfilePage = lazy(() => import('./pages/account/ProfilePage'))
 const AdminSettings = lazy(() => import('./admin/pages/SettingsPage'))
 const AdminJuryPrint = lazy(() => import('./admin/pages/JuryPrintPage'))
@@ -79,6 +81,7 @@ function Layout() {
         Məzmuna keç
       </a>
       <Header />
+      <VotingAnnouncement />
       <main id="main" className="main" tabIndex={-1}>
         <Suspense fallback={<PageLoading />}>
           <Outlet />
@@ -163,6 +166,7 @@ const router = createBrowserRouter([
       { path: 'submissions', element: <AdminSubmissions /> },
       { path: 'submissions/:id', element: <AdminSubmissionDetail /> },
       { path: 'participants', element: <AdminParticipants /> },
+      { path: 'voting', element: <AdminVotingLaunch /> },
       { path: 'settings', element: <AdminSettings /> },
       { path: '*', element: <NotFoundState /> },
     ],
