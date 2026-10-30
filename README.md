@@ -360,10 +360,14 @@ Bir test tamamilə boş bazada bütün migration-ları sıfırdan işlədir.
 yoxlamalar keçəndə **avtomatik https://pryzma.az-a çıxır** ([.github/workflows/deploy.yml](.github/workflows/deploy.yml)).
 Yarımçıq iş ayrıca budaqda aparılır, `main`-ə yalnız hazır olan gəlir.
 
-- Serverə gedən açar yalnız `production` mühitindədir və onu yalnız `main` işlədə bilər; serverdə də bu açar bircə şey
-  edə bilir — [deploy/scripts/ci-deploy.sh](deploy/scripts/ci-deploy.sh) (surəti `~deploy/bin`-də, release-dən kənarda).
-- **07:30–09:30 və 17:00–19:00 (Bakı)** deploy rədd olunur: server QRLog ilə ortaqdır və bu saatlarda ~114 nəfər
-  işə gəlib-gedişini qeyd edir. Bu saatlarda push edilsə, workflow-u sonra Actions səhifəsindən yenidən işə salın.
+- Deploy-u server özü edir: GitHub-un serverləri VPS-in SSH portuna çata bilmir, ona görə VPS hər 2 dəqiqədən bir
+  GitHub-dan `main`-i soruşur və yoxlamaları keçmiş yeni commit-i yükləyib deploy edir
+  ([deploy/scripts/pull-deploy.sh](deploy/scripts/pull-deploy.sh), surəti `~deploy/bin`-də, cron ilə). GitHub-da heç bir
+  server açarı saxlanmır. Workflow-un son addımı (`live`) saytın `/api/version`-u bu commit-i göstərənə qədər gözləyir.
+- **07:30–09:30 və 17:00–19:00 (Bakı)** deploy gözlədilir: server QRLog ilə ortaqdır və bu saatlarda ~114 nəfər
+  işə gəlib-gedişini qeyd edir. Pik bitəndən sonra server commit-i özü çıxarır.
+- Yoxlamaları və ya deploy-u alınmayan commit təkrar cəhd edilmir; düzəliş üçün yeni push lazımdır. Serverin qeydi:
+  `~deploy/.meydan-pull-deploy/log`.
 - Miqrasiyası olan dəyişiklik deploy zamanı avtomatik tətbiq olunur (deploy.sh əvvəlcə ehtiyat nüsxə çıxarır);
   geri qaytarıla bilməyən miqrasiyalardan (sütun/cədvəl silmək) əvvəl sahibi ilə danışın.
 - Lokal test bazası: `scripts/dev-postgres.ps1`. Windows portu ehtiyata götürübsə ("could not bind … Permission

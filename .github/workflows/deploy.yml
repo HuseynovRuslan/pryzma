@@ -1,6 +1,7 @@
-# Every push to main is checked and, when the checks pass, deployed to pryzma.az (the owner, 30 October 2026).
-# The server key lives only in the "production" environment, which only main may use; on the server it can run one
-# thing — deploy/scripts/ci-deploy.sh, installed outside the release tree — which refuses QRLog's clock-in peaks.
+# Every push to main is checked here and, once the checks pass, goes live on pryzma.az (the owner, 30 October 2026).
+# The VPS pulls it: GitHub's runners cannot reach its SSH port, so deploy/scripts/pull-deploy.sh (run by cron on the
+# server, outside any release) asks GitHub every two minutes for a new main whose "frontend" and "backend" checks
+# passed, and deploys it; QRLog's clock-in peaks are waited out. The last job here waits until the site runs the commit.
 name: Deploy
 
 on:
@@ -62,7 +63,7 @@ jobs:
           --filter "FullyQualifiedName!~DerivativeBackfillTests&FullyQualifiedName!~QrlogQrLoginTests&FullyQualifiedName!~RefreshThrottlingTests"
           -- xUnit.MaxParallelThreads=2
 
-  deploy:
+  live:
     if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
     needs: [frontend, backend]
     runs-on: ubuntu-latest
@@ -71,26 +72,17 @@ jobs:
       name: production
       url: https://pryzma.az
     steps:
-      - uses: actions/checkout@v4
-      - name: Pack the release
-        id: pack
-        run: echo "archive=$(bash deploy/scripts/release.sh)" >> "$GITHUB_OUTPUT"
-      - name: Deploy to pryzma.az
-        env:
-          SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
-          KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
-          ARCHIVE: ${{ steps.pack.outputs.archive }}
+      - name: Wait until pryzma.az runs this commit
         run: |
-          install -m 700 -d ~/.ssh
-          printf '%s\n' "$SSH_KEY" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
-          printf '%s\n' "$KNOWN_HOSTS" > ~/.ssh/known_hosts
-          id="$(basename "$ARCHIVE" .tgz)"; id="${id#meydan-}"
-          ssh -i ~/.ssh/deploy -o BatchMode=yes -o ServerAliveInterval=15 deploy@94.20.153.137 "deploy $id" < "$ARCHIVE"
-      - name: The site answers
-        run: |
-          for i in $(seq 1 12); do
-            code="$(curl -s -o /dev/null -w '%{http_code}' https://pryzma.az/health/live || true)"
-            [ "$code" = 200 ] && { echo "pryzma.az is live"; exit 0; }
-            sleep 5
+          for i in $(seq 1 100); do
+            running="$(curl -fsS --max-time 10 https://pryzma.az/api/version 2>/dev/null | jq -r .commit 2>/dev/null || true)"
+            if [ "$running" = "$GITHUB_SHA" ]; then echo "pryzma.az runs ${GITHUB_SHA:0:7}"; exit 0; fi
+            sleep 15
           done
-          echo "pryzma.az did not answer 200 after the deploy" >&2; exit 1
+          baku="$(TZ=Asia/Baku date +%H%M)"; baku=$((10#$baku))
+          if { [ "$baku" -ge 730 ] && [ "$baku" -lt 930 ]; } || { [ "$baku" -ge 1700 ] && [ "$baku" -lt 1900 ]; }; then
+            echo "::notice::QRLog clock-in peak in Baku: the server deploys ${GITHUB_SHA:0:7} after it (09:30 or 19:00)."
+            exit 0
+          fi
+          echo "::error::pryzma.az still runs ${running:-nothing readable}, not ${GITHUB_SHA:0:7}. Either a newer push replaced it, or the server's deploy failed (~deploy/.meydan-pull-deploy/log)."
+          exit 1

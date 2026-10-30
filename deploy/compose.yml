@@ -34,6 +34,8 @@ x-logging: &default-logging
 # Everything the API reads. Compose only passes variables named here — a value in .env alone reaches nothing.
 x-api-environment: &api-environment
   ASPNETCORE_ENVIRONMENT: Production
+  # The commit this release was packed from, answered by GET /api/version (a deploy's last check).
+  MEYDAN_COMMIT: ${MEYDAN_COMMIT:-unknown}
   ConnectionStrings__Meydan: "Host=db;Port=5432;Database=${APP_DB_NAME:?};Username=${APP_DB_USER:?};Password=${APP_DB_PASSWORD:?}"
   Jwt__SigningKey: ${Jwt__SigningKey:?set Jwt__SigningKey in /opt/meydan/.env}
   App__PublicUrl: ${App__PublicUrl:?}

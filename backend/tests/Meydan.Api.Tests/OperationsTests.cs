@@ -15,6 +15,19 @@ namespace Meydan.Api.Tests;
 public sealed class OperationsTests
 {
     [Fact]
+    public async Task The_version_names_the_commit_the_release_was_packed_from_and_nothing_else()
+    {
+        using (var packed = new MeydanFactory { Settings = { ["MEYDAN_COMMIT"] = "9d07e31e30d5fb8d6291b2d67a914e7f864dc90a" } })
+        {
+            var res = await packed.CreateClient().GetAsync("/api/version");
+            Assert.Equal(HttpStatusCode.OK, res.StatusCode);
+            Assert.Equal("""{"commit":"9d07e31e30d5fb8d6291b2d67a914e7f864dc90a"}""", await res.Content.ReadAsStringAsync());
+        }
+        using var unpacked = new MeydanFactory();
+        Assert.Equal("""{"commit":"unknown"}""", await unpacked.CreateClient().GetStringAsync("/api/version"));
+    }
+
+    [Fact]
     public async Task Liveness_and_readiness_report_state_without_details()
     {
         using var factory = new MeydanFactory();
