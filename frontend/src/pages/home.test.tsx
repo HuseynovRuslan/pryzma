@@ -157,7 +157,17 @@ describe('two votes open at once', () => {
   beforeEach(() => {
     vi.clearAllMocks()
     catalog.home.mockResolvedValue({ projects: [], openCompetitions: [] })
-    votingApi.works.mockResolvedValue({ state: 'Open', items: [], total: 0, page: 1, pageSize: 6, viewer: null })
+    votingApi.works.mockImplementation((slug: string) =>
+      Promise.resolve({
+        state: 'Open',
+        items: [{
+          reference: `SUB-2026-${slug === novxani.competition.slug ? '001' : '002'}01`, title: `${slug} işi`,
+          nomination: { slug: 'butun-isler', name: 'Bütün işlər' }, preview: null, previewState: 'None', voteCount: 4,
+          eligibility: 'NotSignedIn', publicConceptDescription: null,
+        }],
+        total: 1, page: 1, pageSize: 6, viewer: null,
+      }),
+    )
     // Each ballot answers with its own works: a row of one can never be counted in the other's table.
     votingApi.leaderboard.mockImplementation((slug: string) =>
       Promise.resolve({
@@ -194,6 +204,13 @@ describe('two votes open at once', () => {
     expect(within(boards[1]).getByRole('link', { name: 'İşlərə bax və səsini ver' })).toHaveAttribute('href', '#finalists-mastaganin-simvolu')
     expect(votingApi.leaderboard).toHaveBeenCalledWith('novxaninin-simvolu', expect.anything())
     expect(votingApi.leaderboard).toHaveBeenCalledWith('mastaganin-simvolu', expect.anything())
+
+    // The rankings come together, before either competition's works — neither is buried under the other's cards.
+    const grids = await screen.findAllByRole('region', { name: 'Səsvermədə iştirak edən işlər' })
+    expect(grids.map((g) => g.id)).toEqual(['finalists-novxaninin-simvolu', 'finalists-mastaganin-simvolu'])
+    const before = (a: Element, b: Element) => Boolean(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING)
+    expect(before(boards[1], grids[0])).toBe(true)
+    expect(boards[0].closest('.home-live')).toBe(boards[1].closest('.home-live'))
   })
 })
 

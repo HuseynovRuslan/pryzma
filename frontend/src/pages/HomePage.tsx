@@ -1,4 +1,4 @@
-import { memo, type ReactNode } from 'react'
+import { memo, useCallback, useEffect, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import type { ApiError } from '../api/client'
 import { catalog } from '../api/endpoints'
@@ -9,9 +9,9 @@ import { LiveLeaderboard } from '../components/voting/LiveLeaderboard'
 import { ProvisionalRanking } from '../components/voting/ProvisionalRanking'
 import { ReviewStatus } from '../components/voting/VotingReview'
 import { VotingFinalists } from '../components/voting/VotingFinalists'
-import { useLeaderboard } from './voting/leaderboard'
+import { useLeaderboard, type LiveRanking } from './voting/leaderboard'
 import { useVotingAudit } from './voting/useVotingAudit'
-import { useFeaturedCompetition } from '../lib/featuredCompetitionContext'
+import { useFeaturedCompetition, type FeaturedSlide } from '../lib/featuredCompetitionContext'
 import { PageError } from '../components/PageState'
 import { participationSteps } from '../content/steps'
 import { useApi } from '../lib/useApi'
@@ -239,13 +239,14 @@ const finalistsAnchor = (slug: string) => `finalists-${slug}`
 
 /**
  * The gate is light enough to tick; the approved finalist grid is memoized and updates only when its data does.
- * Every open vote gets its own ranking and its own works, one competition after another: two competitions are two
- * ballots, and the home page never folds them into one table.
+ * Every open vote gets its own ranking and its own works: two competitions are two ballots, and the home page never
+ * folds them into one table.
  */
 function HomeFinalistsGate() {
   const featured = useFeaturedCompetition()
   const live = featured.slides.filter((s) => s.voting && s.lifecycle.stage === 'votingLive')
-  return live.map((s) => <HomeLiveVote key={s.competition.slug} competition={s.competition} voting={s.voting!} />)
+  if (live.length === 0) return null
+  return <HomeLiveVotes slides={live} />
 }
 
 /**
@@ -274,32 +275,58 @@ function HomeProvisional({ slug, title }: { slug: string; title: string }) {
 }
 
 /**
- * While a vote is live: the stage above, then where the vote stands, then the works. The ranking and the cards
- * share one read every ten seconds, so a card never says a different count from the row above it.
+ * While votes are live: the stage above, then where each vote stands, then the works. The rankings come together —
+ * side by side where there is room, one under the other on a phone — so with two votes open neither is buried under
+ * the other's works; each competition's works follow, in the same order. A competition's ranking and its cards share
+ * one read every ten seconds, so a card never says a different count from its row in the ranking.
  */
-function HomeLiveVote({ competition, voting }: { competition: CompetitionSummary; voting: Voting }) {
-  const live = useLeaderboard(competition.slug)
-  const anchor = finalistsAnchor(competition.slug)
+function HomeLiveVotes({ slides }: { slides: FeaturedSlide[] }) {
+  const [reads, setReads] = useState<Record<string, LiveRanking>>({})
+  const report = useCallback(
+    (slug: string, live: LiveRanking) => setReads((all) => (all[slug] === live ? all : { ...all, [slug]: live })),
+    [],
+  )
   return (
     <>
-      <div className="container home-live">
-        <StableLiveLeaderboard
-          live={live}
-          slug={competition.slug}
-          galleryHref={`#${anchor}`}
-          votedReference={voting.viewer?.votedWorks[0] ?? null}
-          competitionTitle={competition.title}
-        />
+      <div className={`container home-live${slides.length > 1 ? ' home-live--pair' : ''}`}>
+        {slides.map((s) => (
+          <HomeRanking key={s.competition.slug} competition={s.competition} voting={s.voting!} report={report} />
+        ))}
       </div>
-      <div className="container home-finalists">
-        <StableVotingFinalists
-          competition={competition}
-          voting={voting}
-          id={anchor}
-          liveCounts={live.counts}
-          onVoted={live.refresh}
-        />
-      </div>
+      {slides.map((s) => (
+        <div key={s.competition.slug} className="container home-finalists">
+          <StableVotingFinalists
+            competition={s.competition}
+            voting={s.voting!}
+            id={finalistsAnchor(s.competition.slug)}
+            liveCounts={reads[s.competition.slug]?.counts}
+            onVoted={reads[s.competition.slug]?.refresh}
+          />
+        </div>
+      ))}
     </>
+  )
+}
+
+/** One competition's live ranking; it hands its read up, for that competition's cards further down. */
+function HomeRanking({
+  competition,
+  voting,
+  report,
+}: {
+  competition: CompetitionSummary
+  voting: Voting
+  report: (slug: string, live: LiveRanking) => void
+}) {
+  const live = useLeaderboard(competition.slug)
+  useEffect(() => report(competition.slug, live), [competition.slug, live, report])
+  return (
+    <StableLiveLeaderboard
+      live={live}
+      slug={competition.slug}
+      galleryHref={`#${finalistsAnchor(competition.slug)}`}
+      votedReference={voting.viewer?.votedWorks[0] ?? null}
+      competitionTitle={competition.title}
+    />
   )
 }
