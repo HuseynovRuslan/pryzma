@@ -43,11 +43,11 @@ const SAMPLE: [number, number][] = [
   [71, 109],
 ]
 
-function Harness({ voted = null }: { voted?: string | null }) {
+function Harness({ voted = null, title }: { voted?: string | null; title?: string }) {
   const live = useLeaderboard('emircan')
   return (
     <MemoryRouter>
-      <LiveLeaderboard live={live} slug="emircan" galleryHref="#works" votedReference={voted} />
+      <LiveLeaderboard live={live} slug="emircan" galleryHref="#works" votedReference={voted} competitionTitle={title} />
     </MemoryRouter>
   )
 }
@@ -92,6 +92,15 @@ describe('the live ranking', () => {
     expect(screen.getByText(PROVISIONAL)).toHaveClass('lb__provisional')
     // Nobody votes from the ranking.
     expect(screen.queryByRole('button', { name: /Səs ver/ })).not.toBeInTheDocument()
+  })
+
+  it('says whose ranking it is — one competition, never an overall table', async () => {
+    api.leaderboard.mockResolvedValue(board(SAMPLE))
+    render(<Harness title="“Novxanının simvolu” yaradıcılıq müsabiqəsi" />)
+    await settle()
+
+    expect(screen.getByText('«Novxanının simvolu» müsabiqəsi üzrə sıralama')).toBeInTheDocument()
+    expect(screen.queryByText(/ümumi sıralama/)).not.toBeInTheDocument()
   })
 
   it('invents no movement on the first read', async () => {

@@ -34,6 +34,12 @@
   line-height: 1.1;
 }
 
+.prank__scope {
+  margin: 0;
+  font-size: var(--fs-200);
+  font-weight: 700;
+}
+
 .prank__lede,
 .prank__wait {
   margin: 0;

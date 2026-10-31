@@ -109,6 +109,13 @@
   color: var(--lb-muted);
 }
 
+/* Whose ranking: with two votes open, the line that tells them apart is read, not skimmed. */
+.lb__scope--named {
+  font-size: var(--fs-200);
+  font-weight: 700;
+  color: inherit;
+}
+
 .lb__climb {
   font-size: 12px;
   font-weight: 600;

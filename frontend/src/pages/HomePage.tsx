@@ -108,7 +108,7 @@ function HomeLead({ title, subtitle, platformName }: { title: string; subtitle: 
   if (slides.length > 0) {
     return (
       <div className="container home-stage">
-        <CompetitionStageCarousel slides={slides} voteHref="#finalists" />
+        <CompetitionStageCarousel slides={slides} voteHref={(slug) => `#${finalistsAnchor(slug)}`} />
       </div>
     )
   }
@@ -234,25 +234,33 @@ const StableVotingFinalists = memo(VotingFinalists)
 
 const StableLiveLeaderboard = memo(LiveLeaderboard)
 
-/** The gate is light enough to tick; the approved finalist grid is memoized and updates only when its data does. */
+/** Where a competition's works start on the home page — its own, since two votes can be open at once. */
+const finalistsAnchor = (slug: string) => `finalists-${slug}`
+
+/**
+ * The gate is light enough to tick; the approved finalist grid is memoized and updates only when its data does.
+ * Every open vote gets its own ranking and its own works, one competition after another: two competitions are two
+ * ballots, and the home page never folds them into one table.
+ */
 function HomeFinalistsGate() {
   const featured = useFeaturedCompetition()
-  if (!featured.competition || !featured.voting || featured.lifecycle?.stage !== 'votingLive') return null
-  return <HomeLiveVote competition={featured.competition} voting={featured.voting} />
+  const live = featured.slides.filter((s) => s.voting && s.lifecycle.stage === 'votingLive')
+  return live.map((s) => <HomeLiveVote key={s.competition.slug} competition={s.competition} voting={s.voting!} />)
 }
 
 /**
  * The vote is over and the official result not yet published: the review status with the real totals, and under it
- * the provisional top ten, both on the home page itself (the owner's decision of 7 October 2026). Once the result is
- * published the stage is "results" and this gives way to the results the site already shows.
+ * the provisional top ten, both on the home page itself (the owner's decision of 7 October 2026) — for each
+ * competition in review, apart. Once the result is published the stage is "results" and this gives way to the
+ * results the site already shows.
  */
 function HomeProvisionalGate() {
   const featured = useFeaturedCompetition()
-  if (!featured.competition || !featured.voting || featured.lifecycle?.stage !== 'votingClosed') return null
-  return <HomeProvisional slug={featured.competition.slug} />
+  const closed = featured.slides.filter((s) => s.voting && s.lifecycle.stage === 'votingClosed')
+  return closed.map((s) => <HomeProvisional key={s.competition.slug} slug={s.competition.slug} title={s.competition.title} />)
 }
 
-function HomeProvisional({ slug }: { slug: string }) {
+function HomeProvisional({ slug, title }: { slug: string; title: string }) {
   // Both keep reading while the vote is closed (every 30 s, only while the tab is visible), so a vote set aside
   // moves the ranking and the totals here without a reload.
   const live = useLeaderboard(slug)
@@ -260,7 +268,7 @@ function HomeProvisional({ slug }: { slug: string }) {
   return (
     <div className="container home-provisional">
       <ReviewStatus audit={audit} />
-      <ProvisionalRanking board={live.board} slug={slug} />
+      <ProvisionalRanking board={live.board} slug={slug} competitionTitle={title} />
     </div>
   )
 }
@@ -271,20 +279,23 @@ function HomeProvisional({ slug }: { slug: string }) {
  */
 function HomeLiveVote({ competition, voting }: { competition: CompetitionSummary; voting: Voting }) {
   const live = useLeaderboard(competition.slug)
+  const anchor = finalistsAnchor(competition.slug)
   return (
     <>
       <div className="container home-live">
         <StableLiveLeaderboard
           live={live}
           slug={competition.slug}
-          galleryHref="#finalists"
+          galleryHref={`#${anchor}`}
           votedReference={voting.viewer?.votedWorks[0] ?? null}
+          competitionTitle={competition.title}
         />
       </div>
       <div className="container home-finalists">
         <StableVotingFinalists
           competition={competition}
           voting={voting}
+          id={anchor}
           liveCounts={live.counts}
           onVoted={live.refresh}
         />

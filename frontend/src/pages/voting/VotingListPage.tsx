@@ -223,6 +223,7 @@ function Ballot({
                 slug={slug}
                 galleryHref="#works"
                 votedReference={viewer?.votedWorks[0] ?? null}
+                competitionTitle={c.title}
               />
             </div>
             <div className="voting__audit">
@@ -252,6 +253,7 @@ function Ballot({
                 slug={slug}
                 galleryHref="#works"
                 votedReference={viewer?.votedWorks[0] ?? null}
+                competitionTitle={c.title}
               />
             </div>
           </>
