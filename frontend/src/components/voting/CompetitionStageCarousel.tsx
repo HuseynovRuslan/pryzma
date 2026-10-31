@@ -17,7 +17,14 @@ import './carousel.css'
  * With a single competition there is nothing to step between, so the chrome is not rendered at all rather than
  * shown disabled: a lone "01 / 01" beside two dead arrows is furniture, not information.
  */
-export function CompetitionStageCarousel({ slides, voteHref }: { slides: FeaturedSlide[]; voteHref?: string }) {
+export function CompetitionStageCarousel({
+  slides,
+  voteHref: voteHrefFor,
+}: {
+  slides: FeaturedSlide[]
+  /** Where "İndi səs ver" goes: one address, or each competition's own (its works on the home page). */
+  voteHref?: string | ((slug: string) => string)
+}) {
   const [at, setAt] = useState(0)
   const region = useRef<HTMLDivElement>(null)
   const strip = useRef<HTMLDivElement>(null)
@@ -51,6 +58,7 @@ export function CompetitionStageCarousel({ slides, voteHref }: { slides: Feature
 
   if (total === 0) return null
   const slide = slides[current]
+  const voteHref = typeof voteHrefFor === 'function' ? voteHrefFor(slide.competition.slug) : voteHrefFor
 
   if (total === 1) {
     return (

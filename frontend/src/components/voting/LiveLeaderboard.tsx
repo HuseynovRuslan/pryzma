@@ -2,7 +2,7 @@ import { useId, useLayoutEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { VotingLeaderboardEntry } from '../../api/types'
 import { useNow } from '../../lib/competitionLifecycle'
-import { ordinal } from '../../lib/format'
+import { ordinal, shortCompetitionTitle } from '../../lib/format'
 import { azOrdinal } from '../../lib/text'
 import { barShare, COMPACT, gapLine, type LiveRanking } from '../../pages/voting/leaderboard'
 import { ONE_VOTE, workNumber } from '../../pages/voting/lib'
@@ -37,6 +37,7 @@ export function LiveLeaderboard({
   slug,
   galleryHref,
   votedReference = null,
+  competitionTitle,
 }: {
   live: LiveRanking
   slug: string
@@ -44,6 +45,11 @@ export function LiveLeaderboard({
   galleryHref: string
   /** This viewer's vote as the page knows it, until the next read confirms it. */
   votedReference?: string | null
+  /**
+   * Whose ranking this is. Each competition has its own vote and its own ranking — never one table across them —
+   * and with two votes open at once the reader has to see which is which.
+   */
+  competitionTitle?: string
 }) {
   const id = useId()
   const [shown, setShown] = useState(COMPACT)
@@ -120,7 +126,11 @@ export function LiveLeaderboard({
           <p className="lb__lede">
             {isLive ? 'Səslər gəldikcə sıralama yenilənir' : 'Bu sıralama audit davam etdiyi üçün dəyişə bilər.'}
           </p>
-          <p className="lb__scope">Bütün işlər üzrə ümumi sıralama</p>
+          {competitionTitle ? (
+            <p className="lb__scope lb__scope--named">«{shortCompetitionTitle(competitionTitle)}» müsabiqəsi üzrə sıralama</p>
+          ) : (
+            <p className="lb__scope">Bu müsabiqənin işləri üzrə sıralama</p>
+          )}
           {isLive && live.climb && <p className="lb__climb">{live.climb}</p>}
           {isLive && live.readAt !== null && <Freshness readAt={live.readAt} />}
         </header>

@@ -6,7 +6,7 @@ import { lifecycleOf } from '../lib/competitionLifecycle'
 import { FeaturedContext, type Featured } from '../lib/featuredCompetitionContext'
 
 const catalog = vi.hoisted(() => ({ settings: vi.fn(), home: vi.fn(), competitions: vi.fn() }))
-const votingApi = vi.hoisted(() => ({ leaderboard: vi.fn(), audit: vi.fn() }))
+const votingApi = vi.hoisted(() => ({ leaderboard: vi.fn(), audit: vi.fn(), works: vi.fn() }))
 const resultsApi = vi.hoisted(() => ({ list: vi.fn(), result: vi.fn() }))
 vi.mock('../api/endpoints', () => ({ catalog, submissionsApi: {}, votingApi, resultsApi }))
 vi.mock('../auth/AuthContext', () => ({ useAuth: () => ({ status: 'anonymous', user: null }) }))
@@ -131,6 +131,69 @@ describe('the open-calls section on the home page', () => {
     const lifecycle = lifecycleOf(over, null, NOW)
     show(featured({ competition: over, lifecycle, slides: [{ competition: over, voting: null, lifecycle }] }))
     expect(await screen.findByText(EMPTY)).toBeInTheDocument()
+  })
+})
+
+describe('two votes open at once', () => {
+  const open = (slug: string, title: string) => {
+    const c = competition({ slug, title, voting: 'Open', phase: 'Closed' })
+    const voting = {
+      competition: c,
+      state: 'Open',
+      startsAt: new Date(NOW - DAY).toISOString(),
+      endsAt: new Date(NOW + 5 * DAY).toISOString(),
+      nominations: [{ slug: 'butun-isler', name: 'Bütün işlər', workCount: 3, voteCount: 9 }],
+      workCount: 3,
+      voteCount: 9,
+      viewer: null,
+      voterCount: 9,
+      lastVoteAt: null,
+    } as unknown as Voting
+    return { competition: c, voting, lifecycle: lifecycleOf(c, voting, NOW) }
+  }
+  const novxani = open('novxaninin-simvolu', '“Novxanının simvolu” yaradıcılıq müsabiqəsi')
+  const mastaga = open('mastaganin-simvolu', '“Maştağanın simvolu” yaradıcılıq müsabiqəsi')
+
+  beforeEach(() => {
+    vi.clearAllMocks()
+    catalog.home.mockResolvedValue({ projects: [], openCompetitions: [] })
+    votingApi.works.mockResolvedValue({ state: 'Open', items: [], total: 0, page: 1, pageSize: 6, viewer: null })
+    // Each ballot answers with its own works: a row of one can never be counted in the other's table.
+    votingApi.leaderboard.mockImplementation((slug: string) =>
+      Promise.resolve({
+        state: 'Open',
+        updatedAt: new Date(NOW).toISOString(),
+        totalVotes: 9,
+        myVoteReference: null,
+        entries: [1, 2, 3].map((n) => ({
+          rank: n,
+          reference: `SUB-2026-${slug === novxani.competition.slug ? '001' : '002'}0${n}`,
+          title: `${slug} ${n}`,
+          voteCount: 5 - n,
+          preview: null,
+        })),
+      }),
+    )
+  })
+
+  it('shows each competition its own live ranking, named, with its own works below — never one table', async () => {
+    expect(novxani.lifecycle.stage).toBe('votingLive')
+    show(featured({ ...novxani, slides: [novxani, mastaga] }))
+
+    const boards = await screen.findAllByRole('region', { name: 'Canlı reytinq' })
+    expect(boards).toHaveLength(2)
+    expect(within(boards[0]).getByText('«Novxanının simvolu» müsabiqəsi üzrə sıralama')).toBeInTheDocument()
+    expect(within(boards[1]).getByText('«Maştağanın simvolu» müsabiqəsi üzrə sıralama')).toBeInTheDocument()
+    // Each table's rows are its own works and open its own ballot.
+    const opens = (board: HTMLElement) =>
+      within(board).getAllByRole('link').map((a) => a.getAttribute('href')).filter((h) => h?.includes('/voting/'))
+    await waitFor(() => expect(opens(boards[0])).toHaveLength(3))
+    expect(opens(boards[0])).toEqual(['01', '02', '03'].map((n) => `/competitions/novxaninin-simvolu/voting/SUB-2026-001${n}`))
+    expect(opens(boards[1])).toEqual(['01', '02', '03'].map((n) => `/competitions/mastaganin-simvolu/voting/SUB-2026-002${n}`))
+    expect(within(boards[0]).getByRole('link', { name: 'İşlərə bax və səsini ver' })).toHaveAttribute('href', '#finalists-novxaninin-simvolu')
+    expect(within(boards[1]).getByRole('link', { name: 'İşlərə bax və səsini ver' })).toHaveAttribute('href', '#finalists-mastaganin-simvolu')
+    expect(votingApi.leaderboard).toHaveBeenCalledWith('novxaninin-simvolu', expect.anything())
+    expect(votingApi.leaderboard).toHaveBeenCalledWith('mastaganin-simvolu', expect.anything())
   })
 })
 

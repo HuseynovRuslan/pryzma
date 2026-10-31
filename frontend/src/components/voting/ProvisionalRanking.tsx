@@ -1,5 +1,7 @@
+import { useId } from 'react'
 import { Link } from 'react-router-dom'
 import type { VotingLeaderboard } from '../../api/types'
+import { shortCompetitionTitle } from '../../lib/format'
 import { azOrdinal } from '../../lib/text'
 import { votesLabel } from '../../pages/voting/lib'
 import './provisional.css'
@@ -21,18 +23,23 @@ export function ProvisionalRanking({
   board,
   slug,
   top = HOME_TOP,
+  competitionTitle,
 }: {
   board: VotingLeaderboard | null
   slug: string
   top?: number
+  /** Whose ranking — each competition keeps its own, and two may be in review at once. */
+  competitionTitle?: string
 }) {
+  const titleId = useId()
   const entries = board?.entries.slice(0, top) ?? []
   return (
-    <section className="prank" aria-labelledby="prank-title">
+    <section className="prank" aria-labelledby={titleId}>
       <header className="prank__head">
-        <h2 id="prank-title" className="prank__title">
+        <h2 id={titleId} className="prank__title">
           İlkin reytinq
         </h2>
+        {competitionTitle && <p className="prank__scope">«{shortCompetitionTitle(competitionTitle)}» müsabiqəsi üzrə</p>}
         <p className="prank__lede">Bu sıralama audit davam etdiyi üçün dəyişə bilər.</p>
       </header>
 

@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ApiError } from '../../api/client'
 import { votingApi } from '../../api/endpoints'
 import type { CompetitionSummary, Voting, VotingWork, VotingWorks } from '../../api/types'
+import { shortCompetitionTitle } from '../../lib/format'
 import { withLiveCount } from '../../pages/voting/leaderboard'
 import { applyVote, ballotSeed, countsVisible, isSinglePool, voteRefusal } from '../../pages/voting/lib'
 import { VoteDialog, VotingCard } from '../../pages/voting/shared'
@@ -34,6 +35,7 @@ export function VotingFinalists({
   /** A vote was cast here: the ranking reads again. */
   onVoted?: () => void
 }) {
+  const titleId = useId()
   const [page, setPage] = useState<VotingWorks | null>(null)
   const [failed, setFailed] = useState(false)
   const [chosen, setChosen] = useState<VotingWork | null>(null)
@@ -78,12 +80,13 @@ export function VotingFinalists({
   if (failed || (page && page.items.length === 0)) return null
 
   return (
-    <section className="vgrid" id={id} aria-labelledby="vgrid-title">
+    <section className="vgrid" id={id} aria-labelledby={titleId}>
       <header className="vgrid__head">
         <div>
-          {/* Every work entered and not rejected is on the ballot — not a shortlist, so not "finalists". */}
-          <p className="vgrid__eyebrow">Müsabiqə işləri</p>
-          <h2 id="vgrid-title" className="vgrid__title">
+          {/* Every work entered and not rejected is on the ballot — not a shortlist, so not "finalists". Named,
+              because with two votes open the home page carries a grid for each. */}
+          <p className="vgrid__eyebrow">{shortCompetitionTitle(competition.title)} — müsabiqə işləri</p>
+          <h2 id={titleId} className="vgrid__title">
             Səsvermədə iştirak edən işlər
           </h2>
         </div>
