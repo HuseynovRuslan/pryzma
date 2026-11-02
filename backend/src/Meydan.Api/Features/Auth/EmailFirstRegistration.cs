@@ -284,6 +284,10 @@ public sealed class EmailFirstRegistration(
 
             if (await users.FindByEmailAsync(pending.Email) is not null)
                 throw ValidationFailedException.For("email", "Bu e-mail ilə artıq hesab var. Daxil olun və ya şifrəni bərpa edin.");
+            // A registration begun before its domain was known as disposable ends here, account-less. (Only that
+            // verdict: the link was received, so the domain does take mail.)
+            if (await domains.CheckAsync(pending.Email, ct) == EmailDomainVerdict.Disposable)
+                throw ValidationFailedException.For("email", DisposableRefused);
             if (await PhoneNumbers.InUseAsync(users.Users, req.Phone, except: null, ct))
                 throw ValidationFailedException.For("phone", PhoneNumbers.AlreadyUsed);
 

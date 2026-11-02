@@ -237,6 +237,23 @@ public sealed class EmailFirstRegistrationTests : IDisposable
         Assert.Equal(1, Pending());
     }
 
+    [Fact]
+    public async Task A_registration_begun_before_its_domain_was_known_as_disposable_cannot_complete()
+    {
+        Start();
+        var c = _f.CreateClient();
+        const string email = "late@late-temp.example";
+        var proof = await ProofAsync(c, email); // the domain looked ordinary when the link was sent
+
+        _f.MailDns.Answers["late-temp.example"] = new MailDns(["mail.late-temp.example"], ["95.216.191.158"], HasAddress: false);
+        _f.Services.GetRequiredService<Microsoft.Extensions.Caching.Memory.IMemoryCache>().Remove("email-domain:late-temp.example");
+
+        var res = await CompleteAsync(c, proof);
+        Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
+        Assert.Contains("Müvəqqəti (birdəfəlik) e-poçt", await res.Content.ReadAsStringAsync());
+        Assert.Equal(0, Users(email));
+    }
+
     // ---- 4, 5, 6: the link ------------------------------------------------------------------------
 
     [Fact]
