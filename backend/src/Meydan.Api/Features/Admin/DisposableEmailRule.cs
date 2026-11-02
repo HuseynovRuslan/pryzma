@@ -17,6 +17,11 @@ namespace Meydan.Api.Features.Admin;
 /// registration (<see cref="Auth.EmailFirstRegistration"/>): an address on it cannot open an account at all.
 /// </para>
 /// <para>
+/// Version 3 (owner, 2 November 2026, the same day): yzcalo.com, 37xiao.com and hiringview.com join (43 domains) on the
+/// owner's decision, without a public classification: yzcalo.com had no DNS left, the other two have no website and one
+/// shared mail host (157.230.65.184); all three voted only for the works the 10minutemail accounts voted for.
+/// </para>
+/// <para>
 /// Nothing else counts — not the voter's connection, name, speed, the work voted for or its place. Those stay signs
 /// for review. The phone-cluster rule and R2 (D12) are unchanged.
 /// </para>
@@ -26,7 +31,7 @@ namespace Meydan.Api.Features.Admin;
 public sealed record DisposableEmailRule(bool Enabled = false)
 {
     public const string PolicyId = "D14_DISPOSABLE_EMAIL";
-    public const int Version = 2;
+    public const int Version = 3;
     public const string EvidenceType = "DisposableEmailDuringVoting";
 
     /// <summary>The owner-approved reason, as the votes and the audit record it (admins only; the public reads the rule).</summary>
@@ -34,7 +39,8 @@ public sealed record DisposableEmailRule(bool Enabled = false)
 
     public const string Source =
         "Read-only audit 2026-10-07: check-mail.org domain classification + MX records of the named service; owner decision 2026-10-07. " +
-        "v2 2026-11-02: three domains whose MX is prd-smtp.10minutemail.com; owner decision 2026-11-02.";
+        "v2 2026-11-02: three domains whose MX is prd-smtp.10minutemail.com; owner decision 2026-11-02. " +
+        "v3 2026-11-02: three domains on the owner's decision alone (no DNS / no website, one shared mail host).";
 
     /// <summary>The frozen evidence set: domain → the disposable service behind it.</summary>
     public static readonly IReadOnlyDictionary<string, string> Domains = new Dictionary<string, string>(StringComparer.Ordinal)
@@ -87,6 +93,10 @@ public sealed record DisposableEmailRule(bool Enabled = false)
         ["onldm.net"] = "10minutemail.com",
         ["vtmpj.com"] = "10minutemail.com",
         ["vtmpj.net"] = "10minutemail.com",
+        // v3 (2026-11-02): the owner's decision; the service behind them is not known
+        ["yzcalo.com"] = "unknown (no DNS on 2026-11-02)",
+        ["37xiao.com"] = "unknown (mail host 157.230.65.184)",
+        ["hiringview.com"] = "unknown (mail host 157.230.65.184)",
     };
 
     public static DisposableEmailRule From(IConfiguration config) =>

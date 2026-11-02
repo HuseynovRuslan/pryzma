@@ -193,6 +193,7 @@ public sealed class EmailFirstRegistrationTests : IDisposable
     [InlineData("someone@onldm.net")]
     [InlineData("Someone@VTMPJ.com")]
     [InlineData("a.b@inboxorigin.com")]
+    [InlineData("x@hiringview.com")]
     public async Task A_disposable_address_is_refused_before_anything_is_kept_or_sent(string email)
     {
         Start();

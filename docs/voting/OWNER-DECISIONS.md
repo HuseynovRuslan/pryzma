@@ -19,7 +19,7 @@ Re-verified against the repository on 2026-09-30 (branch `feature/voting-module`
 | D10 | Voting dates | **Explicit `VotingStartsAt` / `VotingEndsAt`** | derived — code |
 | D11 | Who may vote | ~~Accounts that existed when voting opened~~ **Any signed-in account** | lifted by the owner, 2026-10-04 |
 | D13 | How the official places are made | **Jury final: the Top 10 by valid votes, frozen after the integrity audit; public points + jury points (10 → 1 each); places 1–3 published only by an explicit admin action** | owner, 2026-10-07 |
-| D14 | Disposable e-mail during the vote | **The vote of an account opened during the voting window with an e-mail domain of the frozen disposable set (37 domains; 40 since v2, 2026-11-02, which also closes registration to it) is set aside — competition-wide, one audited decision, never deleted; public aggregate notice** | owner, 2026-10-07 |
+| D14 | Disposable e-mail during the vote | **The vote of an account opened during the voting window with an e-mail domain of the frozen disposable set (37 domains; 43 since v2–v3, 2026-11-02, which also close registration to it) is set aside — competition-wide, one audited decision, never deleted; public aggregate notice** | owner, 2026-10-07 |
 | D15 | Which page stands for a PDF in the admin and on paper | **Automatic (page 2 of two or more, else page 1) unless an admin chooses a page per file; the same page everywhere; the PDF and its full material untouched** | owner, 2026-10-07 |
 | D18 | How the result of "Əmircanın simvolu" is announced | **Two independent choices — Münsiflərin seçimi (the jury's paper vote: points) and Xalqın seçimi (valid votes) — three places each, shown apart; never combined, no overall winner, no prize shown; published only by the existing publication after the owner's approval** | owner, 2026-10-16 |
 | D17 | Deleting an account that voted | **Never: a permanent deletion of an account with any vote, counted or set aside, is refused (409) — application guard now, database `RESTRICT` in the D1 migration (Phase22)** | owner, 2026-10-09 |
@@ -387,6 +387,14 @@ Approved by the owner on 7 October 2026 after a read-only post-close audit of co
   2 November 2026 while their votes were still open (17 votes: 3 and 14), directly in the database with the same
   reason (`D14_DISPOSABLE_EMAIL v2: …`), one `VoteInvalidated` per vote and one `VotingRuleApplied` per competition.
   It is applied once more after the votes close, for any vote cast in between.
+
+### D14 version 3 (owner, 2 November 2026, the same day)
+
+- **Three more domains (43 in all), on the owner's decision alone.** yzcalo.com (no DNS left), 37xiao.com and
+  hiringview.com (no website, one shared mail host 157.230.65.184). No public classification exists for them; all
+  three voted only for the works the 10minutemail accounts voted for. Registration is closed to them as to the rest.
+- **Applied during the vote** the same way: 7 votes (competition 6: 1, competition 8: 6), reason
+  `D14_DISPOSABLE_EMAIL v3: …`. In all, 24 votes set aside under D14 on 2 November (6: 4, 8: 20).
 
 ## D16 — Every work scored by the jury, an internal ranking (owner, 8 October 2026; simplified the same day)
 
