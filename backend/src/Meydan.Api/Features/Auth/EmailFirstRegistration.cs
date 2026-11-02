@@ -131,6 +131,10 @@ public sealed class EmailFirstRegistration(
     public static string NoMailServer(string email) =>
         $"Bu e-poçt domeni ({Admin.DisposableEmailRule.Domain(email)}) məktub qəbul etmir. Ünvanda səhv ola bilər, yoxlayıb yenidən yazın.";
 
+    /// <summary>A mail exchanger without a website behind it (<see cref="EmailDomainVerdict.NoWebsite"/>).</summary>
+    public static string NoWebsite(string email) =>
+        $"Bu e-poçt domeninin ({Admin.DisposableEmailRule.Domain(email)}) saytı yoxdur; belə ünvanlar müvəqqəti poçt sayılır və qəbul edilmir. Daimi ünvanınızı yazın, məsələn Gmail.";
+
     private const string LinkInvalid =
         "Bu link artıq işləmir: ya istifadə olunub, ya da vaxtı bitib. Ən son gələn məktubdakı linki açın və ya yeni link istəyin.";
     private const string ProofInvalid = "Qeydiyyatın vaxtı bitib. E-mailinizi yenidən təsdiqləyin.";
@@ -154,6 +158,7 @@ public sealed class EmailFirstRegistration(
         {
             case EmailDomainVerdict.Disposable: throw ValidationFailedException.For("email", DisposableRefused);
             case EmailDomainVerdict.NoMailServer: throw ValidationFailedException.For("email", NoMailServer(email));
+            case EmailDomainVerdict.NoWebsite: throw ValidationFailedException.For("email", NoWebsite(email));
         }
         var normalized = users.NormalizeEmail(email);
         var now = clock.GetUtcNow();
@@ -284,10 +289,13 @@ public sealed class EmailFirstRegistration(
 
             if (await users.FindByEmailAsync(pending.Email) is not null)
                 throw ValidationFailedException.For("email", "Bu e-mail ilə artıq hesab var. Daxil olun və ya şifrəni bərpa edin.");
-            // A registration begun before its domain was known as disposable ends here, account-less. (Only that
-            // verdict: the link was received, so the domain does take mail.)
-            if (await domains.CheckAsync(pending.Email, ct) == EmailDomainVerdict.Disposable)
-                throw ValidationFailedException.For("email", DisposableRefused);
+            // A registration begun before its domain was known as throwaway ends here, account-less. (Not the
+            // no-mail verdict: the link was received, so the domain does take mail.)
+            switch (await domains.CheckAsync(pending.Email, ct))
+            {
+                case EmailDomainVerdict.Disposable: throw ValidationFailedException.For("email", DisposableRefused);
+                case EmailDomainVerdict.NoWebsite: throw ValidationFailedException.For("email", NoWebsite(pending.Email));
+            }
             if (await PhoneNumbers.InUseAsync(users.Users, req.Phone, except: null, ct))
                 throw ValidationFailedException.For("phone", PhoneNumbers.AlreadyUsed);
 

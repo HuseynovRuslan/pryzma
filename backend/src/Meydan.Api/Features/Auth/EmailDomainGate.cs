@@ -14,13 +14,19 @@ public enum EmailDomainVerdict
     Disposable,
     /// <summary>The domain does not exist or has no mail exchanger and no address: nothing can be delivered there.</summary>
     NoMailServer,
+    /// <summary>
+    /// A mail exchanger but no website: neither the domain nor www. under it has an address. Real mail providers have a
+    /// site; a domain minted for throwaway mailboxes has none (owner, 2 November 2026).
+    /// </summary>
+    NoWebsite,
 }
 
 /// <summary>
-/// What DNS says about a domain's mail: its mail exchangers (lower case, no trailing dot, by preference, at most three),
-/// their IPv4 addresses, whether the domain itself has an address, and whether it declares "no mail" (a null MX, RFC 7505).
+/// What DNS says about a domain: its mail exchangers (lower case, no trailing dot, by preference, at most three), their
+/// IPv4 addresses, whether the domain itself has an address, whether www. under it has one, and whether it declares
+/// "no mail" (a null MX, RFC 7505).
 /// </summary>
-public sealed record MailDns(IReadOnlyList<string> MxHosts, IReadOnlyList<string> MxAddresses, bool HasAddress, bool NullMx = false);
+public sealed record MailDns(IReadOnlyList<string> MxHosts, IReadOnlyList<string> MxAddresses, bool HasAddress, bool NullMx = false, bool HasWww = false);
 
 public interface IMailDnsLookup
 {
@@ -38,12 +44,20 @@ public interface IEmailDomainGate
 /// service, opens no account — it is refused before a link is queued or anything is stored. Three sources, in order:
 /// the frozen D14 set (<see cref="DisposableEmailRule.Domains"/>), the public disposable-domain list embedded in the
 /// assembly (<see cref="PublicDisposableDomains"/>), and DNS: a domain with no mail exchanger and no address, a mail
-/// exchanger under a known temporary-mail service, or a mail exchanger on a server shared by such a service.
-/// A parent domain counts too (x.abowned.com is abowned.com). DNS verdicts are cached per domain; when DNS does not
-/// answer, the address goes through — a resolver hiccup must not close registration.
+/// exchanger under a known temporary-mail service, a mail exchanger on a server shared by such a service, or a mail
+/// exchanger without any website behind the domain. A parent domain counts too (x.abowned.com is abowned.com). The
+/// big providers skip DNS altogether. DNS verdicts are cached per domain; when DNS does not answer, the address goes
+/// through — a resolver hiccup must not close registration.
 /// </summary>
 public sealed class EmailDomainGate(IMailDnsLookup dns, IMemoryCache cache, ILogger<EmailDomainGate> logger) : IEmailDomainGate
 {
+    /// <summary>Providers nearly every participant uses: no lookup, no cache, no way for a DNS hiccup to touch them.</summary>
+    public static readonly FrozenSet<string> TrustedDomains = new[]
+    {
+        "gmail.com", "googlemail.com", "mail.ru", "bk.ru", "list.ru", "inbox.ru", "internet.ru", "icloud.com", "me.com", "mac.com",
+        "yahoo.com", "outlook.com", "hotmail.com", "live.com", "msn.com", "yandex.ru", "yandex.com", "ya.ru", "box.az", "mail.az",
+    }.ToFrozenSet(StringComparer.Ordinal);
+
     /// <summary>
     /// Temporary-mail services whose every domain is a temporary mailbox: a domain whose mail exchanger is under one of
     /// these is refused, whatever the domain is called. The first five were read off the 2026 votes (temp-mail.org's
@@ -76,6 +90,7 @@ public sealed class EmailDomainGate(IMailDnsLookup dns, IMemoryCache cache, ILog
     {
         var domain = DisposableEmailRule.Domain(email);
         if (domain is null) return EmailDomainVerdict.Ok; // the request model's [EmailAddress] has already refused it
+        if (TrustedDomains.Contains(domain)) return EmailDomainVerdict.Ok;
         if (IsListed(domain)) return EmailDomainVerdict.Disposable;
 
         var key = "email-domain:" + domain;
@@ -116,6 +131,7 @@ public sealed class EmailDomainGate(IMailDnsLookup dns, IMemoryCache cache, ILog
         if (m.MxHosts.Any(h => BlockedMxSuffixes.Any(s => h == s || h.EndsWith("." + s, StringComparison.Ordinal))))
             return EmailDomainVerdict.Disposable;
         if (m.MxAddresses.Any(a => BlockedMxAddresses.Contains(a))) return EmailDomainVerdict.Disposable;
+        if (m.MxHosts.Count > 0 && !m.HasAddress && !m.HasWww) return EmailDomainVerdict.NoWebsite;
         return EmailDomainVerdict.Ok;
     }
 }
@@ -179,18 +195,10 @@ public sealed class DnsClientMailLookup(ILogger<DnsClientMailLookup> logger) : I
                 addresses.AddRange(a.Answers.ARecords().Select(r => r.Address.ToString()));
             }
 
-            var hasAddress = false;
-            if (hosts.Count == 0 && !nullMx && !missing)
-            {
-                var a = await _client.QueryAsync(domain, QueryType.A, cancellationToken: ct);
-                hasAddress = a.Answers.ARecords().Any();
-                if (!hasAddress)
-                {
-                    var aaaa = await _client.QueryAsync(domain, QueryType.AAAA, cancellationToken: ct);
-                    hasAddress = aaaa.Answers.AaaaRecords().Any();
-                }
-            }
-            return new MailDns(hosts, addresses, hasAddress, nullMx);
+            // The website: an address on the domain itself, else on www. under it (a CNAME resolves to one).
+            var hasAddress = !missing && await HasAddressAsync(domain, ct);
+            var hasWww = !missing && !hasAddress && hosts.Count > 0 && await HasAddressAsync("www." + domain, ct);
+            return new MailDns(hosts, addresses, hasAddress, nullMx, hasWww);
         }
         catch (OperationCanceledException) when (ct.IsCancellationRequested)
         {
@@ -201,5 +209,13 @@ public sealed class DnsClientMailLookup(ILogger<DnsClientMailLookup> logger) : I
             logger.LogWarning("DNS lookup for a registration domain failed: {ErrorType}", ex.GetType().Name);
             return null;
         }
+    }
+
+    private async Task<bool> HasAddressAsync(string name, CancellationToken ct)
+    {
+        var a = await _client.QueryAsync(name, QueryType.A, cancellationToken: ct);
+        if (a.Answers.ARecords().Any()) return true;
+        var aaaa = await _client.QueryAsync(name, QueryType.AAAA, cancellationToken: ct);
+        return aaaa.Answers.AaaaRecords().Any();
     }
 }

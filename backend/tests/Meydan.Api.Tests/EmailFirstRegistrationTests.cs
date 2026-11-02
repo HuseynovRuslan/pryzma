@@ -219,11 +219,15 @@ public sealed class EmailFirstRegistrationTests : IDisposable
         _f.MailDns.Answers["gmial.example"] = new MailDns([], [], HasAddress: false);                       // a typo: nothing there
         _f.MailDns.Answers["fresh-temp.example"] = new MailDns(["mail.fresh-temp.example"], ["95.216.191.158"], HasAddress: false); // temp-mail.io's server
         _f.MailDns.Answers["other-temp.example"] = new MailDns(["mx7.wabblywabble.com"], [], HasAddress: true); // temp-mail.org's exchanger
+        _f.MailDns.Answers["nosite.example"] = new MailDns(["mail.nosite.example"], ["203.0.113.9"], HasAddress: false); // a mail server, no website
         _f.MailDns.Answers["dns-down.example"] = null;                                                      // no answer: let through
 
         var typo = await StartAsync(c, "ayse@gmial.example");
         Assert.Equal(HttpStatusCode.BadRequest, typo.StatusCode);
         Assert.Contains("məktub qəbul etmir", await typo.Content.ReadAsStringAsync());
+        var noSite = await StartAsync(c, "x@nosite.example");
+        Assert.Equal(HttpStatusCode.BadRequest, noSite.StatusCode);
+        Assert.Contains("saytı yoxdur", await noSite.Content.ReadAsStringAsync());
         foreach (var email in new[] { "a@fresh-temp.example", "b@other-temp.example" })
         {
             var res = await StartAsync(c, email);

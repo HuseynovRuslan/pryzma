@@ -405,8 +405,13 @@ Approved by the owner on 7 October 2026 after a read-only post-close audit of co
   (98,464 domains, embedded as of 2 November 2026 — registration only, never vote invalidation); when DNS shows no
   mail exchanger and no address, or a null MX ("Bu e-poçt domeni (…) məktub qəbul etmir"); when a mail exchanger is
   under a known temporary-mail service or on a server shared by one (the families read off this vote: temporarymail.com
-  51.38.251.14, temp-mail.io 95.216.191.158, mailporary.com, en2ch.com, temp-mail.org, mail.td, 10minutemail.com).
-  A DNS verdict is cached per domain (12 h / 24 h); when DNS does not answer, the address is let through.
+  51.38.251.14, temp-mail.io 95.216.191.158, mailporary.com, en2ch.com, temp-mail.org, mail.td, 10minutemail.com);
+  and — the owner's own rule — when the domain has a mail exchanger but no website, i.e. neither the domain nor
+  www. under it has an address ("Bu e-poçt domeninin (…) saytı yoxdur"): a real mail provider has a site, a domain
+  minted for throwaway mailboxes has none (en2ch.com). The big providers (Gmail, Mail.ru, iCloud, Yahoo, Outlook,
+  Yandex, box.az, mail.az) skip the lookup. A DNS verdict is cached per domain (12 h / 24 h); when DNS does not
+  answer, the address is let through. The completion step asks the gate again (throwaway verdicts only), so a link
+  already sent to such a mailbox opens no account.
 
 ## D16 — Every work scored by the jury, an internal ranking (owner, 8 October 2026; simplified the same day)
 
