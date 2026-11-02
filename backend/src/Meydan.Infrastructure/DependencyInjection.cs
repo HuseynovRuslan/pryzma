@@ -101,7 +101,11 @@ public static class DependencyInjection
         var mode = (config.GetSection(EmailOptions.Section).Get<EmailOptions>() ?? new EmailOptions()).EffectiveMode(environment);
         switch (mode)
         {
-            case EmailMode.Smtp: services.AddSingleton<IEmailSender, SmtpEmailSender>(); break;
+            case EmailMode.Smtp:
+                // One sender for the process: it remembers which mailbox is resting after its sending limit.
+                services.AddSingleton<ISmtpTransport, MailKitSmtpTransport>();
+                services.AddSingleton<IEmailSender, SmtpEmailSender>();
+                break;
             case EmailMode.Pickup when !environment.IsProduction(): services.AddSingleton<IEmailSender, PickupDirectoryEmailSender>(); break;
             case EmailMode.Log when environment.IsDevelopment(): services.AddSingleton<IEmailSender, LogEmailSender>(); break;
             default: services.AddSingleton<IEmailSender, DisabledEmailSender>(); break;

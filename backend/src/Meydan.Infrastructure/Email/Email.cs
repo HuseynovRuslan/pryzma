@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Hosting;
@@ -52,7 +53,16 @@ public sealed class SmtpSettings
     public string? Password { get; set; }
     public SmtpSecurity Security { get; set; } = SmtpSecurity.StartTls;
     public int TimeoutSeconds { get; set; } = 30;
+
+    /// <summary>
+    /// This account's own sender. A mailbox service sends only as the account that signed in, so a second account
+    /// needs its own; unset, the first account uses Email:FromAddress and a second one its Username.
+    /// </summary>
+    public string? FromAddress { get; set; }
 }
+
+/// <summary>One mailbox the site can send from, with the sender it sends as.</summary>
+public sealed record SmtpAccount(int Number, SmtpSettings Settings, string From);
 
 /// <summary>Configuration section "Email". Credentials come from environment variables / secrets only.</summary>
 public sealed class EmailOptions
@@ -65,6 +75,26 @@ public sealed class EmailOptions
     public string FromName { get; set; } = "PRYZMA";
     public string? PickupDirectory { get; set; }
     public SmtpSettings Smtp { get; set; } = new();
+
+    /// <summary>
+    /// A second mailbox, optional (Email__Smtp2__*). With two, messages take turns between them, so each carries half
+    /// the load; one that reaches its provider's sending limit rests and the other carries on.
+    /// </summary>
+    public SmtpSettings Smtp2 { get; set; } = new();
+
+    /// <summary>How long a mailbox that reported its sending limit is passed over before it is tried again.</summary>
+    public int SmtpRestMinutes { get; set; } = 60;
+
+    /// <summary>The mailboxes that are configured, first one first.</summary>
+    public IReadOnlyList<SmtpAccount> SmtpAccounts()
+    {
+        var accounts = new List<SmtpAccount>();
+        if (!string.IsNullOrWhiteSpace(Smtp.Host))
+            accounts.Add(new SmtpAccount(1, Smtp, Smtp.FromAddress ?? FromAddress ?? Smtp.Username ?? "no-reply@localhost"));
+        if (!string.IsNullOrWhiteSpace(Smtp2.Host))
+            accounts.Add(new SmtpAccount(2, Smtp2, Smtp2.FromAddress ?? Smtp2.Username ?? FromAddress ?? "no-reply@localhost"));
+        return accounts;
+    }
 
     // Durable outbox (PostgreSQL) — see EmailOutboxWorker.
     /// <summary>Delivery attempts per message before it is marked Failed.</summary>
@@ -98,10 +128,10 @@ public static class EmailAddresses
 
 internal static class Mime
 {
-    public static MimeMessage Build(EmailMessage m, EmailOptions o)
+    public static MimeMessage Build(EmailMessage m, EmailOptions o, string? from = null)
     {
         var message = new MimeMessage();
-        message.From.Add(new MailboxAddress(o.FromName, o.FromAddress ?? "no-reply@localhost"));
+        message.From.Add(new MailboxAddress(o.FromName, from ?? o.FromAddress ?? "no-reply@localhost"));
         message.To.Add(MailboxAddress.Parse(m.To));
         // The sender stays our own address (SPF/DKIM); a reply goes to the person the message is from.
         if (!string.IsNullOrWhiteSpace(m.ReplyTo))
@@ -112,12 +142,16 @@ internal static class Mime
     }
 }
 
-public sealed class SmtpEmailSender(IOptions<EmailOptions> options) : IEmailSender
+/// <summary>Hands one message to one mailbox's SMTP server.</summary>
+public interface ISmtpTransport
 {
-    public async Task SendAsync(EmailMessage message, CancellationToken ct)
+    Task SendAsync(SmtpSettings account, MimeMessage message, CancellationToken ct);
+}
+
+public sealed class MailKitSmtpTransport : ISmtpTransport
+{
+    public async Task SendAsync(SmtpSettings s, MimeMessage message, CancellationToken ct)
     {
-        var o = options.Value;
-        var s = o.Smtp;
         using var client = new SmtpClient { Timeout = s.TimeoutSeconds * 1000 };
         var socket = s.Security switch
         {
@@ -128,9 +162,82 @@ public sealed class SmtpEmailSender(IOptions<EmailOptions> options) : IEmailSend
         await client.ConnectAsync(s.Host ?? throw new InvalidOperationException("Email:Smtp:Host is not set."), s.Port, socket, ct);
         if (!string.IsNullOrEmpty(s.Username))
             await client.AuthenticateAsync(s.Username, s.Password ?? "", ct);
-        await client.SendAsync(Mime.Build(message, o), ct);
+        await client.SendAsync(message, ct);
         await client.DisconnectAsync(quit: true, ct);
     }
+}
+
+/// <summary>
+/// Sends through one or two mailboxes (Email:Smtp, Email:Smtp2). Messages take turns between them, so each mailbox
+/// carries half the day's load. A mailbox whose provider says it has reached its sending limit (Gmail: "5.4.5 Daily
+/// user sending limit exceeded") rests for Email:SmtpRestMinutes and the message goes through the other one at once;
+/// any other failure of one mailbox also falls through to the other. Only when every mailbox has failed does the
+/// message fail, and the outbox tries it again later. A recipient the server refuses is the address's fault, not the
+/// mailbox's, so it is not tried again elsewhere.
+/// </summary>
+public sealed class SmtpEmailSender(
+    IOptions<EmailOptions> options, ISmtpTransport transport, TimeProvider clock, ILogger<SmtpEmailSender> logger) : IEmailSender
+{
+    private int _turn = -1;
+    private readonly ConcurrentDictionary<int, DateTimeOffset> _restingUntil = new();
+
+    public async Task SendAsync(EmailMessage message, CancellationToken ct)
+    {
+        var o = options.Value;
+        var accounts = o.SmtpAccounts();
+        if (accounts.Count == 0) throw new InvalidOperationException("Email:Smtp:Host is not set.");
+
+        var now = clock.GetUtcNow();
+        var first = (int)((uint)Interlocked.Increment(ref _turn) % (uint)accounts.Count);
+        // This message's turn first, then the others; a resting mailbox last — still tried when it is all there is,
+        // because a rest is a guess about the provider's limit, not a ban.
+        var order = Enumerable.Range(0, accounts.Count)
+            .Select(i => accounts[(first + i) % accounts.Count])
+            .OrderBy(a => _restingUntil.TryGetValue(a.Number, out var until) && until > now ? 1 : 0)
+            .ToList();
+
+        Exception? last = null;
+        foreach (var account in order)
+        {
+            try
+            {
+                await transport.SendAsync(account.Settings, Mime.Build(message, o, account.From), ct);
+                _restingUntil.TryRemove(account.Number, out _);
+                return;
+            }
+            catch (SmtpCommandException ex) when (ex.ErrorCode == SmtpErrorCode.RecipientNotAccepted)
+            {
+                throw;
+            }
+            catch (Exception ex) when (!ct.IsCancellationRequested)
+            {
+                last = ex;
+                if (IsSendingLimit(ex))
+                {
+                    var until = clock.GetUtcNow().AddMinutes(Math.Max(1, o.SmtpRestMinutes));
+                    _restingUntil[account.Number] = until;
+                    logger.LogWarning("E-mail account {Account} reached its sending limit ({Status}); resting until {Until}",
+                        account.Number, Status(ex), until);
+                }
+                else
+                {
+                    logger.LogWarning("E-mail account {Account} could not send ({Error}{Status})",
+                        account.Number, ex.GetType().Name, Status(ex));
+                }
+            }
+        }
+        throw last!;
+    }
+
+    private static readonly string[] LimitWords = ["limit", "quota", "exceeded", "5.4.5", "4.7.0", "too many", "rate"];
+
+    /// <summary>The provider refuses more mail from this mailbox for now — not a fault of this message.</summary>
+    public static bool IsSendingLimit(Exception ex) =>
+        ex is SmtpCommandException sce
+        && (int)sce.StatusCode is 421 or 450 or 451 or 452 or 454 or 550 or 552 or 554
+        && LimitWords.Any(w => sce.Message.Contains(w, StringComparison.OrdinalIgnoreCase));
+
+    private static string Status(Exception ex) => ex is SmtpCommandException sce ? $":{(int)sce.StatusCode}" : "";
 }
 
 /// <summary>Writes each message as an .eml file. Refused in Production by configuration validation.</summary>

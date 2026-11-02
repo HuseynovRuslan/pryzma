@@ -54,6 +54,14 @@ x-api-environment: &api-environment
   Email__Smtp__Security: ${Email__Smtp__Security:-StartTls}
   Email__Smtp__Username: ${Email__Smtp__Username:-}
   Email__Smtp__Password: ${Email__Smtp__Password:-}
+  # A second mailbox (optional): messages take turns between the two, and one that reaches its provider's daily
+  # sending limit rests while the other carries on. Its own sender address (a Gmail account sends only as itself).
+  Email__Smtp2__Host: ${Email__Smtp2__Host:-}
+  Email__Smtp2__Port: ${Email__Smtp2__Port:-587}
+  Email__Smtp2__Security: ${Email__Smtp2__Security:-StartTls}
+  Email__Smtp2__Username: ${Email__Smtp2__Username:-}
+  Email__Smtp2__Password: ${Email__Smtp2__Password:-}
+  Email__Smtp2__FromAddress: ${Email__Smtp2__FromAddress:-}
   # "QRLog ilə daxil ol": switched on/off in .env; the secret must equal QRLog's
   # ExternalSignIn__Apps__meydan__VouchSecret (both files are server-only, never in Git).
   QrlogSso__Enabled: ${QrlogSso__Enabled:-false}
