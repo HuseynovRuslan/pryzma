@@ -44,6 +44,9 @@ builder.Services.AddSingleton<Meydan.Api.Features.Auth.EmailFirstRegistrationPol
 builder.Services.AddScoped<Meydan.Api.Features.Auth.EmailFirstRegistration>();
 builder.Services.Configure<Meydan.Api.Features.Auth.CaptchaOptions>(builder.Configuration.GetSection(Meydan.Api.Features.Auth.CaptchaOptions.Section));
 builder.Services.AddHttpClient<Meydan.Api.Features.Auth.ICaptchaVerifier, Meydan.Api.Features.Auth.TurnstileVerifier>();
+// Registration refuses a domain that cannot receive mail or belongs to a temporary-mail service (owner, 2 November 2026).
+builder.Services.AddSingleton<Meydan.Api.Features.Auth.IMailDnsLookup, Meydan.Api.Features.Auth.DnsClientMailLookup>();
+builder.Services.AddSingleton<Meydan.Api.Features.Auth.IEmailDomainGate, Meydan.Api.Features.Auth.EmailDomainGate>();
 builder.Services.Configure<Meydan.Api.Features.Contact.ContactOptions>(builder.Configuration.GetSection(Meydan.Api.Features.Contact.ContactOptions.Section));
 builder.Services.AddScoped<Meydan.Api.Features.Contact.ContactMessages>();
 builder.Services.AddScoped<CatalogQueries>();

@@ -47,6 +47,9 @@ public sealed class MeydanFactory : WebApplicationFactory<Program>
     public TestClock Clock { get; } = new();
     public CapturingLoggerProvider Logs { get; } = new();
 
+    /// <summary>The registration gate's DNS, answered here instead of on the network.</summary>
+    public FakeMailDns MailDns { get; } = new();
+
     /// <summary>Host environment for this factory; "Testing" behaves like any non-Development deployment.</summary>
     public string EnvironmentName { get; init; } = "Testing";
 
@@ -115,6 +118,8 @@ public sealed class MeydanFactory : WebApplicationFactory<Program>
         {
             services.RemoveAll<TimeProvider>();
             services.AddSingleton<TimeProvider>(Clock);
+            services.RemoveAll<Meydan.Api.Features.Auth.IMailDnsLookup>();
+            services.AddSingleton<Meydan.Api.Features.Auth.IMailDnsLookup>(MailDns);
             if (Mail is not null)
             {
                 services.RemoveAll<Meydan.Infrastructure.Email.IEmailSender>();

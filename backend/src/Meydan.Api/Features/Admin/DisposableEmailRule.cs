@@ -31,7 +31,7 @@ namespace Meydan.Api.Features.Admin;
 public sealed record DisposableEmailRule(bool Enabled = false)
 {
     public const string PolicyId = "D14_DISPOSABLE_EMAIL";
-    public const int Version = 3;
+    public const int Version = 4;
     public const string EvidenceType = "DisposableEmailDuringVoting";
 
     /// <summary>The owner-approved reason, as the votes and the audit record it (admins only; the public reads the rule).</summary>
@@ -40,7 +40,8 @@ public sealed record DisposableEmailRule(bool Enabled = false)
     public const string Source =
         "Read-only audit 2026-10-07: check-mail.org domain classification + MX records of the named service; owner decision 2026-10-07. " +
         "v2 2026-11-02: three domains whose MX is prd-smtp.10minutemail.com; owner decision 2026-11-02. " +
-        "v3 2026-11-02: three domains on the owner's decision alone (no DNS / no website, one shared mail host).";
+        "v3 2026-11-02: three domains on the owner's decision alone (no DNS / no website, one shared mail host). " +
+        "v4 2026-11-02: en2ch.com, seen registering during the vote (own mail host, no website).";
 
     /// <summary>The frozen evidence set: domain → the disposable service behind it.</summary>
     public static readonly IReadOnlyDictionary<string, string> Domains = new Dictionary<string, string>(StringComparer.Ordinal)
@@ -97,6 +98,8 @@ public sealed record DisposableEmailRule(bool Enabled = false)
         ["yzcalo.com"] = "unknown (no DNS on 2026-11-02)",
         ["37xiao.com"] = "unknown (mail host 157.230.65.184)",
         ["hiringview.com"] = "unknown (mail host 157.230.65.184)",
+        // v4 (2026-11-02, evening): registered during the vote right after the v3 deploy; own mail host, no website
+        ["en2ch.com"] = "unknown (mail host 165.227.252.21)",
     };
 
     public static DisposableEmailRule From(IConfiguration config) =>

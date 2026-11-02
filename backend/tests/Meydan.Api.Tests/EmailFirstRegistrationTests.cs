@@ -211,6 +211,32 @@ public sealed class EmailFirstRegistrationTests : IDisposable
         Assert.Equal(HttpStatusCode.Accepted, (await StartAsync(c, $"r-{Guid.NewGuid():N}@onldm.network")).StatusCode);
     }
 
+    [Fact]
+    public async Task A_domain_that_receives_no_mail_or_sits_on_a_temporary_mail_server_is_refused_by_dns()
+    {
+        Start();
+        var c = _f.CreateClient();
+        _f.MailDns.Answers["gmial.example"] = new MailDns([], [], HasAddress: false);                       // a typo: nothing there
+        _f.MailDns.Answers["fresh-temp.example"] = new MailDns(["mail.fresh-temp.example"], ["95.216.191.158"], HasAddress: false); // temp-mail.io's server
+        _f.MailDns.Answers["other-temp.example"] = new MailDns(["mx7.wabblywabble.com"], [], HasAddress: true); // temp-mail.org's exchanger
+        _f.MailDns.Answers["dns-down.example"] = null;                                                      // no answer: let through
+
+        var typo = await StartAsync(c, "ayse@gmial.example");
+        Assert.Equal(HttpStatusCode.BadRequest, typo.StatusCode);
+        Assert.Contains("məktub qəbul etmir", await typo.Content.ReadAsStringAsync());
+        foreach (var email in new[] { "a@fresh-temp.example", "b@other-temp.example" })
+        {
+            var res = await StartAsync(c, email);
+            Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
+            Assert.Contains("Müvəqqəti (birdəfəlik) e-poçt", await res.Content.ReadAsStringAsync());
+        }
+        Assert.Equal(0, Pending());
+        Assert.Equal(0, _f.WithDb(db => db.EmailOutbox.Count()));
+
+        Assert.Equal(HttpStatusCode.Accepted, (await StartAsync(c, "d@dns-down.example")).StatusCode);
+        Assert.Equal(1, Pending());
+    }
+
     // ---- 4, 5, 6: the link ------------------------------------------------------------------------
 
     [Fact]

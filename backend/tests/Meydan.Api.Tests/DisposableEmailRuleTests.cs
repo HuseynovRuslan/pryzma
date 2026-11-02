@@ -21,11 +21,11 @@ public sealed class DisposableEmailRuleTests
     private static readonly DateTimeOffset End = new(2026, 10, 7, 7, 40, 0, TimeSpan.Zero);
 
     [Fact]
-    public void The_frozen_set_is_the_37_audited_domains_and_the_six_added_on_2_November()
+    public void The_frozen_set_is_the_37_audited_domains_and_the_seven_added_on_2_November()
     {
-        Assert.Equal(43, DisposableEmailRule.Domains.Count);
-        Assert.Equal(3, DisposableEmailRule.Version);
-        Assert.All(new[] { "yzcalo.com", "37xiao.com", "hiringview.com" }, d => Assert.True(DisposableEmailRule.Domains.ContainsKey(d)));
+        Assert.Equal(44, DisposableEmailRule.Domains.Count);
+        Assert.Equal(4, DisposableEmailRule.Version);
+        Assert.All(new[] { "yzcalo.com", "37xiao.com", "hiringview.com", "en2ch.com" }, d => Assert.True(DisposableEmailRule.Domains.ContainsKey(d)));
         Assert.Equal(9, DisposableEmailRule.Domains.Count(d => d.Value == "temporarymail.com"));
         Assert.Equal(new[] { "jbsze.com", "onldm.net", "vtmpj.com", "vtmpj.net" },
             DisposableEmailRule.Domains.Where(d => d.Value == "10minutemail.com").Select(d => d.Key).Order(StringComparer.Ordinal));
@@ -252,13 +252,13 @@ public sealed class DisposableEmailRuleTests
         // Never deleted: every row is still there with its own facts; the four carry who, when and the rule.
         var after = s.Factory.WithDb(db => db.Votes.IgnoreQueryFilters().OrderBy(v => v.Id).ToList());
         Assert.Equal(before.Select(v => (v.Id, v.UserId, v.SubmissionId, v.CreatedAt)), after.Select(v => (v.Id, v.UserId, v.SubmissionId, v.CreatedAt)));
-        var d14 = after.Where(v => v.InvalidationReason?.StartsWith("D14_DISPOSABLE_EMAIL v3: ") == true).ToList();
+        var d14 = after.Where(v => v.InvalidationReason?.StartsWith("D14_DISPOSABLE_EMAIL v4: ") == true).ToList();
         Assert.Equal(4, d14.Count);
         Assert.All(d14, v =>
         {
             Assert.Equal(s.Factory.Clock.Now, v.InvalidatedAt);
             Assert.NotNull(v.InvalidatedById);
-            Assert.Equal($"D14_DISPOSABLE_EMAIL v3: {DisposableEmailRule.Reason}", v.InvalidationReason);
+            Assert.Equal($"D14_DISPOSABLE_EMAIL v4: {DisposableEmailRule.Reason}", v.InvalidationReason);
         });
         // The earlier phone-rule decision is untouched.
         Assert.Equal(3, after.Count(v => v.InvalidationReason == "Eyni telefonla açılmış 3 hesab."));
@@ -269,7 +269,7 @@ public sealed class DisposableEmailRuleTests
         Assert.Equal(4, votes.Count);
         Assert.Contains(votes, x => x.Summary!.Contains("domain mailmagnet.co") && x.Summary.Contains("evidence DisposableEmailDuringVoting"));
         var decision = Assert.Single(audit, x => x.Action == "VotingRuleApplied");
-        Assert.Contains("D14_DISPOSABLE_EMAIL v3 (DisposableEmailDuringVoting): 4 votes set aside", decision.Summary);
+        Assert.Contains("D14_DISPOSABLE_EMAIL v4 (DisposableEmailDuringVoting): 4 votes set aside", decision.Summary);
         Assert.Contains($"{r.A.Reference} 3, {r.B.Reference} 1", decision.Summary);
 
         // The ranking re-counts on valid votes at once.

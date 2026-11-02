@@ -396,6 +396,18 @@ Approved by the owner on 7 October 2026 after a read-only post-close audit of co
 - **Applied during the vote** the same way: 7 votes (competition 6: 1, competition 8: 6), reason
   `D14_DISPOSABLE_EMAIL v3: …`. In all, 24 votes set aside under D14 on 2 November (6: 4, 8: 20).
 
+### D14 version 4 and the registration gate (owner, 2 November 2026, evening)
+
+- **en2ch.com joins the set (44).** It registered during the vote right after the v3 deploy: its own mail host
+  (165.227.252.21), no website, no public classification; the owner's decision.
+- **Registration checks the domain itself** (`EmailDomainGate`, before anything is stored or sent): refused when the
+  domain or a parent of it is in the D14 set or in the public list of github.com/disposable/disposable-email-domains
+  (98,464 domains, embedded as of 2 November 2026 — registration only, never vote invalidation); when DNS shows no
+  mail exchanger and no address, or a null MX ("Bu e-poçt domeni (…) məktub qəbul etmir"); when a mail exchanger is
+  under a known temporary-mail service or on a server shared by one (the families read off this vote: temporarymail.com
+  51.38.251.14, temp-mail.io 95.216.191.158, mailporary.com, en2ch.com, temp-mail.org, mail.td, 10minutemail.com).
+  A DNS verdict is cached per domain (12 h / 24 h); when DNS does not answer, the address is let through.
+
 ## D16 — Every work scored by the jury, an internal ranking (owner, 8 October 2026; simplified the same day)
 
 Replaces D13's combined 50/50 Top 10 final for "Əmircanın simvolu" with the format `InternalJuryRankingV1`.

@@ -113,6 +113,7 @@ public sealed class EmailFirstRegistration(
     EmailFirstRegistrationPolicy policy,
     ICaptchaVerifier captcha,
     IOptions<CaptchaOptions> captchaOptions,
+    IEmailDomainGate domains,
     AuthService auth,
     TimeProvider clock,
     ILogger<EmailFirstRegistration> logger)
@@ -124,7 +125,11 @@ public sealed class EmailFirstRegistration(
 
     /// <summary>An address on a disposable / temporary mail service (the D14 set) opens no account (owner, 2 November 2026).</summary>
     public const string DisposableRefused =
-        "Müvəqqəti (birdəfəlik) e-poçt ünvanı ilə qeydiyyat mümkün deyil. Daimi ünvanınızı yazın, məsələn Gmail və ya Mail.ru.";
+        "Müvəqqəti (birdəfəlik) e-poçt ünvanı ilə qeydiyyat mümkün deyil. Daimi ünvanınızı yazın, məsələn Gmail.";
+
+    /// <summary>The domain does not exist or receives no mail (<see cref="EmailDomainGate"/>): most often a typo.</summary>
+    public static string NoMailServer(string email) =>
+        $"Bu e-poçt domeni ({Admin.DisposableEmailRule.Domain(email)}) məktub qəbul etmir. Ünvanda səhv ola bilər, yoxlayıb yenidən yazın.";
 
     private const string LinkInvalid =
         "Bu link artıq işləmir: ya istifadə olunub, ya da vaxtı bitib. Ən son gələn məktubdakı linki açın və ya yeni link istəyin.";
@@ -143,9 +148,13 @@ public sealed class EmailFirstRegistration(
         await CaptchaGate.EnsureAsync(captcha, captchaOptions.Value, req.CaptchaToken, "register", ip, logger, ct);
 
         var email = req.Email.Trim();
-        // A temporary mailbox proves nothing about a person: no link goes to one, and nothing is stored for it.
-        if (Admin.DisposableEmailRule.ListedDomain(email) is not null)
-            throw ValidationFailedException.For("email", DisposableRefused);
+        // A temporary mailbox proves nothing about a person, and a domain without a mail server receives nothing:
+        // no link goes to either, and nothing is stored (EmailDomainGate: the D14 set, the public list, DNS).
+        switch (await domains.CheckAsync(email, ct))
+        {
+            case EmailDomainVerdict.Disposable: throw ValidationFailedException.For("email", DisposableRefused);
+            case EmailDomainVerdict.NoMailServer: throw ValidationFailedException.For("email", NoMailServer(email));
+        }
         var normalized = users.NormalizeEmail(email);
         var now = clock.GetUtcNow();
 
