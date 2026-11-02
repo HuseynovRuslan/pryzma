@@ -186,6 +186,21 @@ else changes: password-reset and submission-receipt mails already queue in the d
 worker starts delivering. Until then the site says, before anyone types an address, that password reset by e-mail is
 not active yet; account enumeration is not affected (the form is simply not offered).
 
+**A second mailbox** (when one reaches its provider's daily sending limit — a Gmail account sends about 500 a day):
+
+```bash
+# in /opt/meydan/.env, beside the Email__Smtp__* lines (the password is that account's app password)
+Email__Smtp2__Host=smtp.gmail.com
+Email__Smtp2__Username=second.account@gmail.com
+Email__Smtp2__Password=...
+Email__Smtp2__FromAddress=second.account@gmail.com
+```
+
+then `mc up -d --no-deps api`. Messages take turns between the two; one that answers with its sending limit rests for an
+hour (`Email__SmtpRestMinutes`) while the other carries on, and any other failure of one falls through to the other.
+The logs say "E-mail account 2 reached its sending limit" and the like — never an address or a password. A wrong
+second account cannot stop the site: its sends fail and the first mailbox takes them.
+
 ### "QRLog ilə daxil ol"
 
 QRLog is not an OpenID provider; the two sites share an HMAC secret and QRLog's server vouches for a signed-in
