@@ -12,6 +12,11 @@ namespace Meydan.Api.Features.Admin;
 /// unknown) was left out by the owner.
 /// </para>
 /// <para>
+/// Version 2 (owner, 2 November 2026): three 10minutemail.com domains seen in the Novxanı and Maştağa votes, each with
+/// prd-smtp.10minutemail.com as its mail exchanger, join the set (40 domains). The same set now also closes
+/// registration (<see cref="Auth.EmailFirstRegistration"/>): an address on it cannot open an account at all.
+/// </para>
+/// <para>
 /// Nothing else counts — not the voter's connection, name, speed, the work voted for or its place. Those stay signs
 /// for review. The phone-cluster rule and R2 (D12) are unchanged.
 /// </para>
@@ -21,14 +26,15 @@ namespace Meydan.Api.Features.Admin;
 public sealed record DisposableEmailRule(bool Enabled = false)
 {
     public const string PolicyId = "D14_DISPOSABLE_EMAIL";
-    public const int Version = 1;
+    public const int Version = 2;
     public const string EvidenceType = "DisposableEmailDuringVoting";
 
     /// <summary>The owner-approved reason, as the votes and the audit record it (admins only; the public reads the rule).</summary>
     public const string Reason = "Disposable/temporary email domain used by an account created during the voting window.";
 
     public const string Source =
-        "Read-only audit 2026-10-07: check-mail.org domain classification + MX records of the named service; owner decision 2026-10-07.";
+        "Read-only audit 2026-10-07: check-mail.org domain classification + MX records of the named service; owner decision 2026-10-07. " +
+        "v2 2026-11-02: three domains whose MX is prd-smtp.10minutemail.com; owner decision 2026-11-02.";
 
     /// <summary>The frozen evidence set: domain → the disposable service behind it.</summary>
     public static readonly IReadOnlyDictionary<string, string> Domains = new Dictionary<string, string>(StringComparer.Ordinal)
@@ -77,6 +83,10 @@ public sealed record DisposableEmailRule(bool Enabled = false)
         ["onetopclick.online"] = "noopmail.org",
         ["animatimg.com"] = "tempmail.ing",
         ["betterr.org"] = "temp-mail.app",
+        // v2 (2026-11-02): 10minutemail.com — mail exchanger prd-smtp.10minutemail.com for all three
+        ["onldm.net"] = "10minutemail.com",
+        ["vtmpj.com"] = "10minutemail.com",
+        ["vtmpj.net"] = "10minutemail.com",
     };
 
     public static DisposableEmailRule From(IConfiguration config) =>

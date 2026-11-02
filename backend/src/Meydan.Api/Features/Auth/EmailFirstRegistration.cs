@@ -122,6 +122,10 @@ public sealed class EmailFirstRegistration(
 
     public const string AccountExists = "Bu e-mail ilə artıq hesab mövcuddur";
 
+    /// <summary>An address on a disposable / temporary mail service (the D14 set) opens no account (owner, 2 November 2026).</summary>
+    public const string DisposableRefused =
+        "Müvəqqəti (birdəfəlik) e-poçt ünvanı ilə qeydiyyat mümkün deyil. Daimi ünvanınızı yazın, məsələn Gmail və ya Mail.ru.";
+
     private const string LinkInvalid =
         "Bu link artıq işləmir: ya istifadə olunub, ya da vaxtı bitib. Ən son gələn məktubdakı linki açın və ya yeni link istəyin.";
     private const string ProofInvalid = "Qeydiyyatın vaxtı bitib. E-mailinizi yenidən təsdiqləyin.";
@@ -139,6 +143,9 @@ public sealed class EmailFirstRegistration(
         await CaptchaGate.EnsureAsync(captcha, captchaOptions.Value, req.CaptchaToken, "register", ip, logger, ct);
 
         var email = req.Email.Trim();
+        // A temporary mailbox proves nothing about a person: no link goes to one, and nothing is stored for it.
+        if (Admin.DisposableEmailRule.ListedDomain(email) is not null)
+            throw ValidationFailedException.For("email", DisposableRefused);
         var normalized = users.NormalizeEmail(email);
         var now = clock.GetUtcNow();
 

@@ -187,6 +187,29 @@ public sealed class EmailFirstRegistrationTests : IDisposable
         Assert.Equal(HttpStatusCode.Accepted, (await StartAsync(c, NewEmail())).StatusCode);
     }
 
+    // ---- a temporary mailbox opens no account (owner, 2 November 2026) ---------------------------
+
+    [Theory]
+    [InlineData("someone@onldm.net")]
+    [InlineData("Someone@VTMPJ.com")]
+    [InlineData("a.b@inboxorigin.com")]
+    public async Task A_disposable_address_is_refused_before_anything_is_kept_or_sent(string email)
+    {
+        Start();
+        var c = _f.CreateClient();
+        var res = await StartAsync(c, email);
+        Assert.Equal(HttpStatusCode.BadRequest, res.StatusCode);
+        var body = await res.Content.ReadAsStringAsync();
+        Assert.Contains("\"email\"", body);
+        Assert.Contains("Müvəqqəti (birdəfəlik) e-poçt", body);
+        Assert.Equal(0, Pending());
+        Assert.Equal(0, _f.WithDb(db => db.EmailOutbox.Count()));
+
+        // A real mailbox next door is untouched, and so is a look-alike that is not on the list.
+        Assert.Equal(HttpStatusCode.Accepted, (await StartAsync(c, NewEmail())).StatusCode);
+        Assert.Equal(HttpStatusCode.Accepted, (await StartAsync(c, $"r-{Guid.NewGuid():N}@onldm.network")).StatusCode);
+    }
+
     // ---- 4, 5, 6: the link ------------------------------------------------------------------------
 
     [Fact]
