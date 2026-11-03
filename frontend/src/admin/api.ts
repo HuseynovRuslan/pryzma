@@ -240,6 +240,15 @@ export interface AdminVotingNomination {
   works: AdminVoteWork[]
 }
 
+/** Server-authenticated vote attempts with no corresponding vote record. */
+export interface UnrecordedVoteCandidate {
+  attemptId: number
+  reference: string
+  attemptedAt: string
+}
+export interface UnrecordedVoteCandidates { items: UnrecordedVoteCandidate[] }
+export interface RecoverUnrecordedVotesResult { recovered: number }
+
 export interface AdminVoting {
   state: VotingState
   startsAt: string | null
@@ -887,6 +896,12 @@ export const adminApi = {
   competition: (id: number, signal?: AbortSignal) => api<AdminCompetition>(`/api/admin/competitions/${id}`, { signal }),
   /** What the public vote produced. Read-only: the window is a competition setting, the winner a results decision. */
   voting: (id: number, signal?: AbortSignal) => api<AdminVoting>(`/api/admin/competitions/${id}/voting`, { signal }),
+  recoveryCandidates: (id: number, signal?: AbortSignal) =>
+    api<UnrecordedVoteCandidates>(`/api/admin/competitions/${id}/voting/recovery-candidates`, { signal }),
+  recoverMissingVotes: (id: number, attemptIds: number[]) =>
+    api<RecoverUnrecordedVotesResult>(`/api/admin/competitions/${id}/voting/recover-missing`, {
+      method: 'POST', body: { attemptIds },
+    }),
   voteSuspicion: (id: number, signal?: AbortSignal) =>
     api<AdminVoteSuspicion>(`/api/admin/competitions/${id}/voting/suspicion`, { signal }),
   /** One work's evidence and every vote it received, for review. */
