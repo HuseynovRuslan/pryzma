@@ -10,9 +10,9 @@ After authentication, work-ownership check, email confirmation and any enabled C
 
 ## Administrator workflow
 
-After the voting window closes, open the competition's Voting tab. If unmatched, eligible server attempts exist, a small 'Bazaya düşməmiş səslər' panel appears with work reference and time. Select relevant attempts, then confirm recovery. The operation writes real Vote rows for the original users and records a VoteRecovered internal audit action; the normal ranking/counting logic already uses those Vote rows. There is **no public audit panel** and no separate audit-history UI.
+While voting is open **or** after the window closes, open the competition's Voting tab. If unmatched, eligible server attempts exist, a small 'Bazaya düşməmiş səslər' panel appears with work reference and time. Select relevant attempts, then confirm recovery. The operation writes real Vote rows for the original users and records a VoteRecovered internal audit action; the normal ranking/counting logic already uses those Vote rows. There is **no public audit panel** and no separate audit-history UI.
 
-The service excludes any account which already has a vote (including an invalidated one), entries outside the voting window, the author's own entry, withdrawn/rejected/unplaced works, and users with ambiguous attempts for different works. Every requested attempt must be eligible. It cannot be replayed. Recovery is blocked before voting closes, after finalists are frozen, or after publication of results.
+The service excludes any account which already has a vote (including an invalidated one), entries outside the voting window, the author's own entry, withdrawn/rejected/unplaced works, and users with ambiguous attempts for different works. Every requested attempt must be eligible. It cannot be replayed. Recovery is blocked **before voting starts**, after finalists are frozen, or after publication of results. During a live vote, an attempt becomes eligible only after **60 seconds** and recovery uses the same per-voter PostgreSQL advisory lock as normal voting. The candidate set is rechecked after acquiring those locks to prevent double voting.
 
 ## Limitations and cautions
 
