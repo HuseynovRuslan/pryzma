@@ -479,8 +479,15 @@ public sealed class PublicVoting(
         if (captchaOptions.Value.VoteEnabled)
             await Auth.CaptchaGate.EnsureAsync(captcha, captchaOptions.Value, captchaToken, CaptchaAction, ip, logger, ct);
 
-        var now = clock.GetUtcNow();
         var competitionId = gate.Competition.Id;
+        // Durable proof of an authenticated, validated user intent. This is committed independently
+        // BEFORE the vote transaction, so a later server/database failure can be reconciled.
+        // No arbitrary user or work can be supplied through the recovery API.
+        audit.Record(userId, AuditActions.VoteAttempted, AuditEntities.Submission,
+            entry.Id, $"competition:{competitionId};category:{entry.CategoryId}");
+        await db.SaveChangesAsync(ct);
+
+        var now = clock.GetUtcNow();
         var strategy = db.Database.CreateExecutionStrategy();
         await strategy.ExecuteAsync(async () =>
         {
