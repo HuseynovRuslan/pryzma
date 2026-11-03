@@ -90,6 +90,8 @@ public static class AuditActions
     /// in the same transaction as the vote itself, so a vote without its record, or a record without its vote,
     /// cannot exist.
     /// </summary>
+    public const string VoteAttempted = "VoteAttempted";
+    public const string VoteRecovered = "VoteRecovered";
     public const string VoteCast = "VoteCast";
     /// <summary>An admin set a vote aside as fraudulent; the summary is the work and the reason (D12).</summary>
     public const string VoteInvalidated = "VoteInvalidated";
