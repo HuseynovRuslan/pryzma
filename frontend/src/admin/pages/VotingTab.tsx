@@ -113,7 +113,7 @@ export function VotingTab({ competition }: { competition: AdminCompetition }) {
         <DisposableEmailPanel competitionId={competition.id} onChanged={() => setVersion((n) => n + 1)} />
       )}
 
-      {v.state === 'Closed' && (
+      {(v.state === 'Open' || v.state === 'Closed') && (
         <VoteAttemptRecoveryPanel competitionId={competition.id} onChanged={() => setVersion((n) => n + 1)} />
       )}
 
