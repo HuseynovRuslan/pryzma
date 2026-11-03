@@ -38,14 +38,15 @@ public sealed class VoteAttemptRecovery(
     private sealed record Candidate(long AttemptId, Guid UserId, int SubmissionId,
         int CategoryId, string Reference, DateTimeOffset AttemptedAt);
 
-    private async Task<Competition> ClosedCompetitionAsync(int competitionId, CancellationToken ct)
+    private async Task<Competition> RecoverableCompetitionAsync(int competitionId, CancellationToken ct)
     {
         var competition = await db.Competitions.AsNoTracking()
             .SingleOrDefaultAsync(c => c.Id == competitionId, ct)
             ?? throw new NotFoundException("Müsabiqə tapılmadı.");
 
-        if (competition.VotingStateAt(clock.GetUtcNow()) != VotingState.Closed)
-            throw new ConflictException("Səs bərpası yalnız səsvermə bitəndən sonra mümkündür.");
+        // Recovery is also allowed while voting is ongoing, but never before it starts.
+        if (competition.VotingStateAt(clock.GetUtcNow()) is not (VotingState.Open or VotingState.Closed))
+            throw new ConflictException("Səs bərpası yalnız səsvermə başladıqdan sonra mümkündür.");
 
         if (await db.CompetitionFinals.AsNoTracking().AnyAsync(x => x.CompetitionId == competitionId, ct) ||
             await db.CompetitionResults.AsNoTracking()
@@ -70,8 +71,11 @@ public sealed class VoteAttemptRecovery(
         if (competition.VotingStartsAt is not { } from || competition.VotingEndsAt is not { } to)
             return [];
 
+        // Do not offer an in-flight request for recovery. The normal vote transaction gets time to finish;
+        // live recovery must not race a still-running legitimate vote request.
+        var safeBefore = clock.GetUtcNow().AddMinutes(-1);
         var attemptsInWindow = attempts
-            .Where(a => a.CreatedAt >= from && a.CreatedAt < to && a.UserId.HasValue &&
+            .Where(a => a.CreatedAt >= from && a.CreatedAt < to && a.CreatedAt <= safeBefore && a.UserId.HasValue &&
                         int.TryParse(a.EntityId, out _))
             .ToList();
         if (attemptsInWindow.Count == 0) return [];
@@ -105,7 +109,7 @@ public sealed class VoteAttemptRecovery(
 
     public async Task<UnrecordedVoteCandidates> ListAsync(int competitionId, CancellationToken ct)
     {
-        var competition = await ClosedCompetitionAsync(competitionId, ct);
+        var competition = await RecoverableCompetitionAsync(competitionId, ct);
         var candidates = await CandidatesAsync(competition, ct);
         return new UnrecordedVoteCandidates(candidates
             .Select(x => new UnrecordedVoteCandidate(x.AttemptId, x.Reference, x.AttemptedAt))
@@ -126,14 +130,27 @@ public sealed class VoteAttemptRecovery(
             // All reconciliation requests for this competition are serialized.
             await db.Database.ExecuteSqlInterpolatedAsync(
                 $"SELECT pg_advisory_xact_lock({-9021}, {competitionId})", ct);
-            var competition = await ClosedCompetitionAsync(competitionId, ct);
+            var competition = await RecoverableCompetitionAsync(competitionId, ct);
             var selected = (await CandidatesAsync(competition, ct))
                 .Where(x => ids.Contains(x.AttemptId))
                 .ToList();
             if (selected.Count != ids.Length)
                 throw new ConflictException("Seçilmiş səs cəhdlərindən biri bərpa üçün uyğun deyil. Siyahını yeniləyin.");
 
-            foreach (var attempt in selected)
+            // CastAsync uses this same per-voter advisory lock. Acquiring locks in stable order
+            // serializes a live vote and a recovery, including across different nominations.
+            foreach (var lockKey in selected.Select(x => PublicVoting.VoterLockKey(x.UserId)).Distinct().OrderBy(x => x))
+                await db.Database.ExecuteSqlInterpolatedAsync(
+                    $"SELECT pg_advisory_xact_lock({competitionId}, {lockKey})", ct);
+
+            // Re-read after locks: another request might have committed a Vote while we waited.
+            var stillEligible = (await CandidatesAsync(competition, ct))
+                .Where(x => ids.Contains(x.AttemptId))
+                .ToList();
+            if (stillEligible.Count != ids.Length)
+                throw new ConflictException("Səs artıq qeydə alınıb və ya bərpa edilə bilməz. Siyahını yeniləyin.");
+
+            foreach (var attempt in stillEligible)
             {
                 db.Votes.Add(new Vote
                 {
