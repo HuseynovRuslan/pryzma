@@ -275,7 +275,7 @@ public sealed class VotingTests : IDisposable
         });
         Assert.Equal(0, VoteCount());
 
-        _factory.Clock.Now = _t0.AddSeconds(25);
+        _factory.Clock.Now = _t0.AddSeconds(80);
         var url = $"/api/admin/competitions/{b.Competition}/voting";
         var candidates = await Json(await b.Admin.GetAsync($"{url}/recovery-candidates"));
         var item = Assert.Single(candidates.GetProperty("items").EnumerateArray().ToArray());
@@ -302,14 +302,52 @@ public sealed class VotingTests : IDisposable
     }
 
     [Fact]
-    public async Task Recovery_is_forbidden_before_voting_closes()
+    public async Task Recovery_is_forbidden_before_voting_starts()
     {
         var b = await OpenBallotAsync();
+        _factory.Clock.Now = _t0;
         await Refused(await b.Admin.GetAsync(
             $"/api/admin/competitions/{b.Competition}/voting/recovery-candidates"), HttpStatusCode.Conflict);
         await Refused(await b.Admin.PostAsJsonAsync(
             $"/api/admin/competitions/{b.Competition}/voting/recover-missing",
             new { attemptIds = new[] { 1L } }), HttpStatusCode.Conflict);
+    }
+
+    [Fact]
+    public async Task Recovery_works_while_voting_is_open_but_waits_for_in_flight_attempts()
+    {
+        var b = await OpenBallotAsync();
+        // Keep voting open long enough to age the recorded attempt while still accepting votes.
+        await WindowAsync(_t0.AddSeconds(5), _t0.AddMinutes(5));
+        await Json(await VoteAsync(b.Voter, b.Balaxani.Reference));
+
+        // Simulate a vote row lost after its authenticated attempt was recorded.
+        await _factory.WithDbAsync(async db =>
+        {
+            var vote = await db.Votes.SingleAsync();
+            db.Votes.Remove(vote);
+            await db.SaveChangesAsync();
+        });
+        var url = $"/api/admin/competitions/{b.Competition}/voting";
+        Assert.Empty((await Json(await b.Admin.GetAsync($"{url}/recovery-candidates")))
+            .GetProperty("items").EnumerateArray());
+
+        // 60 seconds later the normal vote request has had time to complete.
+        _factory.Clock.Now = _t0.AddSeconds(80);
+        var candidates = await Json(await b.Admin.GetAsync($"{url}/recovery-candidates"));
+        var item = Assert.Single(candidates.GetProperty("items").EnumerateArray().ToArray());
+        var attemptId = item.GetProperty("attemptId").GetInt64();
+
+        var done = await Json(await b.Admin.PostAsJsonAsync($"{url}/recover-missing",
+            new { attemptIds = new[] { attemptId } }));
+        Assert.Equal(1, done.GetProperty("recovered").GetInt32());
+        Assert.Equal(1, VoteCount());
+
+        // The recovered vote still spends the same user's sole vote during the open window.
+        await Refused(await VoteAsync(b.Voter, b.Ramana.Reference), HttpStatusCode.Conflict);
+        Assert.Equal(1, VoteCount());
+        await Refused(await b.Admin.PostAsJsonAsync($"{url}/recover-missing",
+            new { attemptIds = new[] { attemptId } }), HttpStatusCode.Conflict);
     }
 
     // ---- The ballot -----------------------------------------------------------------------------
