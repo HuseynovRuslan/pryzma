@@ -73,7 +73,8 @@ public sealed class VotingController(PublicVoting voting) : ControllerBase
         CancellationToken ct)
     {
         var receipt = await voting.CastAsync(
-            User.GetUserId(), slug, reference, req?.CaptchaToken, HttpContext.Connection.RemoteIpAddress?.ToString(), ct);
+            User.GetUserId(), slug, reference, req?.CaptchaToken,
+            HttpContext.Connection.RemoteIpAddress?.ToString(), ct, HttpContext.TraceIdentifier);
         return Created($"/api/competitions/{slug}/voting/works/{reference}", receipt);
     }
 
