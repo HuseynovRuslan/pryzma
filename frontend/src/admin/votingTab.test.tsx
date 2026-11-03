@@ -95,8 +95,8 @@ describe('the vote, for the administration', () => {
     })
     show(tally({ state: 'Open' }))
 
-    expect(await screen.findByRole('heading', { name: 'Bazaya düşməmiş səslər' })).toBeInTheDocument()
-    expect(screen.getByText(/SUB-2026-00001/)).toBeInTheDocument()
+    const panel = (await screen.findByRole('heading', { name: 'Bazaya düşməmiş səslər' })).closest('section')!
+    expect(within(panel).getByText(/SUB-2026-00001/)).toBeInTheDocument()
     expect(adminApi.recoveryCandidates).toHaveBeenCalledWith(competition.id, expect.anything())
   })
 
