@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useApi } from '../../lib/useApi'
 import { formatDateTime } from '../../lib/format'
 import { ApiError } from '../../api/client'
@@ -18,6 +18,11 @@ export function VoteAttemptRecoveryPanel({
   onChanged: () => void
 }) {
   const [version, setVersion] = useState(0)
+  useEffect(() => {
+    // A missing vote attempt can become eligible during live voting.
+    const timer = window.setInterval(() => setVersion((n) => n + 1), 30_000)
+    return () => window.clearInterval(timer)
+  }, [competitionId])
   const response = useApi(
     (signal) => adminApi.recoveryCandidates(competitionId, signal),
     [competitionId, version],
