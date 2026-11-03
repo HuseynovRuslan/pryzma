@@ -13,6 +13,7 @@ import { Badge, Empty, Notice, Stat } from '../ui'
 import { WorkViewer, type ViewerFact } from '../WorkViewer'
 import { DisposableEmailPanel } from './DisposableEmailPanel'
 import { SuspicionPanel } from './SuspicionPanel'
+import { VoteAttemptRecoveryPanel } from './VoteAttemptRecoveryPanel'
 
 const stateLabel: Record<string, string> = {
   NotConfigured: 'Səsvermə qurulmayıb',
@@ -110,6 +111,10 @@ export function VotingTab({ competition }: { competition: AdminCompetition }) {
 
       {v.state === 'Closed' && (v.voteCount > 0 || v.invalidatedVoteCount > 0) && (
         <DisposableEmailPanel competitionId={competition.id} onChanged={() => setVersion((n) => n + 1)} />
+      )}
+
+      {(v.state === 'Open' || v.state === 'Closed') && (
+        <VoteAttemptRecoveryPanel competitionId={competition.id} onChanged={() => setVersion((n) => n + 1)} />
       )}
 
       {v.unplaced.length > 0 && (

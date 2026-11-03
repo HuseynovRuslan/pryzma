@@ -458,7 +458,8 @@ public sealed class PublicVoting(
     /// </para>
     /// </summary>
     public async Task<VoteReceiptDto> CastAsync(
-        Guid userId, string slug, string reference, string? captchaToken, string? ip, CancellationToken ct)
+        Guid userId, string slug, string reference, string? captchaToken, string? ip, CancellationToken ct,
+        string? correlationId = null)
     {
         var gate = await OpenedGateAsync(slug, ct);
         if (gate.State != VotingState.Open)
@@ -479,8 +480,15 @@ public sealed class PublicVoting(
         if (captchaOptions.Value.VoteEnabled)
             await Auth.CaptchaGate.EnsureAsync(captcha, captchaOptions.Value, captchaToken, CaptchaAction, ip, logger, ct);
 
-        var now = clock.GetUtcNow();
         var competitionId = gate.Competition.Id;
+        // Durable proof of an authenticated, validated user intent. This is committed independently
+        // BEFORE the vote transaction, so a later server/database failure can be reconciled.
+        // No arbitrary user or work can be supplied through the recovery API.
+        audit.Record(userId, AuditActions.VoteAttempted, AuditEntities.Submission,
+            entry.Id, $"competition:{competitionId};category:{entry.CategoryId};trace:{correlationId}");
+        await db.SaveChangesAsync(ct);
+
+        var now = clock.GetUtcNow();
         var strategy = db.Database.CreateExecutionStrategy();
         await strategy.ExecuteAsync(async () =>
         {
@@ -540,7 +548,7 @@ public sealed class PublicVoting(
     private const string AlreadyVoted = "Siz bu müsabiqədə artıq səs vermisiniz. Müsabiqədə yalnız bir işə səs vermək olar.";
 
     /// <summary>The voter half of the lock's key: any stable 32-bit digest of the id will do — a clash only queues two voters.</summary>
-    private static int VoterLockKey(Guid userId)
+    internal static int VoterLockKey(Guid userId)
     {
         var bytes = userId.ToByteArray();
         return BitConverter.ToInt32(bytes, 0) ^ BitConverter.ToInt32(bytes, 4) ^ BitConverter.ToInt32(bytes, 8) ^ BitConverter.ToInt32(bytes, 12);

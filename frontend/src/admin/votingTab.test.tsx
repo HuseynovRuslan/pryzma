@@ -7,6 +7,8 @@ import { VotingTab } from './pages/VotingTab'
 
 const adminApi = vi.hoisted(() => ({
   voting: vi.fn(),
+  recoveryCandidates: vi.fn(),
+  recoverMissingVotes: vi.fn(),
   voteSuspicion: vi.fn(),
   workMaterial: vi.fn(),
   publicAssetBlob: vi.fn(),
@@ -31,6 +33,7 @@ beforeEach(() => {
   vi.clearAllMocks()
   adminApi.publicAssetBlob.mockResolvedValue(new Blob())
   adminApi.documentPageBlob.mockResolvedValue(new Blob())
+  adminApi.recoveryCandidates.mockResolvedValue({ items: [] })
 })
 
 const competition = { id: 5, title: 'Əmircanın simvolu' } as AdminCompetition
@@ -86,6 +89,17 @@ const show = (v: AdminVoting, suspicion: AdminVoteSuspicion = quiet) => {
 }
 
 describe('the vote, for the administration', () => {
+  it('offers verified missing-vote recovery while voting remains open', async () => {
+    adminApi.recoveryCandidates.mockResolvedValue({
+      items: [{ attemptId: 42, reference: 'SUB-2026-00001', attemptedAt: '2026-10-10T05:01:00Z' }],
+    })
+    show(tally({ state: 'Open' }))
+
+    const panel = (await screen.findByRole('heading', { name: 'Bazaya düşməmiş səslər' })).closest('section')!
+    expect(within(panel).getByText(/SUB-2026-00001/)).toBeInTheDocument()
+    expect(adminApi.recoveryCandidates).toHaveBeenCalledWith(competition.id, expect.anything())
+  })
+
   it('scores suspicious votes with their reasons, sums them per work, and folds the milder ones away', async () => {
     show(tally(), {
       voteCount: 18,
