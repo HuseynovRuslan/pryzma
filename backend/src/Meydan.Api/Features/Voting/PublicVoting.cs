@@ -458,7 +458,8 @@ public sealed class PublicVoting(
     /// </para>
     /// </summary>
     public async Task<VoteReceiptDto> CastAsync(
-        Guid userId, string slug, string reference, string? captchaToken, string? ip, CancellationToken ct)
+        Guid userId, string slug, string reference, string? captchaToken, string? ip, CancellationToken ct,
+        string? correlationId = null)
     {
         var gate = await OpenedGateAsync(slug, ct);
         if (gate.State != VotingState.Open)
@@ -484,7 +485,7 @@ public sealed class PublicVoting(
         // BEFORE the vote transaction, so a later server/database failure can be reconciled.
         // No arbitrary user or work can be supplied through the recovery API.
         audit.Record(userId, AuditActions.VoteAttempted, AuditEntities.Submission,
-            entry.Id, $"competition:{competitionId};category:{entry.CategoryId}");
+            entry.Id, $"competition:{competitionId};category:{entry.CategoryId};trace:{correlationId}");
         await db.SaveChangesAsync(ct);
 
         var now = clock.GetUtcNow();
