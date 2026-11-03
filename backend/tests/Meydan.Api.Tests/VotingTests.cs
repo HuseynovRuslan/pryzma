@@ -244,6 +244,74 @@ public sealed class VotingTests : IDisposable
         return new Ballot(admin, competition, voter, second, balaxani, other, ramana, rejected);
     }
 
+    // ---- Server-evidenced vote recovery ---------------------------------------------------------
+
+    [Fact]
+    public async Task A_logged_attempt_is_not_a_recovery_candidate_when_the_vote_exists()
+    {
+        var b = await OpenBallotAsync();
+        await Json(await VoteAsync(b.Voter, b.Balaxani.Reference));
+        Assert.Equal(1, _factory.WithDb(db => db.AuditLogs.Count(x => x.Action == "VoteAttempted")));
+
+        _factory.Clock.Now = _t0.AddSeconds(25);
+        var candidates = await Json(await b.Admin.GetAsync(
+            $"/api/admin/competitions/{b.Competition}/voting/recovery-candidates"));
+        Assert.Empty(candidates.GetProperty("items").EnumerateArray());
+    }
+
+    [Fact]
+    public async Task Recovery_requires_a_logged_authenticated_attempt_and_cannot_be_replayed()
+    {
+        var b = await OpenBallotAsync();
+        await Json(await VoteAsync(b.Voter, b.Balaxani.Reference));
+
+        // Model a lost vote row after a verified, server-recorded request.
+        // The original authenticated intent must survive independently in AuditLogs.
+        await _factory.WithDbAsync(async db =>
+        {
+            var vote = await db.Votes.SingleAsync();
+            db.Votes.Remove(vote);
+            await db.SaveChangesAsync();
+        });
+        Assert.Equal(0, VoteCount());
+
+        _factory.Clock.Now = _t0.AddSeconds(25);
+        var url = $"/api/admin/competitions/{b.Competition}/voting";
+        var candidates = await Json(await b.Admin.GetAsync($"{url}/recovery-candidates"));
+        var item = Assert.Single(candidates.GetProperty("items").EnumerateArray().ToArray());
+        Assert.Equal(b.Balaxani.Reference, item.GetProperty("reference").GetString());
+        var attemptId = item.GetProperty("attemptId").GetInt64();
+
+        // An invented ID must not create a vote.
+        await Refused(await b.Admin.PostAsJsonAsync($"{url}/recover-missing",
+            new { attemptIds = new[] { attemptId + 1000000 } }), HttpStatusCode.Conflict);
+        Assert.Equal(0, VoteCount());
+
+        var done = await Json(await b.Admin.PostAsJsonAsync($"{url}/recover-missing",
+            new { attemptIds = new[] { attemptId } }));
+        Assert.Equal(1, done.GetProperty("recovered").GetInt32());
+        Assert.Equal(1, VoteCount());
+        Assert.Equal(1, _factory.WithDb(db => db.AuditLogs.Count(x => x.Action == "VoteRecovered")));
+
+        // The same attempt cannot be replayed and one user cannot cast again.
+        await Refused(await b.Admin.PostAsJsonAsync($"{url}/recover-missing",
+            new { attemptIds = new[] { attemptId } }), HttpStatusCode.Conflict);
+        Assert.Equal(1, VoteCount());
+        Assert.Empty((await Json(await b.Admin.GetAsync($"{url}/recovery-candidates")))
+            .GetProperty("items").EnumerateArray());
+    }
+
+    [Fact]
+    public async Task Recovery_is_forbidden_before_voting_closes()
+    {
+        var b = await OpenBallotAsync();
+        await Refused(await b.Admin.GetAsync(
+            $"/api/admin/competitions/{b.Competition}/voting/recovery-candidates"), HttpStatusCode.Conflict);
+        await Refused(await b.Admin.PostAsJsonAsync(
+            $"/api/admin/competitions/{b.Competition}/voting/recover-missing",
+            new { attemptIds = new[] { 1L } }), HttpStatusCode.Conflict);
+    }
+
     // ---- The ballot -----------------------------------------------------------------------------
 
     [Fact]
