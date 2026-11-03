@@ -662,3 +662,18 @@
     display: inline;
   }
 }
+
+/* The last ten minutes: the tiles turn to the final's dark, the figures to the vote's saffron. Colour only — no
+   motion, nothing that flashes. */
+.stage__tiles--final .stage__tile {
+  background: var(--ink);
+  border-color: var(--ink);
+}
+
+.stage__tiles--final .stage__tile-value {
+  color: var(--saffron);
+}
+
+.stage__tiles--final .stage__tile-unit {
+  color: var(--stone-2);
+}

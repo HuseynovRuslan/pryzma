@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 import { createBrowserRouter, Outlet, RouterProvider, ScrollRestoration } from 'react-router-dom'
 import { AuthProvider } from './auth/AuthContext'
 import { RequireAuth } from './auth/RequireAuth'
+import { FinalMusic } from './components/FinalMusic'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { NotFoundState, PageLoading } from './components/PageState'
@@ -88,6 +89,8 @@ function Layout() {
         </Suspense>
       </main>
       <Footer />
+      {/* The music of a vote's last three hours, on the pages about it only. */}
+      <FinalMusic />
       <ScrollRestoration />
     </FeaturedCompetitionProvider>
   )

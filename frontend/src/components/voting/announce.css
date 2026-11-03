@@ -70,3 +70,37 @@
     animation: none;
   }
 }
+
+/* The last ten minutes: the strip goes dark, as a studio does for its final, and carries the minutes left. The
+   links keep their shape; only the colours turn. */
+.vannounce--final {
+  background: var(--ink);
+  color: var(--paper);
+  border-bottom-color: var(--saffron);
+}
+
+.vannounce--final .vannounce__dot {
+  background: var(--saffron);
+}
+
+.vannounce__clock {
+  margin-left: var(--s-2);
+  padding: 0 var(--s-2);
+  border: 1px solid var(--saffron);
+  color: var(--saffron);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.vannounce--final .vannounce__link {
+  border-color: var(--paper);
+  background: transparent;
+  color: var(--paper);
+}
+
+.vannounce--final .vannounce__link:hover,
+.vannounce--final .vannounce__link[aria-current='page'] {
+  background: var(--saffron);
+  border-color: var(--saffron);
+  color: var(--ink);
+}

@@ -41,6 +41,18 @@ describe('the "voting has started" strip', () => {
     expect(screen.getByRole('link', { name: 'Novxanının simvolu — səs ver' })).toHaveAttribute('aria-current', 'page')
   })
 
+  it('turns dark and counts the minutes in the last ten minutes', () => {
+    const final = {
+      ...slide('novxaninin-simvolu', '“Novxanının simvolu”', 'votingLive'),
+      lifecycle: { stage: 'votingLive', countdown: { remaining: { ms: 9 * 60_000 + 41_000 } } } as Lifecycle,
+    }
+    show([final])
+    const strip = screen.getByRole('complementary', { name: 'Səsvermə elanı' })
+    expect(strip).toHaveClass('vannounce--final')
+    expect(strip).toHaveTextContent('Son dəqiqələr')
+    expect(screen.getByRole('timer')).toHaveTextContent('09:41')
+  })
+
   it('is not there while no vote is open', () => {
     show([slide('novxaninin-simvolu', '“Novxanının simvolu”', 'review')])
     expect(screen.queryByRole('complementary')).not.toBeInTheDocument()

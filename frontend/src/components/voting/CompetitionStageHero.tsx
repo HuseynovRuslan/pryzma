@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import type { CompetitionSummary, Voting } from '../../api/types'
 import type { Lifecycle, LifecycleStage } from '../../lib/competitionLifecycle'
 import { formatDate, formatTime, shortCompetitionTitle } from '../../lib/format'
+import { LAST_TEN_MS } from '../../lib/finalMusic/schedule'
 import { LIVE_COUNTS } from '../../pages/voting/lib'
 import { VotePulse } from './VotePulse'
 import './stage.css'
@@ -153,7 +154,13 @@ export function CompetitionStageHero({
                   <span className="stage__countdown-label">{countdown.label}</span>
                   {isFinalDay && <span className="stage__urgent">● Son 24 saat</span>}
                 </p>
-                <div className="stage__tiles" role="timer" aria-live="off">
+                <div
+                  className={`stage__tiles${
+                    voting_ && countdown.remaining.ms > 0 && countdown.remaining.ms <= LAST_TEN_MS ? ' stage__tiles--final' : ''
+                  }`}
+                  role="timer"
+                  aria-live="off"
+                >
                   <Tile value={countdown.remaining.days} unit="GÜN" />
                   <Tile value={countdown.remaining.hours} unit="SAAT" />
                   <Tile value={countdown.remaining.minutes} unit="DƏQİQƏ" />
