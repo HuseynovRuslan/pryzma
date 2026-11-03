@@ -54,6 +54,7 @@ builder.Services.AddScoped<SubmissionService>();
 builder.Services.AddScoped<Meydan.Api.Features.Results.PublicResults>();
 builder.Services.AddScoped<Meydan.Api.Features.Voting.PublicVoting>();
 builder.Services.AddScoped<Meydan.Api.Features.Admin.VoteReview>();
+builder.Services.AddScoped<Meydan.Api.Features.Admin.VoteAttemptRecovery>();
 builder.Services.AddScoped<Meydan.Api.Features.Admin.VoteCatalogAnalytics>();
 // Rendered PDF pages for the ballot, kept in memory: bounded to 128 MB (entries are sized in bytes).
 builder.Services.AddMemoryCache(o => o.SizeLimit = 128L * 1024 * 1024);
