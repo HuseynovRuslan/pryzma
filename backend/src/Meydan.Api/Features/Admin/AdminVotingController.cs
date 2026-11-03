@@ -17,7 +17,8 @@ namespace Meydan.Api.Features.Admin;
 /// </summary>
 [Route("api/admin/competitions/{competitionId:int}/voting")]
 public sealed class AdminVotingController(
-    MeydanDbContext db, TimeProvider clock, VoteReview review, PrintItems printItems, VoteCatalogAnalytics analytics) : AdminControllerBase
+    MeydanDbContext db, TimeProvider clock, VoteReview review, PrintItems printItems,
+    VoteCatalogAnalytics analytics, VoteAttemptRecovery recovery) : AdminControllerBase
 {
     /// <summary>
     /// The catalog of every work with its public vote (admins only): valid votes, public position and the votes set
@@ -67,6 +68,17 @@ public sealed class AdminVotingController(
     [HttpPost("votes/restore")]
     public Task<AdminVoteDecisionDto> Restore(int competitionId, VoteDecisionRequest req, CancellationToken ct) =>
         review.RestoreAsync(competitionId, req, CurrentUserId, ct);
+
+    /// <summary>Validated server-recorded vote attempts with no matching Vote row; admin only.</summary>
+    [HttpGet("recovery-candidates")]
+    public Task<UnrecordedVoteCandidates> RecoveryCandidates(int competitionId, CancellationToken ct) =>
+        recovery.ListAsync(competitionId, ct);
+
+    /// <summary>Recover only genuine, server-recorded attempts, atomically, after the voting window closes.</summary>
+    [HttpPost("recover-missing")]
+    public Task<RecoverUnrecordedVotesResult> RecoverMissing(
+        int competitionId, RecoverUnrecordedVotesRequest request, CancellationToken ct) =>
+        recovery.RecoverAsync(competitionId, request, CurrentUserId, ct);
 
     [HttpGet]
     public async Task<AdminVotingDto> Get(int competitionId, CancellationToken ct)
