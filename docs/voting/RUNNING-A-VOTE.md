@@ -42,6 +42,7 @@ doğru, iştirakçıların adı ilə. Kimin kimə səs verdiyi **heç yerdə gö
 | | |
 |---|---|
 | Bir nəfər — bir nominasiyada bir səs | İkinci dəfə cəhd edən “artıq səs vermisiniz” cavabı alır |
+| Bir nəfər — bir hesab | Eyni şəxsin bir neçə hesabla verdiyi səslərdən biri sayılır, qalanları yekun auditdə etibarsız sayılır (D19) |
 | Öz işinə səs vermək olmaz | |
 | Səs geri alınmır | Təsdiq pəncərəsi bunu səs verilməzdən **əvvəl** yazır |
 | Səsvermə başlayandan **sonra** açılan hesablar səs verə bilmir | Bir nəfərin bir neçə hesab açıb səs yığmasının qarşısını alır |

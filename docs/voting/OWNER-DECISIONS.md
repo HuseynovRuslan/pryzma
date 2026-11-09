@@ -23,6 +23,7 @@ Re-verified against the repository on 2026-09-30 (branch `feature/voting-module`
 | D15 | Which page stands for a PDF in the admin and on paper | **Automatic (page 2 of two or more, else page 1) unless an admin chooses a page per file; the same page everywhere; the PDF and its full material untouched** | owner, 2026-10-07 |
 | D18 | How the result of "Əmircanın simvolu" is announced | **Two independent choices — Münsiflərin seçimi (the jury's paper vote: points) and Xalqın seçimi (valid votes) — three places each, shown apart; never combined, no overall winner, no prize shown; published only by the existing publication after the owner's approval** | owner, 2026-10-16 |
 | D17 | Deleting an account that voted | **Never: a permanent deletion of an account with any vote, counted or set aside, is refused (409) — application guard now, database `RESTRICT` in the D1 migration (Phase22)** | owner, 2026-10-09 |
+| D19 | One person, one vote | **Of the votes one person cast for a work from several accounts, the earliest counts and the rest are set aside — the same three links for every work; the work itself stays in the contest; the rule is written into future competitions' rules and the vote dialog** | owner, 2026-11-09 |
 | D12 | Fraudulent votes | **Set aside by an admin only on a phone cluster (3+ voting accounts on one phone) or R2-strict (new account, name group 5+, 5+ of it from one registration IP), with a reason, audited — never deleted; one phone, one new account; a mobile-format phone; a robot check at registration** | owner, 2026-10-05 (narrowed the same evening); R2 added 2026-10-06 |
 
 ## D1 — One vote per user per competition (was: per nomination)
@@ -502,3 +503,23 @@ The management approved announcing the result of "Əmircanın simvolu" as two in
   the jury's need their source ("Kağız protokol"). Every change is audited. Nothing is public until an admin
   publishes the result with the existing "Nəticəni dərc et", only after the owner's approval; publication stays OFF.
 
+
+## D19 — One person, one vote (owner, 9 November 2026)
+
+**Decided by the owner after the final audit of "Novxanının simvolu" and "Maştağanın simvolu".** The e-mail
+addresses behind the votes showed people who opened several accounts — often under other people's names — and voted
+once from each. The owner chose the common practice: such votes are void except one, and the work is not removed.
+
+- **Three links, the same for every work.** Accounts that voted for the same work belong to one person when
+  (1) their e-mail addresses name the same person — local parts one letter apart once digits and dots are removed,
+  or an account's e-mail carries the name of another voter of that work; (2) they carry the same name, one letter
+  apart at most, and were opened within 30 minutes of each other, from any IP; or (3) three or more of them were
+  opened within ten minutes of each other from the author's own IP addresses. Linked accounts form one group.
+- **One vote kept.** In each group the earliest valid vote counts; the others are set aside with the reason
+  "Yekun audit (09.11.2026), sahibin qərarı «bir nəfər — bir səs» …", audited (`VoteInvalidated` per vote,
+  `VotingRuleApplied` per competition) and never deleted. Applied on 9 November 2026: **81 votes over 22 works**.
+- **The work stays.** Relatives' multi-accounting is not proof that the author did it, and the competitions' rules
+  had no sentence that would remove a work for it; a work is therefore never disqualified under this decision.
+- **Written down for what comes next.** The rules template of new competitions (`SettlementCompetitionContent.Rules`)
+  and the vote dialog now say it before anyone votes. The rules of competitions already held are not rewritten
+  after the fact — the seeder fills only empty rules, so their published words stay as they were.

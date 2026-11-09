@@ -9,7 +9,7 @@ import { Buta } from '../../components/Motifs'
 import { Turnstile } from '../../components/Turnstile'
 import { usePublicConfig } from '../../lib/publicConfig'
 import { WorkVisual } from '../results/shared'
-import { ONE_VOTE, voteCopyFor, voteNote, votesLabel, workName, workNumber } from './lib'
+import { ONE_PERSON, ONE_VOTE, voteCopyFor, voteNote, votesLabel, workName, workNumber } from './lib'
 import { ShareVote } from './ShareVote'
 
 /** The running total on a card, as the design shows it: a heart, the number, the word. */
@@ -335,6 +335,7 @@ export function VoteDialog({
             </p>
             {/* Said before the vote is cast, because it cannot be taken back — and it spends the one vote. */}
             <p className="vdlg__final">{ONE_VOTE} Səs bir dəfə verilir və geri alınmır.</p>
+            <p className="vdlg__rule">{ONE_PERSON}</p>
             {error && (
               <p className="vdlg__error" role="alert">
                 {error}

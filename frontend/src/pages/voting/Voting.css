@@ -644,6 +644,14 @@
   font-weight: 700;
 }
 
+/* D19: one person, one vote — the audit acts on it, so the voter reads it here first. */
+.vdlg__rule {
+  margin: 0;
+  text-align: center;
+  font-size: var(--fs-100);
+  color: var(--muted);
+}
+
 .vdlg__error {
   margin: 0;
   padding: var(--s-3);

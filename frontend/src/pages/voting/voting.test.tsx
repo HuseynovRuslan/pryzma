@@ -512,6 +512,8 @@ describe('casting a vote', () => {
     // The dialog names no category: choosing one is not a vote of its own.
     expect(within(dialog).queryByText(/Nominasiya:/)).not.toBeInTheDocument()
     expect(within(dialog).getByText('Müsabiqədə yalnız bir işə səs verə bilərsiniz. Səs bir dəfə verilir və geri alınmır.')).toBeInTheDocument()
+    // D19: one person, one vote is said before the vote is cast, because the final audit acts on it.
+    expect(within(dialog).getByText(/^Bir nəfər yalnız bir hesabla səs verir: .* qalanları etibarsız sayılır\.$/)).toBeInTheDocument()
     expect(api.vote).not.toHaveBeenCalled()
 
     await userEvent.click(within(dialog).getByRole('button', { name: 'Səsi təsdiqlə' }))

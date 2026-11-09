@@ -81,6 +81,10 @@ internal static class SettlementCompetitionContent
         + "istifadəyə yol verilmir.\n"
         + "İştirakçı təqdim etdiyi məlumatların düzgünlüyünə görə məsuliyyət daşıyır.\n"
         + "Eyni iş yanlış və ya yanıltıcı məlumatla təqdim edilməməlidir.\n"
+        + "Bir nəfər müsabiqədə yalnız bir səs verir: eyni şəxsin bir neçə hesabla verdiyi səslərdən biri sayılır, "
+        + "qalanları etibarsız sayılır.\n"
+        + "Müəllif və ya onun adından hərəkət edən şəxs saxta səs toplayarsa, təşkilatçı işi müsabiqədən "
+        + "kənarlaşdıra bilər.\n"
         + "Təşkilatçı qaydalara uyğun olmayan təqdimatı qiymətləndirmədən kənarlaşdıra bilər.\n"
         + "Seçilmiş işin tətbiqi texniki uyğunlaşdırma tələb edə bilər.";
 

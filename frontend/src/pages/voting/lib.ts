@@ -74,6 +74,13 @@ export const isSinglePool = (voting: Pick<Voting, 'nominations'> | null | undefi
 export const ONE_VOTE = 'Müsabiqədə yalnız bir işə səs verə bilərsiniz.'
 
 /**
+ * One person, one vote — said before the vote is cast, because the final audit acts on it: of the votes one person
+ * cast from several accounts, one is counted and the rest are set aside (owner, 9 November 2026 — OWNER-DECISIONS D19).
+ */
+export const ONE_PERSON =
+  'Bir nəfər yalnız bir hesabla səs verir: eyni şəxsin bir neçə hesabla verdiyi səslərdən biri sayılır, qalanları etibarsız sayılır.'
+
+/**
  * What comes after the vote, for a page that shows it: `review` from the end of the window until an admin publishes
  * the official result, then `results`. Null while the vote is upcoming or open.
  *
