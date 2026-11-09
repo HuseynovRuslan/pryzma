@@ -91,6 +91,8 @@ internal sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<Refre
         b.HasIndex(x => x.TokenHash).IsUnique();
         b.Property(x => x.ReplacedByHash).HasMaxLength(64);
         b.Property(x => x.CreatedByIp).HasMaxLength(64);
+        b.Property(x => x.CreatedByUserAgent).HasMaxLength(Auth.ClientDevice.UserAgentMax);
+        b.Property(x => x.CreatedByDeviceId).HasMaxLength(Auth.ClientDevice.DeviceIdMax);
         b.HasIndex(x => x.FamilyId);
         b.HasOne(x => x.User)
             .WithMany(u => u.RefreshTokens)

@@ -46,6 +46,19 @@ public class Vote
     /// <summary>Why, in the admin's words — required whenever <see cref="InvalidatedAt"/> is set.</summary>
     public string? InvalidationReason { get; set; }
 
+    /// <summary>
+    /// Where the vote came from, kept for an audit only (D20) and never published: the client IP, the browser's
+    /// User-Agent (cut to 512 characters) and the frontend's per-browser random id. Null on votes cast before
+    /// 2026-11-09 and whenever the client sent nothing usable.
+    /// </summary>
+    public string? CastIp { get; set; }
+
+    /// <inheritdoc cref="CastIp"/>
+    public string? CastUserAgent { get; set; }
+
+    /// <inheritdoc cref="CastIp"/>
+    public string? CastDeviceId { get; set; }
+
     public ApplicationUser User { get; set; } = null!;
     public ApplicationUser? InvalidatedBy { get; set; }
     public Submission Submission { get; set; } = null!;

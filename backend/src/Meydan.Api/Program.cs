@@ -138,7 +138,8 @@ var corsOrigins = (builder.Configuration.GetSection("Cors:Origins").Get<string[]
 builder.Services.AddCors(o => o.AddDefaultPolicy(p =>
     p.WithOrigins(corsOrigins)
         .WithMethods("GET", "POST", "PUT", "DELETE")
-        .WithHeaders("Content-Type", "Authorization", RequestLoggingMiddleware.Header)
+        .WithHeaders("Content-Type", "Authorization", RequestLoggingMiddleware.Header,
+            Meydan.Infrastructure.Auth.ClientDevice.Header)
         .AllowCredentials()
         .SetPreflightMaxAge(TimeSpan.FromHours(1))));
 

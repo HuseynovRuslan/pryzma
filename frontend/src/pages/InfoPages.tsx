@@ -115,6 +115,10 @@ export function PrivacyPage() {
             <li>Ad, soyad, telefon və e-mail hesabınızda saxlanılır. Bunlar yalnız sizə və platformanın administratorlarına görünür.</li>
             <li>Şifrə açıq şəkildə saxlanılmır — yalnız onun geri qaytarılmayan heş-dəyəri.</li>
             <li>Giriş sessiyası brauzerdə yalnız server tərəfindən oxunan (HttpOnly) cookie ilə saxlanılır. Şifrə yeniləndikdə bütün cihazlardakı girişlər dərhal bağlanır.</li>
+            <li>
+              Hesaba daxil olanda və səs verəndə IP ünvanı, brauzerin adı və bu brauzer üçün yaradılan təsadüfi cihaz nömrəsi
+              saxlanılır. Bunlar yalnız saxta hesabları və təkrar səsləri aşkar etmək üçündür, heç yerdə dərc olunmur.
+            </li>
           </ul>
         </section>
         <section>

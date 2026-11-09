@@ -30,7 +30,8 @@ public sealed partial class RefreshTokenService(
     MeydanDbContext db,
     IOptions<JwtOptions> options,
     TimeProvider clock,
-    ILogger<RefreshTokenService> logger)
+    ILogger<RefreshTokenService> logger,
+    Microsoft.AspNetCore.Http.IHttpContextAccessor http)
 {
     private static readonly TimeSpan ReuseGrace = TimeSpan.FromSeconds(30);
 
@@ -78,6 +79,10 @@ public sealed partial class RefreshTokenService(
             CreatedAt = now,
             ExpiresAt = expires,
             CreatedByIp = ip,
+            // Fraud evidence (D20): the browser behind this sign-in or refresh. The first token of a new account is
+            // minted when its confirmation link is opened, so this also records the device that opened the link.
+            CreatedByUserAgent = ClientDevice.UserAgent(http.HttpContext),
+            CreatedByDeviceId = ClientDevice.DeviceId(http.HttpContext),
         });
         await db.SaveChangesAsync(ct);
         return new IssuedRefreshToken(raw, expires, persistent);

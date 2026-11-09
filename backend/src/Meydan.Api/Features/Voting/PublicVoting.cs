@@ -36,7 +36,7 @@ public sealed class PublicVoting(
     MeydanDbContext db, IFileStorage storage, AuditTrail audit, TimeProvider clock, DocumentPages pages,
     IMemoryCache cache, IConfiguration config, Auth.EmailConfirmationPolicy confirmation,
     Auth.ICaptchaVerifier captcha, Microsoft.Extensions.Options.IOptions<Auth.CaptchaOptions> captchaOptions,
-    ILogger<PublicVoting> logger)
+    ILogger<PublicVoting> logger, IHttpContextAccessor http)
 {
     /// <summary>The robot check's action for a vote: a token made for registration or the contact form is not accepted here.</summary>
     public const string CaptchaAction = "vote";
@@ -515,6 +515,10 @@ public sealed class PublicVoting(
                 SubmissionId = entry.Id,
                 CompetitionCategoryId = entry.CategoryId,
                 CreatedAt = now,
+                // Where it came from, for an audit only (D20): one phone cycling accounts shows up here.
+                CastIp = ip is { Length: <= 64 } ? ip : null,
+                CastUserAgent = Meydan.Infrastructure.Auth.ClientDevice.UserAgent(http.HttpContext),
+                CastDeviceId = Meydan.Infrastructure.Auth.ClientDevice.DeviceId(http.HttpContext),
             });
             // The same unit of work as the vote itself: a vote without its record cannot exist, nor a record without
             // its vote. The summary names the category and nothing about the voter.

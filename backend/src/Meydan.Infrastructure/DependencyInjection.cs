@@ -89,6 +89,8 @@ public static class DependencyInjection
         services.AddHostedService(sp => sp.GetRequiredService<PublicAssetWorker>());
 
         services.AddScoped<AccessTokenService>();
+        // RefreshTokenService reads the request's browser details (D20); outside a request it sees none.
+        services.AddHttpContextAccessor();
         services.AddScoped<RefreshTokenService>();
         services.AddScoped<ReferenceNumberGenerator>();
         services.AddScoped<AuditTrail>();

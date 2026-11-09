@@ -212,6 +212,10 @@ internal sealed class VoteConfiguration : IEntityTypeConfiguration<Vote>
         // (IgnoreQueryFilters): counts, rankings and results see valid votes only. D12.
         b.HasQueryFilter(x => x.InvalidatedAt == null);
         b.Property(x => x.InvalidationReason).HasMaxLength(500);
+        // Fraud evidence only (D20), never published.
+        b.Property(x => x.CastIp).HasMaxLength(64);
+        b.Property(x => x.CastUserAgent).HasMaxLength(Auth.ClientDevice.UserAgentMax);
+        b.Property(x => x.CastDeviceId).HasMaxLength(Auth.ClientDevice.DeviceIdMax);
         // Set aside means set aside for a stated reason; a valid vote carries none. Every term is NOT NULL-safe on
         // purpose: a CHECK that evaluates to NULL passes, so a missing reason must make it false, not unknown.
         b.ToTable(t => t.HasCheckConstraint("CK_Votes_InvalidationHasReason",

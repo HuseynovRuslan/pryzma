@@ -1,3 +1,4 @@
+import { DEVICE_HEADER, deviceId } from '../lib/deviceId'
 import type { AuthResponse } from './types'
 
 /** Field-level messages from ValidationProblemDetails, keyed by camelCase field name ('' = form level). */
@@ -63,7 +64,11 @@ export function retryAfterMs(header: string | null, now = Date.now()): number {
 export function refreshSession(): Promise<RefreshOutcome> {
   refreshInFlight ??= (async (): Promise<RefreshOutcome> => {
     try {
-      const res = await fetch('/api/auth/refresh', { method: 'POST', credentials: 'same-origin' })
+      const res = await fetch('/api/auth/refresh', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: { [DEVICE_HEADER]: deviceId() },
+      })
       if (res.ok) {
         const session = (await res.json()) as AuthResponse
         setAccessToken(session.accessToken)
@@ -109,7 +114,8 @@ interface RequestOptions {
 }
 
 export async function api<T>(path: string, options: RequestOptions = {}, retried = false): Promise<T> {
-  const headers: Record<string, string> = { Accept: 'application/json' }
+  // The browser's random id goes with every call: sign-ins and votes keep it as fraud evidence (D20).
+  const headers: Record<string, string> = { Accept: 'application/json', [DEVICE_HEADER]: deviceId() }
   if (options.body !== undefined) headers['Content-Type'] = 'application/json'
   if (accessToken) headers.Authorization = `Bearer ${accessToken}`
 

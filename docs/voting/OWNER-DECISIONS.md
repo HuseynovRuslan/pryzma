@@ -23,6 +23,7 @@ Re-verified against the repository on 2026-09-30 (branch `feature/voting-module`
 | D15 | Which page stands for a PDF in the admin and on paper | **Automatic (page 2 of two or more, else page 1) unless an admin chooses a page per file; the same page everywhere; the PDF and its full material untouched** | owner, 2026-10-07 |
 | D18 | How the result of "Əmircanın simvolu" is announced | **Two independent choices — Münsiflərin seçimi (the jury's paper vote: points) and Xalqın seçimi (valid votes) — three places each, shown apart; never combined, no overall winner, no prize shown; published only by the existing publication after the owner's approval** | owner, 2026-10-16 |
 | D17 | Deleting an account that voted | **Never: a permanent deletion of an account with any vote, counted or set aside, is refused (409) — application guard now, database `RESTRICT` in the D1 migration (Phase22)** | owner, 2026-10-09 |
+| D20 | What a sign-in and a vote keep | **The browser's User-Agent and a random per-browser id with every sign-in, plus the IP with every vote — audit evidence only, never published; SMS phone confirmation set aside** | owner, 2026-11-09 |
 | D19 | One person, one vote | **Of the votes one person cast for a work from several accounts, the earliest counts and the rest are set aside — the same three links for every work; the work itself stays in the contest; the rule is written into future competitions' rules and the vote dialog** | owner, 2026-11-09 |
 | D12 | Fraudulent votes | **Set aside by an admin only on a phone cluster (3+ voting accounts on one phone) or R2-strict (new account, name group 5+, 5+ of it from one registration IP), with a reason, audited — never deleted; one phone, one new account; a mobile-format phone; a robot check at registration** | owner, 2026-10-05 (narrowed the same evening); R2 added 2026-10-06 |
 
@@ -523,3 +524,20 @@ once from each. The owner chose the common practice: such votes are void except 
 - **Written down for what comes next.** The rules template of new competitions (`SettlementCompetitionContent.Rules`)
   and the vote dialog now say it before anyone votes. The rules of competitions already held are not rewritten
   after the fact — the seeder fills only empty rules, so their published words stay as they were.
+
+## D20 — Every sign-in and every vote keeps its browser (owner, 9 November 2026)
+
+**Decided by the owner after the final audit**, from the world-practice checks the site could not run: which device a
+vote came from, and which device opened a confirmation link. SMS confirmation of the phone was set aside for now.
+
+- **What is kept.** Each refresh token (every sign-in and refresh) now stores the browser's User-Agent (cut to 512
+  characters) and the frontend's random per-browser id (header `X-Device-Id`, 8–64 letters, digits or hyphens; anything
+  else is dropped). Each vote stores the client IP, the User-Agent and the same id. A new account's first token is minted
+  when its confirmation link is opened, so the device that opened the link is recorded too. Migration
+  `Phase23ClientDeviceEvidence`, additive and nullable; older rows stay null.
+- **What it is for.** Audit evidence only: several accounts signing in and voting from one browser share the id, which
+  the 2026 audits could only infer from sign-out chains on shared mobile IPs. Nothing is refused because of these
+  fields, and they are never published or shown to voters. The privacy page says they are kept and why.
+- **Limits.** Both values come from the client, so they are hints, not proof: the id disappears with cleared site
+  data or a private window, and identical phones send identical User-Agents. A finding still needs a second, independent
+  link (e-mail, name, phone or the author), as in D19.

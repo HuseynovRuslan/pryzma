@@ -15,6 +15,18 @@ public class RefreshToken
     public string? ReplacedByHash { get; set; }
     public string? CreatedByIp { get; set; }
 
+    /// <summary>
+    /// The browser's User-Agent at sign-in or refresh, cut to 512 characters. Fraud evidence only (D20): with the IP
+    /// and <see cref="CreatedByDeviceId"/> it shows one phone cycling several accounts. Never published.
+    /// </summary>
+    public string? CreatedByUserAgent { get; set; }
+
+    /// <summary>
+    /// The random id the site's own frontend keeps in this browser (header X-Device-Id); null when absent or
+    /// malformed. It identifies a browser, not a person, and is read only by an audit (D20).
+    /// </summary>
+    public string? CreatedByDeviceId { get; set; }
+
     public ApplicationUser User { get; set; } = null!;
 
     public bool IsActive(DateTimeOffset now) => RevokedAt is null && ExpiresAt > now;
